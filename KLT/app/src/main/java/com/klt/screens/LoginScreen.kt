@@ -11,6 +11,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -152,7 +153,7 @@ fun PasswordTextField(
         visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
     )
     Spacer(modifier = Modifier.height(8.dp))
-    if (validateStrengthPassword && text != "") {
+    if (validateStrengthPassword) {
         val strengthPasswordType = strengthChecker(text)
         if (strengthPasswordType == StrengthPasswordTypes.STRONG) {
             onHasStrongPassword(true)
@@ -164,7 +165,8 @@ fun PasswordTextField(
                 .padding(start = 12.dp, top = 10.dp)
                 .semantics {
                     contentDescription = "StrengthPasswordMessage"
-                },
+                }
+                .alpha(if (text == "") 0f else 100f),
             text = buildAnnotatedString {
                 withStyle(
                     style = SpanStyle(
