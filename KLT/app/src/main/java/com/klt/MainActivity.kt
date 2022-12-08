@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.klt.screens.ClientScreen
 import com.klt.screens.LoginScreen
 import com.klt.screens.backgroundColor
 import com.klt.ui.theme.KLTTheme
@@ -33,7 +34,5 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun RunApp(name: String) {
-    LoginScreen(
-        modifier = Modifier.background(color = backgroundColor),
-    )
+    ClientScreen(modifier = Modifier.background(color = backgroundColor))
 }
