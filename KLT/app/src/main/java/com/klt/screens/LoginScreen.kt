@@ -27,7 +27,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.klt.R
-import kotlinx.coroutines.launch
 
 val backgroundColor = Color.White
 
@@ -129,9 +128,6 @@ fun PasswordTextField(
 ) {
     val focusManager = LocalFocusManager.current
     val showPassword = remember { mutableStateOf(false) }
-    var strengthColor by remember {
-        mutableStateOf("D10000")
-    }
 
     TextField(
         modifier = Modifier
@@ -163,45 +159,41 @@ fun PasswordTextField(
         } else {
             onHasStrongPassword(false)
         }
-
-        val isStrong by remember {
-            mutableStateOf(StrengthPasswordTypes.STRONG)
-        }
-
-        var color = 0xFF0000
-
-
-        LaunchedEffect(isStrong) {
-            launch {
-                color = if (isStrong == StrengthPasswordTypes.STRONG) 0xFD10000 else 0xFA30000
-            }
-        }
         Text(
             modifier = Modifier
-                .padding(start = 14.dp)
+                .padding(start = 12.dp, top = 10.dp)
                 .semantics {
                     contentDescription = "StrengthPasswordMessage"
                 },
             text = buildAnnotatedString {
                 withStyle(
-
                     style = SpanStyle(
-                        color = Color(0xFF515151),
+                        color = Color.DarkGray,
                         fontSize = 10.sp,
                     )
                 ) {
                     append(stringResource(id = R.string.warning_password_level))
-                    withStyle(style = SpanStyle( color = Color(color))) {
+                    withStyle(
+                        style = SpanStyle(
+                            color = if (strengthPasswordType == StrengthPasswordTypes.STRONG)
+                                Color(0xFF52c202)
+                            else Color(0xFFD10000)
+                        )
+                    ) {
                         when (strengthPasswordType) {
-                            StrengthPasswordTypes.STRONG -> {
-                                color = 0xFD10000
-                                append(" ${stringResource(id = R.string.warning_password_level_strong)}")
-                            }
+                            StrengthPasswordTypes.STRONG ->
+                                append(
+                                    " ${
+                                        stringResource(id = R.string.warning_password_level_strong)
+                                    }"
+                                )
+                            StrengthPasswordTypes.WEAK ->
+                                append(
+                                    " ${
+                                        stringResource(id = R.string.warning_password_level_weak)
+                                    }"
+                                )
 
-                            StrengthPasswordTypes.WEAK ->{
-                                color = 0xFA30000
-                                append(" ${stringResource(id = R.string.warning_password_level_weak)}")
-                            }
 
                         }
                     }
