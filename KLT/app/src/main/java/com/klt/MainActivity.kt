@@ -5,11 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.klt.screens.ClientScreen
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.klt.screens.LoginScreen
 import com.klt.screens.backgroundColor
 import com.klt.ui.theme.KLTTheme
@@ -34,5 +37,21 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun RunApp(name: String) {
-    ClientScreen(modifier = Modifier.background(color = backgroundColor))
+    val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Open))
+    Scaffold(scaffoldState = scaffoldState, topBar = {
+        Icon(
+            painter = painterResource(id = R.drawable.klt_icon_logo),
+            contentDescription = "KLT Logo",
+            tint = Color.Unspecified,
+            modifier = Modifier
+                .scale(2f)
+                .padding(start = 25.dp, top = 15.dp)
+        )
+    })
+    {
+        LoginScreen(
+            modifier = Modifier.background(color = backgroundColor),
+        )
+    }
+
 }
