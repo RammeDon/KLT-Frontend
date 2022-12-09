@@ -90,7 +90,7 @@ fun LoginScreen(
             )
 
             Button(
-                onClick = { ApiConnector.test() },
+                onClick = { },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)
