@@ -14,7 +14,7 @@ object ApiConnector {
     /** Call api to login */
     fun login() {
         //TODO: Update this functionality, currently this is just a test to the api
-        val res = getRequest("http://192.168.0.38:3000/api/user", "123")
+        val res = getRequest("url", "secretjwt")
         res?.let { Log.d("APIKLT", it) }
     }
 
