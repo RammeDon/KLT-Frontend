@@ -28,7 +28,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.klt.R
-import com.klt.util.ApiConnector
 
 val backgroundColor = Color.White
 
@@ -50,6 +49,7 @@ private const val REGEX_STRONG_PASSWORD =
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    OnSelfClick: () -> Unit = {}
 ) {
     var username: String by remember {
         mutableStateOf("")

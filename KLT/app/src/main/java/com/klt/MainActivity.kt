@@ -5,53 +5,53 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.klt.screens.LoginScreen
 import com.klt.screens.backgroundColor
+import com.klt.ui.composables.TopBar
+import com.klt.ui.navigation.Home
+import com.klt.ui.navigation.appTabRowScreens
 import com.klt.ui.theme.KLTTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // Wrapper theme that acts as a container for the upcoming surface composable
             KLTTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    RunApp(name = "")
-
+                // This surface is the top-level Box containing the core styling of the activity
+                // ... Here, the modifier has largely been left empty.
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    RunApp()
                 }
             }
         }
     }
 }
 
+/**
+ *  Initializes the NavController and sets the NavHost on startup
+ */
 @Composable
-fun RunApp(name: String) {
+fun RunApp() {
     val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Open))
-    Scaffold(scaffoldState = scaffoldState, topBar = {
-        Icon(
-            painter = painterResource(id = R.drawable.klt_icon_logo),
-            contentDescription = "KLT Logo",
-            tint = Color.Unspecified,
-            modifier = Modifier
-                .scale(2f)
-                .padding(start = 25.dp, top = 15.dp)
-        )
-    })
+    // Calls the navigate function to control movement between views/screens in the app
+    val navController = rememberNavController()
+    // Returns the current back stack (composable view/screen stack) as a state
+    val currentBackStack by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStack?.destination
+    val currentScreen =
+        appTabRowScreens.find { it.route == currentDestination?.route } ?: Home
+
+    Scaffold(scaffoldState = scaffoldState, topBar = { TopBar() })
     {
         LoginScreen(
             modifier = Modifier.background(color = backgroundColor),
         )
     }
-
 }
