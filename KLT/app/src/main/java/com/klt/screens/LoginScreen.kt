@@ -28,6 +28,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.klt.R
+import com.klt.util.ApiConnector
 
 val backgroundColor = Color.White
 
@@ -89,7 +90,7 @@ fun LoginScreen(
             )
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)
