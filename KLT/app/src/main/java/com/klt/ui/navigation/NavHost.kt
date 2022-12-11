@@ -26,108 +26,110 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.klt.screens.ClientScreen
-import com.klt.screens.HomeScreen
-import com.klt.screens.LoginScreen
-import com.klt.screens.SettingsScreen
+import androidx.navigation.compose.rememberNavController
+import com.klt.screens.*
 
 //import com.klt.screens.LoginScreen
 
 @Composable
-fun AppNavHost(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
+fun AppNavHost(modifier: Modifier = Modifier) {
+    // Calls the navigate function to control movement between views/screens in the app
+    val navController = rememberNavController()
+
     NavHost(
         navController = navController,
-        startDestination = Home.route,
+        startDestination = Login.route,
         modifier = modifier
     ) {
 
         // LOGIN
         composable(route = Login.route) {
             LoginScreen(
-                OnSelfClick = { // navigation for when an allocated icon is clicked
-                    navController.navigateSingleTopTo(Login.route)
-                }
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(Login.route) }
             )
         }
 
         // HOME
         composable(route = Home.route) {
             HomeScreen(
-                OnSelfClick = {
-                    navController.navigateSingleTopTo(Home.route)
-                },
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(Home.route) }
             )
-
         }
 
         // CLIENTS
         composable(route = Clients.route) {
             ClientScreen(
-                OnSelfClick = {
-                    navController.navigateSingleTopTo(Home.route)
-                }
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(Clients.route) }
             )
         }
 
         // SETTINGS
         composable(route = Settings.route) {
             SettingsScreen(
-                OnSelfClick = {
-                    navController.navigateSingleTopTo(Settings.route)
-                },
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(Settings.route) }
             )
         }
 
         // TASKS
         composable(route = Tasks.route) {
-            SettingsScreen(
-                OnSelfClick = {
-                    navController.navigateSingleTopTo(Tasks.route)
-                },
+            TaskScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(Tasks.route) }
             )
         }
 
-        // TASKS
-        composable(route = Tasks.route) {
-            SettingsScreen(
-                OnSelfClick = {
-                    navController.navigateSingleTopTo(Tasks.route)
-                },
-            )
-        }
 
         // CREATE USER
         composable(route = CreateUser.route) {
-            SettingsScreen(
-                OnSelfClick = {
-                    navController.navigateSingleTopTo(CreateUser.route)
-                },
+            CreateUserScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(CreateUser.route) }
             )
         }
 
         // ADMIN
         composable(route = Admin.route) {
-            SettingsScreen(
-                OnSelfClick = {
-                    navController.navigateSingleTopTo(Admin.route)
-                },
+            AdminScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(Admin.route) }
             )
         }
 
-        // User
+        // USER
         composable(route = User.route) {
-            SettingsScreen(
-                OnSelfClick = {
-                    navController.navigateSingleTopTo(User.route)
-                },
+            UserScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(User.route) }
+            )
+        }
+
+        // RESET PASSWORD
+        composable(route = ResetPassword.route) {
+            ResetPasswordScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(ResetPassword.route) }
+            )
+        }
+
+
+        // FORGOT PASSWORD
+        composable(route = ForgotPassword.route) {
+            ForgotPasswordScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(ForgotPassword.route) }
             )
         }
     }
 }
 
+/**
+ * Ensures that there is no duplicate entries within the NavGraph backstack on clicking a NavPath
+ * ImageVector (Icon) asset, if any.
+ */
 fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) {
     // Pop up to the start destination of the graph to
     // avoid building up a large stack of destinations

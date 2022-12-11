@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.klt.R
 
 @Composable
-fun TopBar() {
-    Row(modifier = Modifier.fillMaxWidth()) {
+fun TopBar(modifier: Modifier = Modifier) {
+    Row(modifier = modifier.then(Modifier.fillMaxWidth())) {
         Icon(
             painter = painterResource(id = R.drawable.klt_icon_logo),
             contentDescription = "KLT Logo",

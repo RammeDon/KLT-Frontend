@@ -60,7 +60,7 @@ object Settings : NavPath {
 
 object CreateUser : NavPath {
     override val icon = Icons.Rounded.Settings
-    override val route = "create_user"
+    override val route = "create-user"
 }
 
 object Admin : NavPath {
@@ -72,3 +72,27 @@ object User : NavPath {
     override val icon = Icons.Rounded.Settings
     override val route = "user"
 }
+
+object ResetPassword : NavPath {
+    override val icon = Icons.Rounded.LockReset
+    override val route = "reset-password"
+}
+
+object ForgotPassword : NavPath {
+    override val icon = Icons.Rounded.QuestionMark
+    override val route = "forgot-password"
+}
+
+val allNavPaths = listOf(
+    Login,
+    Home,
+    Clients,
+    Settings,
+    Tasks,
+    Settings,
+    CreateUser,
+    Admin,
+    User,
+    ResetPassword,
+    ForgotPassword
+)

@@ -27,7 +27,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.klt.R
+import com.klt.ui.navigation.Home
 
 val backgroundColor = Color.White
 
@@ -48,6 +50,7 @@ private const val REGEX_STRONG_PASSWORD =
 
 @Composable
 fun LoginScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
@@ -90,7 +93,7 @@ fun LoginScreen(
             )
 
             Button(
-                onClick = { },
+                onClick = { navController.navigate(Home.route) },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)
