@@ -82,17 +82,3 @@ object ForgotPassword : NavPath {
     override val icon = Icons.Rounded.QuestionMark
     override val route = "forgot-password"
 }
-
-val allNavPaths = listOf(
-    Login,
-    Home,
-    Clients,
-    Settings,
-    Tasks,
-    Settings,
-    CreateUser,
-    Admin,
-    User,
-    ResetPassword,
-    ForgotPassword
-)

@@ -82,7 +82,6 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-
         // CREATE USER
         composable(route = CreateUser.route) {
             CreateUserScreen(

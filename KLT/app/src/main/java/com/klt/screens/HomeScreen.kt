@@ -23,10 +23,7 @@ fun HomeScreen(
             "KLT: Home"
         )
         TextButton(modifier = Modifier.align(Alignment.Center), onClick = {
-            navController.navigate(
-                Login
-                    .route
-            )
+            navController.navigate(Login.route)
         }) {
             Text("Return to Login", fontSize = 32.sp)
         }

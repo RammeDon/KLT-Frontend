@@ -40,9 +40,7 @@ fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
-    /*TODO */
-
-    
+    /*TODO -- add screen contents here */
 }
 
 @Composable
