@@ -27,8 +27,7 @@ fun TopBar(modifier: Modifier = Modifier) {
                 .padding(start = 25.dp, top = 15.dp)
         )
         Spacer(modifier = Modifier.weight(3f))
-
-
+        
         var menuOpened by remember {
             mutableStateOf(false)
         }
@@ -47,15 +46,13 @@ fun TopBar(modifier: Modifier = Modifier) {
                 Icon(
                     painter = painterResource(R.drawable.ic_baseline_menu_open_24),
                     contentDescription = "Hamburger-menu-closed",
-                    modifier = Modifier
-                        .scale(scale)
+                    modifier = Modifier.scale(scale)
                 )
             } else {
                 Icon(
                     painter = painterResource(R.drawable.ic_baseline_menu_closed_24),
                     contentDescription = "Hamburger-menu-closed",
-                    modifier = Modifier
-                        .scale(scale)
+                    modifier = Modifier.scale(scale)
                 )
             }
         }
