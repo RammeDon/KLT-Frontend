@@ -3,55 +3,54 @@ package com.klt
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.klt.screens.LoginScreen
-import com.klt.screens.backgroundColor
+import com.klt.ui.composables.TopBar
+import com.klt.ui.navigation.AppNavHost
 import com.klt.ui.theme.KLTTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // Wrapper theme that acts as a container for the upcoming surface composable
             KLTTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    RunApp(name = "")
-
+                // This surface is the top-level Box containing the core styling of the activity
+                // ... Here, the modifier has largely been left empty.
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    RunApp()
                 }
             }
         }
     }
 }
 
+/**
+ *  Initializes the NavController and sets the NavHost on startup
+ */
 @Composable
-fun RunApp(name: String) {
-    val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Open))
-    Scaffold(scaffoldState = scaffoldState, topBar = {
-        Icon(
-            painter = painterResource(id = R.drawable.klt_icon_logo),
-            contentDescription = "KLT Logo",
-            tint = Color.Unspecified,
-            modifier = Modifier
-                .scale(2f)
-                .padding(start = 25.dp, top = 15.dp)
-        )
-    })
-    {
-        LoginScreen(
-            modifier = Modifier.background(color = backgroundColor),
-        )
-    }
+fun RunApp() {
+    val scaffoldState = rememberScaffoldState(
+        rememberDrawerState(initialValue = DrawerValue.Open)
+    )
 
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = { TopBar() },
+        content = {
+            Box(
+                modifier = Modifier
+                    .padding(it) // only applied when there is a bottomBar added.
+                    // set height of padding equal to 1/x of device screen current height
+                    .padding(top = (LocalConfiguration.current.screenHeightDp / 23).dp)
+            ) {
+                AppNavHost() // Instantiates NavHost and loads in the default route
+            }
+        })
 }
