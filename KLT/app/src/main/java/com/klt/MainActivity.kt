@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.klt.ui.composables.TopBar
-import com.klt.ui.navigation.AppNavHost
+import com.klt.ui.navigation.AnimatedAppNavHost
 import com.klt.ui.theme.KLTTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,7 +50,7 @@ fun RunApp() {
                     // set height of padding equal to 1/x of device screen current height
                     .padding(top = (LocalConfiguration.current.screenHeightDp / 23).dp)
             ) {
-                AppNavHost() // Instantiates NavHost and loads in the default route
+                AnimatedAppNavHost() // Instantiates NavHost and loads in the default route
             }
         })
 }
