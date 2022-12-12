@@ -16,18 +16,18 @@ import com.klt.R
 
 @Composable
 fun TopBar(modifier: Modifier = Modifier) {
+    val scale = 2f
     Row(modifier = modifier.then(Modifier.fillMaxWidth())) {
         Icon(
             painter = painterResource(id = R.drawable.klt_icon_logo),
             contentDescription = "KLT Logo",
             tint = Color.Unspecified,
             modifier = Modifier
-                .scale(2f)
+                .scale(scale)
                 .padding(start = 25.dp, top = 15.dp)
         )
         Spacer(modifier = Modifier.weight(3f))
-
-
+        
         var menuOpened by remember {
             mutableStateOf(false)
         }
@@ -36,19 +36,23 @@ fun TopBar(modifier: Modifier = Modifier) {
             mutableStateOf(-1)
         }
 
-        IconButton(onClick = {
-            iconDisplayed = if (menuOpened) 1 else 0
-            menuOpened = !menuOpened
-        }) {
+        IconButton(
+            onClick = {
+                menuOpened = !menuOpened
+                iconDisplayed = if (menuOpened) 1 else 0
+            }, modifier = Modifier.padding(end = 15.dp, top = 10.dp)
+        ) {
             if (iconDisplayed == 1) {
                 Icon(
                     painter = painterResource(R.drawable.ic_baseline_menu_open_24),
-                    contentDescription = "Hamburger-menu-closed"
+                    contentDescription = "Hamburger-menu-closed",
+                    modifier = Modifier.scale(scale)
                 )
             } else {
                 Icon(
                     painter = painterResource(R.drawable.ic_baseline_menu_closed_24),
-                    contentDescription = "Hamburger-menu-closed"
+                    contentDescription = "Hamburger-menu-closed",
+                    modifier = Modifier.scale(scale)
                 )
             }
         }

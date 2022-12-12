@@ -11,6 +11,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
@@ -20,11 +21,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.klt.ui.navigation.ForgotPassword
 import com.klt.ui.navigation.Home
-
-val backgroundColor = Color.White
 
 
 @Composable
@@ -33,10 +34,17 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
-    var username: String by remember {
-        mutableStateOf("")
-    }
     Box(modifier = modifier.then(Modifier.fillMaxSize()), contentAlignment = Alignment.Center) {
+        val textGenerator: @Composable (String) -> Unit = {
+            Text(
+                text = it,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 5.dp)
+            )
+        }
+
         Column(
             modifier = Modifier
                 .background(
@@ -45,20 +53,26 @@ fun LoginScreen(
                 .fillMaxWidth()
         ) {
             Spacer(Modifier.padding(vertical = 8.dp))
-            Text(text = "Username", modifier = Modifier.padding(horizontal = 160.dp))
+
+            textGenerator("Username")
+
+            var username: String by remember {
+                mutableStateOf("")
+            }
             TextField(
                 username,
                 label = { Text("Username") },
                 onValueChange = { if (it != " ") username = it },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 15.dp),
+                    .padding(horizontal = 15.dp)
+                    .padding(bottom = 10.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
 
             Spacer(Modifier.padding(vertical = 8.dp))
 
-            Text(text = "Password", modifier = Modifier.padding(horizontal = 160.dp))
+            textGenerator("Password")
 
             var pw: String by remember {
                 mutableStateOf("")
@@ -74,23 +88,21 @@ fun LoginScreen(
                 onClick = { navController.navigate(Home.route) },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 15.dp)
+                    .padding(top = 40.dp)
+                    .scale(1.2f)
             ) {
-                Text(text = "Login")
-            }
-            var state by remember {
-                mutableStateOf(false)
+                Text(text = "Login", modifier = Modifier.padding(horizontal = 22.dp))
             }
 
-            val text = "Forgot Password state: $state"
+
+            val text = "Forgot Password"
             ClickableText(
                 text = AnnotatedString(text),
-                onClick = { state = !state },
+                onClick = { navController.navigate(ForgotPassword.route) },
                 modifier = Modifier
                     .padding(vertical = 18.dp)
                     .align(Alignment.CenterHorizontally)
             )
-
         }
     }
 }
