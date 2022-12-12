@@ -20,23 +20,25 @@ package com.klt.ui.navigation
  * limitations under the License.
  */
 
+//import androidx.navigation.compose.composable
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.klt.screens.*
 
-//import com.klt.screens.LoginScreen
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
     // Calls the navigate function to control movement between views/screens in the app
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
 
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
         startDestination = Login.route,
         modifier = modifier
