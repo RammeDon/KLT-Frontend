@@ -62,8 +62,8 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
             },
             // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                when (navController.currentBackStackEntry?.destination?.route) {
-                    Login.route -> slideIntoContainer(
+                when (initialState.destination.route) {
+                    ForgotPassword.route -> slideIntoContainer(
                         AnimatedContentScope.SlideDirection.Up,
                         tween(defaultTween)
                     )
