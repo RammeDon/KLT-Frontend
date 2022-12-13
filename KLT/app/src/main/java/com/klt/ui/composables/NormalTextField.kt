@@ -1,5 +1,6 @@
 package com.klt.ui.composables
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,20 +15,22 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun NormalTextField(labelText: String, horizontalPadding: Dp = 15.dp, title: String = "") {
-    if (title != "")
-        TextFieldTitle(title)
+    Column {
+        if (title != "")
+            TextFieldTitle(title)
 
-    var stateValue: String by remember {
-        mutableStateOf("")
+        var stateValue: String by remember {
+            mutableStateOf("")
+        }
+        TextField(
+            stateValue,
+            label = { Text(labelText) },
+            onValueChange = { if (it != " ") stateValue = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp)
+                .padding(bottom = 10.dp),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
     }
-    TextField(
-        stateValue,
-        label = { Text(labelText) },
-        onValueChange = { if (it != " ") stateValue = it },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 15.dp)
-            .padding(bottom = 10.dp),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-    )
 }

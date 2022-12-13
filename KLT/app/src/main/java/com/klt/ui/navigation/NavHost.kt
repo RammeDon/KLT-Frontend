@@ -349,25 +349,25 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
             route = ResetPassword.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Right,
                     tween(defaultTween)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Right,
                     tween(defaultTween)
                 )
             }
@@ -383,22 +383,41 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
         composable(
             route = ForgotPassword.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Down,
-                    tween(defaultTween)
-                )
+                when (initialState.destination.route) {
+                    Login.route -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Down,
+                        tween(defaultTween)
+                    )
+                    else -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Down,
+                        tween(defaultTween)
+                    )
+                }
+
             },
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Down,
-                    tween(defaultTween)
-                )
+                when (initialState.destination.route) {
+                    ResetPassword.route -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(defaultTween)
+                    )
+                    else -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(defaultTween)
+                    )
+                }
             },
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Up,
-                    tween(defaultTween)
-                )
+                when (targetState.destination.route) {
+                    ResetPassword.route -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                    else -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                }
             },
             popExitTransition = {
                 slideOutOfContainer(

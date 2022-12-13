@@ -34,7 +34,7 @@ sealed interface NavPath {
 }
 
 object Login : NavPath {
-    override val route = "faqs"
+    override val route = "login"
     override val icon: ImageVector = Icons.Rounded.Login
 }
 
@@ -44,12 +44,12 @@ object Home : NavPath {
 }
 
 object Clients : NavPath {
-    override val route = "analyzer"
+    override val route = "clients"
     override val icon: ImageVector = Icons.Rounded.PeopleAlt
 }
 
 object Tasks : NavPath {
-    override val route = "analyzer"
+    override val route = "tasks"
     override val icon: ImageVector = Icons.Rounded.TaskAlt
 }
 
