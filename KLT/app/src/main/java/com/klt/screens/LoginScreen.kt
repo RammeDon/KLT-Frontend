@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.ui.composables.NormalTextField
 import com.klt.ui.composables.PasswordTextField
+import com.klt.ui.navigation.Clients
 import com.klt.ui.navigation.ForgotPassword
-import com.klt.ui.navigation.Home
 
 
 @Composable
@@ -44,7 +44,7 @@ fun LoginScreen(
              */
 
             Button(
-                onClick = { navController.navigate(Home.route) },
+                onClick = { navController.navigate(Clients.route) },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 40.dp)

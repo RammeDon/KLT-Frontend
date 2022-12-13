@@ -106,64 +106,30 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        // HOME
-        composable(
-            route = Home.route,
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
-            }
-        ) {
-            HomeScreen(
-                navController = navController,
-                OnSelfClick = { navController.navigateSingleTopTo(Home.route) }
-            )
-        }
-
         // CLIENTS
         composable(
             route = Clients.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
             },
             popEnterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Right,
                     tween(defaultTween)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Right,
                     tween(defaultTween)
                 )
             }

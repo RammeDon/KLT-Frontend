@@ -38,11 +38,6 @@ object Login : NavPath {
     override val icon: ImageVector = Icons.Rounded.Login
 }
 
-object Home : NavPath {
-    override val route = "home"
-    override val icon: ImageVector = Icons.Rounded.Home
-}
-
 object Clients : NavPath {
     override val route = "clients"
     override val icon: ImageVector = Icons.Rounded.PeopleAlt
