@@ -24,4 +24,5 @@ fun ForgotPasswordScreen(
             .fillMaxSize()
             .padding(top = (LocalConfiguration.current.screenHeightDp / 2.5).dp)
     )
+    
 }
