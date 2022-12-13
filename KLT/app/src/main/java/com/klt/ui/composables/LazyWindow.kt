@@ -14,21 +14,14 @@ import androidx.compose.ui.unit.max
 import androidx.navigation.NavController
 import com.klt.screens.KLTItem
 
-enum class Types {
-    Client,
-    Task
-}
-
 @Composable
 fun LazyWindow(
     modifier: Modifier = Modifier,
     navController: NavController,
     destination: String,
     items: List<KLTItem>,
-    type: Types
+    repeats: Int = 1
 ) {
-
-
     LazyColumn(
         modifier = Modifier
             .height(
@@ -38,11 +31,8 @@ fun LazyWindow(
                 )
             )
     ) {
-
-
         items(items = items, key = { client -> client.id }) { item ->
-
-            repeat(5) {
+            repeat(repeats) {
                 EntryCard(
                     text = item.name,
                     navController = navController,
@@ -52,7 +42,6 @@ fun LazyWindow(
                 )
                 Spacer(modifier = Modifier.height(7.dp))
             }
-
         }
     }
 }
