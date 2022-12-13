@@ -20,30 +20,86 @@ package com.klt.ui.navigation
  * limitations under the License.
  */
 
+//import androidx.navigation.compose.composable
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.klt.screens.*
 
-//import com.klt.screens.LoginScreen
-
+/**
+ * Docs: https://google.github.io/accompanist/navigation-animation/
+ */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AppNavHost(modifier: Modifier = Modifier) {
+fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
     // Calls the navigate function to control movement between views/screens in the app
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
+    val defaultTween = 650
 
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
         startDestination = Login.route,
         modifier = modifier
     ) {
 
+
         // LOGIN
-        composable(route = Login.route) {
+        composable(
+            route = Login.route,
+            // animation played ON ENTER when screen is not at top of back stack)
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
+            popEnterTransition = {
+                when (initialState.destination.route) {
+                    ForgotPassword.route -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Up,
+                        tween(defaultTween)
+                    )
+                    else -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(defaultTween)
+                    )
+                }
+            },
+            // animation played ON EXIT
+            exitTransition = {
+                when (targetState.destination.route) {
+                    ForgotPassword.route -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Down,
+                        tween(defaultTween)
+                    )
+                    else -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                }
+            },
+            // animation played ON EXIT ON BACK-KEY
+            popExitTransition = {
+                when (targetState.destination.route) {
+                    ForgotPassword.route -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Down,
+                        tween(defaultTween)
+                    )
+                    else -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                }
+            }
+        ) {
             LoginScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(Login.route) }
@@ -51,7 +107,33 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         // HOME
-        composable(route = Home.route) {
+        composable(
+            route = Home.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            }
+        ) {
             HomeScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(Home.route) }
@@ -59,7 +141,33 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         // CLIENTS
-        composable(route = Clients.route) {
+        composable(
+            route = Clients.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            }
+        ) {
             ClientScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(Clients.route) }
@@ -67,7 +175,33 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         // SETTINGS
-        composable(route = Settings.route) {
+        composable(
+            route = Settings.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            }
+        ) {
             SettingsScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(Settings.route) }
@@ -75,7 +209,33 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         // TASKS
-        composable(route = Tasks.route) {
+        composable(
+            route = Tasks.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            }
+        ) {
             TaskScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(Tasks.route) }
@@ -83,7 +243,33 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         // CREATE USER
-        composable(route = CreateUser.route) {
+        composable(
+            route = CreateUser.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            }
+        ) {
             CreateUserScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(CreateUser.route) }
@@ -91,7 +277,33 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         // ADMIN
-        composable(route = Admin.route) {
+        composable(
+            route = Admin.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            }
+        ) {
             AdminScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(Admin.route) }
@@ -99,7 +311,33 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         // USER
-        composable(route = User.route) {
+        composable(
+            route = User.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            }
+        ) {
             UserScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(User.route) }
@@ -107,7 +345,33 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         // RESET PASSWORD
-        composable(route = ResetPassword.route) {
+        composable(
+            route = ResetPassword.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            }
+        ) {
             ResetPasswordScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(ResetPassword.route) }
@@ -116,7 +380,33 @@ fun AppNavHost(modifier: Modifier = Modifier) {
 
 
         // FORGOT PASSWORD
-        composable(route = ForgotPassword.route) {
+        composable(
+            route = ForgotPassword.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Down,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Down,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Up,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Up,
+                    tween(defaultTween)
+                )
+            }
+        ) {
             ForgotPasswordScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(ForgotPassword.route) }
@@ -124,6 +414,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
     }
 }
+
 
 /**
  * Ensures that there is no duplicate entries within the NavGraph backstack on clicking a NavPath
