@@ -3,11 +3,13 @@ package com.klt.ui.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -37,22 +39,18 @@ fun EntryCard(
             .then(modifier),
         contentAlignment = Alignment.Center
     ) {
-
-
-        Row(
-
-            modifier = Modifier
-                .padding(padding),
-
-            ) {
+        Row(modifier = Modifier.padding(padding)) {
             Text(text = text)
-
             Spacer(modifier = Modifier.weight(1f))
-
             if (icon != null) Icon(imageVector = icon, contentDescription = "card-icon")
-
         }
-
+        Button(modifier = Modifier
+            .fillMaxSize()
+            .alpha(0f), onClick = {
+            navController.navigate(destination)
+        }) {
+            /* intentionally left blank */
+        }
 
     }
 
