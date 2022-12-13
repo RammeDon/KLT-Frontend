@@ -33,11 +33,15 @@ fun LoginScreen(
                 )
                 .fillMaxWidth()
         ) {
-            
+
             Spacer(Modifier.padding(vertical = 8.dp))
             NormalTextField(labelText = "Username", title = "Username")
             Spacer(Modifier.padding(vertical = 8.dp))
             PasswordTextField(title = "Password")
+
+            /*
+            TODO - LOGIC CHECK `pwContainer` against database entry for username & add logic to button
+             */
 
             Button(
                 onClick = { navController.navigate(Home.route) },
