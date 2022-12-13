@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.klt.ui.composables.TextFieldTitle
 
 @Composable
 fun ForgotPasswordScreen(
@@ -16,6 +17,8 @@ fun ForgotPasswordScreen(
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
+    TextFieldTitle("Username")
+
     // placeholder text
     Text(
         text = "Screen: ForgotPassword",
@@ -24,5 +27,5 @@ fun ForgotPasswordScreen(
             .fillMaxSize()
             .padding(top = (LocalConfiguration.current.screenHeightDp / 2.5).dp)
     )
-    
+
 }

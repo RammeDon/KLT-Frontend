@@ -6,9 +6,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
@@ -21,22 +19,27 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PasswordTextField(
-    initText: String,
+    labelText: String = "Password",
     semanticContentDescription: String = "",
     hasError: Boolean = false,
-    onTextChanged: (text: String) -> Unit,
+    title: String = ""
 ) {
     val focusManager = LocalFocusManager.current
     val showPassword = remember { mutableStateOf(false) }
+    var pwStateValue: String by remember {
+        mutableStateOf("")
+    }
+    if (title != "")
+        TextFieldTitle(title)
 
     TextField(
         modifier = Modifier
             .fillMaxWidth()
             .semantics { contentDescription = semanticContentDescription }
             .padding(horizontal = 12.dp),
-        value = initText,
-        label = { Text("Password") },
-        onValueChange = onTextChanged,
+        value = pwStateValue,
+        label = { Text(labelText) },
+        onValueChange = { if (it != " ") pwStateValue = it },
         keyboardOptions = KeyboardOptions.Default.copy(
             autoCorrect = true,
             keyboardType = KeyboardType.Text,
