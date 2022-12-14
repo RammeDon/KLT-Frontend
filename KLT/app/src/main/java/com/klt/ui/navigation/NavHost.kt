@@ -106,54 +106,26 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        // HOME
-        composable(
-            route = Home.route,
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
-            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
-            }
-        ) {
-            HomeScreen(
-                navController = navController,
-                OnSelfClick = { navController.navigateSingleTopTo(Home.route) }
-            )
-        }
-
         // CLIENTS
         composable(
             route = Clients.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
             },
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                when (initialState.destination.route) {
+                    Tasks.route -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(defaultTween)
+                    )
+                    else -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                }
             },
             exitTransition = {
                 slideOutOfContainer(
@@ -162,10 +134,16 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
                 )
             },
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                when (targetState.destination.route) {
+                    Login.route -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(defaultTween)
+                    )
+                    else -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                }
             }
         ) {
             ClientScreen(
@@ -213,7 +191,7 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
             route = Tasks.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
             },
@@ -225,13 +203,13 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Right,
                     tween(defaultTween)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Right,
                     tween(defaultTween)
                 )
             }
