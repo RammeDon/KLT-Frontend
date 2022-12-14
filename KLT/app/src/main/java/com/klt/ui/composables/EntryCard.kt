@@ -8,11 +8,14 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.ui.navigation.Login
@@ -31,13 +34,17 @@ fun EntryCard(
 
     ) {
     val padding = 15.dp
+    val cardColor = remember { mutableStateOf(color) }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 15.dp)
             .height(50.dp) // make dynamic
-            .background(color, shape = RoundedCornerShape(5.dp))
+            .background(cardColor.value, shape = RoundedCornerShape(5.dp))
+            .pointerInteropFilter {
+                when (it.action)
+            }
             .then(modifier),
         contentAlignment = Alignment.Center
     ) {
