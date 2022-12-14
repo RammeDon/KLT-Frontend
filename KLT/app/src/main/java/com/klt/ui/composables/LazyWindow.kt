@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.navigation.NavController
-import com.klt.screens.Client
+import com.klt.screens.Customer
 import com.klt.screens.KLTItem
 import com.klt.screens.Task
 
@@ -35,7 +35,7 @@ fun LazyWindow(
         items(items = items, key = { item -> item.name }) { item ->
             repeat(repeats) {
                 val bgColor: Color = when (item) {
-                    is Client -> Color.LightGray
+                    is Customer -> Color.LightGray
                     is Task -> Color(0xFFE30613) // KLT Red
                     else -> Color.Transparent
                 }

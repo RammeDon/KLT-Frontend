@@ -19,7 +19,7 @@ interface KLTItem {
     val hasIcon: Boolean
 }
 
-interface Client : KLTItem //inherits all abstract properties from KLTItem
+interface Customer : KLTItem //inherits all abstract properties from KLTItem
 interface Task : KLTItem { // inherits all abstracts properties from KLTItem + specify some new ones
     val timeTaken: Long
     val timePaused: Long
@@ -28,14 +28,14 @@ interface Task : KLTItem { // inherits all abstracts properties from KLTItem + s
 }
 
 // Client -> Client Interface -> KLT Item interface
-object Client1 : Client {
+object Customer1 : Customer {
     // only needs to override values specified in super parent (KLTItem)
     override val name = "KLT Internal Client Example"
     override val id = "BABAGOCLIENT"
     override val hasIcon = true
 }
 
-object Client2 : Client {
+object Customer2 : Customer {
     // only needs to override values specified in super parent (KLTItem)
     override val name = "Krinova Client Example"
     override val id = "BABAGOCLIENT2"
@@ -72,7 +72,7 @@ object Task2 : Task {
  */
 
 
-val listOfClients = listOf(Client1, Client2)
+val listOfClients = listOf(Customer1, Customer2)
 val listOfTasks = listOf(Task1, Task2)
 
 @Composable
@@ -87,7 +87,6 @@ fun ClientScreen(
                 .fillMaxSize()
                 .padding(10.dp),
         ) {
-
             Text(text = "Clients", fontSize = 26.sp, fontWeight = FontWeight.Bold)
             Text(text = "Click on a client to show its tasks", fontSize = 14.sp)
             Spacer(Modifier.padding(vertical = 8.dp))

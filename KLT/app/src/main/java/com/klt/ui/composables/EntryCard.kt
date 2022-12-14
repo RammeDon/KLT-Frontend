@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.klt.screens.Client
+import com.klt.screens.Customer
 import com.klt.screens.KLTItem
 import com.klt.screens.Task
 import com.klt.ui.navigation.Login
@@ -63,7 +63,7 @@ fun EntryCard(
                 IconButton(onClick = { navController.navigate(Login.route) }) {
                     Icon(
                         imageVector = when (item) {
-                            is Client -> Icons.Outlined.PushPin
+                            is Customer -> Icons.Outlined.PushPin
                             is Task -> Icons.Rounded.ArrowForward
                             else -> Icons.Default.BrokenImage // in case of error
                         }, contentDescription = "card-icon", tint = textColor
