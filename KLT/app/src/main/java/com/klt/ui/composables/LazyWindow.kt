@@ -36,11 +36,11 @@ fun LazyWindow(
             repeat(repeats) {
                 val bgColor: Color = when (item) {
                     is Client -> Color.LightGray
-                    is Task -> Color.Red // KLT Red
+                    is Task -> Color(0xFFE30613) // KLT Red
                     else -> Color.Transparent
                 }
-                val textColor: Color = when (bgColor) {
-                    Color.Red -> Color.White
+                val textColor: Color = when (item) {
+                    is Task -> Color.White
                     else -> Color.Black
                 }
                 EntryCard(
