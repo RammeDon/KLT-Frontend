@@ -116,7 +116,6 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
                 )
             },
             popEnterTransition = {
-
                 when (initialState.destination.route) {
                     Tasks.route -> slideIntoContainer(
                         AnimatedContentScope.SlideDirection.Right,
@@ -126,19 +125,13 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
                         AnimatedContentScope.SlideDirection.Left,
                         tween(defaultTween)
                     )
-
-
                 }
-
             },
             exitTransition = {
-
                 slideOutOfContainer(
                     AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
-
-
             },
             popExitTransition = {
                 when (targetState.destination.route) {
@@ -210,13 +203,13 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Right,
                     tween(defaultTween)
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Right,
                     tween(defaultTween)
                 )
             }
