@@ -116,22 +116,41 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
                 )
             },
             popEnterTransition = {
-                slideIntoContainer(
+
+                when (initialState.destination.route) {
+                    Tasks.route -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(defaultTween)
+                    )
+                    else -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+
+
+                }
+
+            },
+            exitTransition = {
+
+                slideOutOfContainer(
                     AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+
+
             },
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                when (targetState.destination.route) {
+                    Login.route -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(defaultTween)
+                    )
+                    else -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                }
             }
         ) {
             ClientScreen(
@@ -179,7 +198,7 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
             route = Tasks.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
             },
