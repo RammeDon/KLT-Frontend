@@ -60,10 +60,7 @@ fun ClientScreen(
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
-
     Box(modifier = Modifier.fillMaxSize()) {
-
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -73,9 +70,6 @@ fun ClientScreen(
                 Text(text = "Clients", fontSize = 26.sp, fontWeight = FontWeight.Bold)
                 Text(text = "Click on a client to show its tasks", fontSize = 14.sp)
                 Spacer(Modifier.padding(vertical = 8.dp))
-
-
-
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
