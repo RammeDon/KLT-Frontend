@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
@@ -20,7 +21,8 @@ fun LazyWindow(
     navController: NavController,
     destination: String,
     items: List<KLTItem>,
-    repeats: Int = 1
+    repeats: Int = 1,
+    color: Color
 ) {
     LazyColumn(
         modifier = Modifier
@@ -38,7 +40,8 @@ fun LazyWindow(
                     navController = navController,
                     destination = destination,
                     id = item.id,
-                    icon = Icons.Outlined.PushPin
+                    icon = Icons.Outlined.PushPin,
+                    color = color
                 )
                 Spacer(modifier = Modifier.height(7.dp))
             }

@@ -37,7 +37,7 @@ fun EntryCard(
             .fillMaxWidth()
             .padding(horizontal = 15.dp)
             .height(50.dp) // make dynamic
-            .background(Color.LightGray, shape = RoundedCornerShape(5.dp))
+            .background(color, shape = RoundedCornerShape(5.dp))
             .then(modifier),
         contentAlignment = Alignment.Center
     ) {
