@@ -19,9 +19,7 @@ fun TitledDivider(
     modifier: Modifier = Modifier,
     title: String,
     fontSize: TextUnit = 14.sp
-
 ) {
-
     Row(
         modifier = Modifier
             .padding(vertical = 10.dp)

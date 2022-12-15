@@ -10,13 +10,12 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.klt.ui.composables.SideDrawerContent
+import com.klt.drawers.SideDrawer
 import com.klt.ui.composables.TopBar
 import com.klt.ui.navigation.AnimatedAppNavHost
 import com.klt.ui.theme.KLTTheme
@@ -72,13 +71,12 @@ fun RunApp() {
             drawerContent = {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr)
                 {
-                    Row {
-                        Spacer(modifier = Modifier.width(56.dp)) // cover scrim area
-                        SideDrawerContent(
-                            state = state.drawerState,
-                            modifier = Modifier.scale(2f),
-                        )
-                    }
+                    val sideDrawer: SideDrawer = SideDrawer(
+                        drawerState = state.drawerState,
+                        navController = navController
+                    )
+                    sideDrawer.drawScaffold()
+
                 }
             },
             drawerGesturesEnabled = state.drawerState.isOpen,

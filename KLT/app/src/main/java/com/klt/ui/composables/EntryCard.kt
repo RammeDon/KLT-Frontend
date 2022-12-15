@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -19,21 +20,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.screens.Customer
-import com.klt.screens.KLTItem
 import com.klt.screens.Task
 import com.klt.ui.navigation.Login
+import kotlinx.coroutines.launch
 
 @Composable
 fun EntryCard(
-    item: KLTItem,
+    item: Any,
     textColor: Color,
     navController: NavController,
     destination: String,
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.LightGray,
-    hasIcon: Boolean = true
+    hasIcon: Boolean = true,
+    iconDestination: String = "",  // route
+    isInsideDrawer: Boolean = false,
+    job: () -> Unit = { }
+
 ) {
+    val coroutine = rememberCoroutineScope()
     val padding = 15.dp
+
+    val text = when (item) {
+        is Customer -> item.name
+        is Task -> item.name
+        is String -> item
+        else -> ""
+    }
 
     Box(
         modifier = Modifier
@@ -45,7 +58,7 @@ fun EntryCard(
         contentAlignment = Alignment.Center
     ) {
         Row(modifier = Modifier.padding(padding)) {
-            Text(text = item.name, color = textColor)
+            Text(text = text, color = textColor)
             Spacer(modifier = Modifier.weight(1f))
         }
         Row(
@@ -54,9 +67,11 @@ fun EntryCard(
         ) {
             Button(modifier = Modifier
                 .alpha(0f)
-                .weight(1f), onClick = {
-                navController.navigate(destination)
-            }) {
+                .weight(1f),
+                onClick = {
+                    navController.navigate(destination)
+                    if (isInsideDrawer) coroutine.launch { job() }
+                }) {
                 /* intentionally left blank */
             }
             if (hasIcon) {
