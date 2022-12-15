@@ -6,7 +6,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.KeyboardArrowDown
-import androidx.compose.material.icons.sharp.KeyboardArrowUp
+import androidx.compose.material.icons.sharp.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,19 +27,21 @@ fun CollapsableLazyWindow(
     color: Color,
     windowTitle: String,
     icon: ImageVector? = null,
+    defaultCollapsed: Boolean
 ) {
 
-    var collapsed by remember { mutableStateOf(false) }
+    var collapsed by remember { mutableStateOf(defaultCollapsed) }
 
     Column(
         modifier = Modifier
+            .then(modifier)
     ) {
         Column(modifier = Modifier) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
                     .clickable { collapsed = !collapsed }
+                    .padding(horizontal = 20.dp)
                     .height(30.dp)
 
             ) {
@@ -51,16 +53,17 @@ fun CollapsableLazyWindow(
                 )
 
                 Icon(
-                    imageVector = if (collapsed) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
+                    imageVector = if (collapsed) Icons.Sharp.KeyboardArrowRight else Icons.Sharp.KeyboardArrowDown,
                     contentDescription = "keyboard up/down icon"
                 )
             }
         }
+        Spacer(modifier = Modifier.height(10.dp))
         LazyWindow(
             navController = navController,
             destination = Login.route, // change it so that it takes the destination parameter as value
             items = items,
-            repeats = 10,
+            repeats = repeats,
             color = color,
             icon = icon,
             collapsed = collapsed,

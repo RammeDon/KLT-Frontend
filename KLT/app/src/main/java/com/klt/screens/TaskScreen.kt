@@ -45,20 +45,23 @@ fun TaskScreen(
                         navController = navController,
                         destination = Tasks.route,
                         items = listOfClients,
-                        repeats = 20,
+                        repeats = 25,
                         color = Color.LightGray,
                         icon = Icons.Outlined.ArrowForward,
-                        windowTitle = "Uncompleted Tasks"
+                        windowTitle = "Uncompleted Tasks",
+                        defaultCollapsed = false
+
                     )
                     Spacer(modifier = Modifier.height(15.dp))
                     CollapsableLazyWindow(
                         navController = navController,
                         destination = Tasks.route, // we don't yet have an ActiveTask screen
                         items = listOfTasks,
-                        repeats = 20,
+                        repeats = 15,
                         color = Color.Red,
                         icon = Icons.Outlined.Done,
-                        windowTitle = "Completed Tasks"
+                        windowTitle = "Completed Tasks",
+                        defaultCollapsed = true
                     )
                 }
             }

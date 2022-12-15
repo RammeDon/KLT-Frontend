@@ -76,25 +76,33 @@ fun ClientScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 TitledDivider(title = "Pinned Clients")
-                LazyWindow(
-                    navController = navController,
-                    destination = Tasks.route,
-                    items = listOfClients,
-                    repeats = 1,
-                    color = Color.LightGray,
-                    icon = Icons.Outlined.PushPin,
-                    modifier = Modifier.weight(1f)
-                )
+                Box(
+                    modifier = Modifier.heightIn(0.dp, 232.dp)
+                ) {
+                    LazyWindow(
+                        navController = navController,
+                        destination = Tasks.route,
+                        items = listOfClients,
+                        repeats = 8,
+                        color = Color.LightGray,
+                        icon = Icons.Outlined.PushPin
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(15.dp))
                 TitledDivider(title = "All Clients")
-                LazyWindow(
-                    navController = navController,
-                    destination = Tasks.route, // we don't yet have an ActiveTask screen
-                    items = listOfTasks,
-                    repeats = 10,
-                    color = Color.Red,
-                    modifier = Modifier.weight(1f)
-                )
+                Box(
+                    modifier = Modifier
+                ) {
+                    LazyWindow(
+                        navController = navController,
+                        destination = Tasks.route, // we don't yet have an ActiveTask screen
+                        items = listOfTasks,
+                        repeats = 10,
+                        color = Color.Red
+                    )
+                }
+
             }
         }
     }

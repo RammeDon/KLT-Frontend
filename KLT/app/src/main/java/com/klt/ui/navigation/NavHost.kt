@@ -216,7 +216,7 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
             },
             popExitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Right,
                     tween(defaultTween)
                 )
             }
