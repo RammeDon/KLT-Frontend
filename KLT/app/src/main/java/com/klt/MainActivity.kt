@@ -76,7 +76,6 @@ fun RunApp() {
                         navController = navController
                     )
                     sideDrawer.drawScaffold()
-
                 }
             },
             drawerGesturesEnabled = state.drawerState.isOpen,

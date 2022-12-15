@@ -23,9 +23,11 @@ import androidx.navigation.NavController
 import com.klt.R
 import com.klt.ui.composables.EntryCard
 import com.klt.ui.composables.TitledDivider
-import com.klt.ui.navigation.User
+import com.klt.util.SideBarAdminOptions
+import com.klt.util.SideBarUserOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 class SideDrawer(
     private val drawerState: DrawerState,
@@ -41,10 +43,7 @@ class SideDrawer(
                 .background(colorResource(id = R.color.KLT_WhiteGray1)),
             topBar = { drawHead(modifier = modifier.scale(1.75f)) },
             content = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
+                Box(modifier = Modifier.fillMaxSize()) {
                     drawBody(
                         modifier = Modifier
                             .fillMaxSize()
@@ -60,39 +59,51 @@ class SideDrawer(
     @Composable
     private fun drawHead(modifier: Modifier = Modifier) {
         val coroutine = rememberCoroutineScope()
-        Row(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(bottom = 56.dp)
-        ) {
-            Spacer(modifier = Modifier.width(56.dp)) // cover scrim area
-            /* TODO -- CODE HEAD */
+        val primaryCol = Color.Black
+        val primaryAlpha: Float = 1f
+        val bgCol = colorResource(id = R.color.KLT_WhiteGray1)
+        Column {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp)
+                    .background(colorResource(id = R.color.KLT_Red))
+            )
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 28.dp)
-                    .padding(top = 14.dp)
-                    .height(35.dp)
+                    .background(bgCol)
+                    .padding(bottom = 20.dp)
             ) {
-                Text(
-                    "Menu", modifier = modifier.then(
-                        Modifier
-                            .fillMaxHeight()
-                            .padding(top = 7.dp)
-                    ),
-                    textAlign = TextAlign.Center,
-                    color = colorResource(id = R.color.KLT_Red)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = { coroutine.launch { drawerState.close() } },
-                    modifier = Modifier.padding(top = 10.dp)
+                Spacer(modifier = Modifier.width(12.dp)) // cover scrim area
+                /* TODO -- CODE HEAD */
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 28.dp)
+                        .padding(top = 20.dp)
+                        .height(35.dp)
                 ) {
-                    Icon(
-                        Icons.Rounded.ArrowForward,
-                        contentDescription = "Close",
-                        tint = colorResource(id = R.color.KLT_Red),
-                        modifier = modifier
+                    Text(
+                        "Menu", modifier = modifier.then(
+                            Modifier
+                                .fillMaxHeight()
+                                .padding(top = 7.dp)
+                                .alpha(primaryAlpha)
+                        ),
+                        textAlign = TextAlign.Center,
+                        color = primaryCol
                     )
+                    Spacer(modifier = Modifier.weight(1f))
+                    IconButton(
+                        onClick = { coroutine.launch { drawerState.close() } },
+                        modifier = Modifier.padding(top = 10.dp)
+                    ) {
+                        Icon(
+                            Icons.Rounded.ArrowForward,
+                            contentDescription = "Close",
+                            tint = primaryCol,
+                            modifier = modifier.then(Modifier.alpha(primaryAlpha))
+                        )
+                    }
                 }
             }
         }
@@ -103,40 +114,57 @@ class SideDrawer(
     @Composable
     private fun drawBody(modifier: Modifier = Modifier) {
         val coroutine: CoroutineScope = rememberCoroutineScope()
+        val dividerCol: Color = colorResource(id = R.color.KLT_DarkGray1)
+        val dividerColAlpha = 0.5f
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            TitledDivider(title = "User Menu")
+            TitledDivider(
+                title = "User",
+                dividerCol = dividerCol,
+                dividerColAlpha = dividerColAlpha
+            )
 
-            EntryCard(
-                item = "Profile",
-                textColor = colorResource(id = R.color.KLT_DarkGray1),
-                navController = this@SideDrawer.navController,
-                destination = User.route,
-                hasIcon = false,
-                isInsideDrawer = true,
-                backgroundColor = colorResource(id = R.color.KLT_WhiteGray2),
-                job = { coroutine.launch { drawerState.close() } }
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            EntryCard(
-                item = "Profile",
-                textColor = colorResource(id = R.color.KLT_DarkGray1),
-                navController = this@SideDrawer.navController,
-                destination = User.route,
-                hasIcon = false,
-                isInsideDrawer = true,
-                job = { coroutine.launch { drawerState.close() } }
-            )
+            SideBarUserOptions.values().forEach {
+                EntryCard(
+                    item = it.title,
+                    textColor = colorResource(id = R.color.KLT_DarkGray1),
+                    navController = this@SideDrawer.navController,
+                    destination = it.route,
+                    hasIcon = it.icon != null,
+                    icon = it.icon,
+                    isInsideDrawer = true,
+                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1),
+                    job = { coroutine.launch { drawerState.close() } }
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+            }
             Spacer(modifier = Modifier.weight(1f))
-            TitledDivider(title = "Admin Menu")
+            TitledDivider(
+                title = "Admin",
+                dividerCol = dividerCol,
+                dividerColAlpha = dividerColAlpha
+            )
+            SideBarAdminOptions.values().forEach {
+                EntryCard(
+                    item = it.title,
+                    textColor = colorResource(id = R.color.KLT_DarkGray1),
+                    navController = this@SideDrawer.navController,
+                    destination = it.route,
+                    hasIcon = it.icon != null,
+                    icon = it.icon,
+                    isInsideDrawer = true,
+                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1),
+                    job = { coroutine.launch { drawerState.close() } }
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+            }
             Spacer(modifier = Modifier.weight(2f))
-
-
         }
-
     }
+
 
     @SuppressLint("ComposableNaming")
     @Composable
@@ -159,9 +187,6 @@ class SideDrawer(
                 textAlign = TextAlign.Center, fontSize = 12.sp
 
             )
-
         }
-
-
     }
 }

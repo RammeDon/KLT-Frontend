@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.screens.Customer
@@ -35,6 +36,7 @@ fun EntryCard(
     hasIcon: Boolean = true,
     iconDestination: String = "",  // route
     isInsideDrawer: Boolean = false,
+    icon: ImageVector? = null,
     job: () -> Unit = { }
 
 ) {
@@ -80,7 +82,7 @@ fun EntryCard(
                         imageVector = when (item) {
                             is Customer -> Icons.Outlined.PushPin
                             is Task -> Icons.Rounded.ArrowForward
-                            else -> Icons.Default.BrokenImage // in case of error
+                            else -> icon ?: Icons.Default.BrokenImage // in case of error
                         }, contentDescription = "card-icon", tint = textColor
                     )
                 }
