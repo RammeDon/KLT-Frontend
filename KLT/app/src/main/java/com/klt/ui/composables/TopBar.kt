@@ -27,7 +27,7 @@ fun TopBar(modifier: Modifier = Modifier) {
                 .padding(start = 25.dp, top = 15.dp)
         )
         Spacer(modifier = Modifier.weight(3f))
-        
+
         var menuOpened by remember {
             mutableStateOf(false)
         }
@@ -56,5 +56,7 @@ fun TopBar(modifier: Modifier = Modifier) {
                 )
             }
         }
+
+        
     }
 }
