@@ -19,12 +19,15 @@ import com.klt.ui.navigation.Tasks
 interface KLTItem {
     val name: String
     val id: String
+    val hasIcon: Boolean
 }
 
 interface Customer : KLTItem //inherits all abstract properties from KLTItem
 interface Task : KLTItem { // inherits all abstracts properties from KLTItem + specify some new ones
     val timeTaken: Long
     val timePaused: Long
+    override val hasIcon: Boolean // force default true
+        get() = true
 }
 
 // Client -> Client Interface -> KLT Item interface
@@ -32,6 +35,14 @@ object Customer1 : Customer {
     // only needs to override values specified in super parent (KLTItem)
     override val name = "KLT Internal Client Example"
     override val id = "BABAGOCLIENT"
+    override val hasIcon = true
+}
+
+object Customer2 : Customer {
+    // only needs to override values specified in super parent (KLTItem)
+    override val name = "Krinova Client Example"
+    override val id = "BABAGOCLIENT2"
+    override val hasIcon = false
 }
 
 // Task -> Task Interface -> KLT Item interface
@@ -39,6 +50,17 @@ object Task1 : Task {
     // needs to override values specified in super parent (KLTItem)
     override val name = "KLT Internal Task Example"
     override val id = "BABAGOTASK"
+
+    // also needs to override values specified in direct parent (Task)
+    override val timeTaken = 1L
+    override val timePaused = 2L
+}
+
+
+object Task2 : Task {
+    // needs to override values specified in super parent (KLTItem)
+    override val name = "Krinova Task Example"
+    override val id = "BABAGOTASK2"
 
     // also needs to override values specified in direct parent (Task)
     override val timeTaken = 1L
@@ -53,8 +75,8 @@ object Task1 : Task {
  */
 
 
-val listOfClients = listOf(Customer1)
-val listOfTasks = listOf(Task1)
+val listOfClients = listOf(Customer1, Customer2)
+val listOfTasks = listOf(Task1, Task2)
 
 @Composable
 fun ClientScreen(
@@ -68,7 +90,6 @@ fun ClientScreen(
                 .fillMaxSize()
                 .padding(10.dp),
         ) {
-
             Text(text = "Clients", fontSize = 26.sp, fontWeight = FontWeight.Bold)
             Text(text = "Click on a client to show its tasks", fontSize = 14.sp)
             Spacer(Modifier.padding(vertical = 8.dp))

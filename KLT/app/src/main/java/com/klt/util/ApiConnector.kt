@@ -40,6 +40,60 @@ object ApiConnector {
         onRespond(ApiResult(call.execute()))
     }
 
+    /** Api Call for creating an account */
+    fun createAccount(
+        token: String,
+        email: String,
+        firstName: String,
+        lastName: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/create"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("firstName", firstName)
+            .add("lastName", lastName)
+            .add("email", email)
+            .build()
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        val call = client.newCall(request)
+
+        onRespond(ApiResult(call.execute()))
+    }
+
+    /** Api call to change password */
+    fun changePassword(
+        token: String,
+        currentPassword: String,
+        newPassword: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/changepassword"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("newPassword", currentPassword)
+            .add("currentPassword", newPassword)
+            .build()
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        val call = client.newCall(request)
+
+        onRespond(ApiResult(call.execute()))
+    }
+
+
+    /** Retries the information about the users that the token belongs too */
     fun getUserData(token: String, onRespond: (result: ApiResult) -> Unit) {
         val urlPath = "/api/user"
         val request: Request = Request.Builder()
@@ -47,6 +101,26 @@ object ApiConnector {
             .url(Values.BACKEND_IP + urlPath)
             .build()
         val call = client.newCall(request)
+        onRespond(ApiResult(call.execute()))
+    }
+
+    
+    /** Api call to delete an user */
+    fun deleteUser(
+        token: String,
+        userId: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/deleteAccount/$userId"
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .delete()
+            .build()
+
+        val call = client.newCall(request)
+
         onRespond(ApiResult(call.execute()))
     }
 }
