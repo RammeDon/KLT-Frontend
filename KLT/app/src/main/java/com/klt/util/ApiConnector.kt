@@ -40,6 +40,7 @@ object ApiConnector {
         onRespond(ApiResult(call.execute()))
     }
 
+    /** Retries the information about the users that the token belongs too */
     fun getUserData(token: String, onRespond: (result: ApiResult) -> Unit) {
         val urlPath = "/api/user"
         val request: Request = Request.Builder()
