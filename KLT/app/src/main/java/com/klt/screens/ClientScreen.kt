@@ -2,8 +2,11 @@ package com.klt.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -94,20 +97,33 @@ fun ClientScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 TitledDivider(title = "Pinned Clients")
-                LazyWindow(
-                    navController = navController,
-                    destination = Tasks.route,
-                    items = listOfClients,
-                    repeats = 20
-                )
+                Box(
+                    modifier = Modifier.heightIn(0.dp, 232.dp)
+                ) {
+                    LazyWindow(
+                        navController = navController,
+                        destination = Tasks.route,
+                        items = listOfClients,
+                        repeats = 8,
+                        color = Color.LightGray,
+                        icon = Icons.Outlined.PushPin
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(15.dp))
                 TitledDivider(title = "All Clients")
-                LazyWindow(
-                    navController = navController,
-                    destination = Tasks.route, // we don't yet have an ActiveTask screen
-                    items = listOfTasks,
-                    repeats = 20
-                )
+                Box(
+                    modifier = Modifier
+                ) {
+                    LazyWindow(
+                        navController = navController,
+                        destination = Tasks.route, // we don't yet have an ActiveTask screen
+                        items = listOfTasks,
+                        repeats = 10,
+                        color = Color.Red
+                    )
+                }
+
             }
         }
     }
