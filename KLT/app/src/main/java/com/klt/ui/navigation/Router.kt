@@ -77,3 +77,8 @@ object ForgotPassword : NavPath {
     override val icon = Icons.Rounded.QuestionMark
     override val route = "forgot-password"
 }
+
+object ActiveTask : NavPath {
+    override val icon = Icons.Rounded.TaskAlt
+    override val route = "active-task"
+}

@@ -1,6 +1,7 @@
 package com.klt.ui.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -12,6 +13,8 @@ import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +37,7 @@ fun EntryCard(
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.LightGray,
     hasIcon: Boolean = true,
-    iconDestination: String = "",  // route
+    iconDestination: String = "",  // route for pin/unpin sep. paths
     isInsideDrawer: Boolean = false,
     icon: ImageVector? = null,
     job: () -> Unit = { }
@@ -42,6 +45,7 @@ fun EntryCard(
 ) {
     val coroutine = rememberCoroutineScope()
     val padding = 15.dp
+    val cardColor = remember { mutableStateOf(backgroundColor) }
 
     val text = when (item) {
         is Customer -> item.name
@@ -55,7 +59,8 @@ fun EntryCard(
             .fillMaxWidth()
             .padding(horizontal = 15.dp)
             .height(50.dp) // make dynamic
-            .background(backgroundColor, shape = RoundedCornerShape(5.dp))
+            .background(cardColor.value, shape = RoundedCornerShape(5.dp))
+            .clickable { } // Make box background color change
             .then(modifier),
         contentAlignment = Alignment.Center
     ) {
