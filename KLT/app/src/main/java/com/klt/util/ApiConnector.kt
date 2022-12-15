@@ -40,6 +40,33 @@ object ApiConnector {
         onRespond(ApiResult(call.execute()))
     }
 
+    /** Api Call for creating an account */
+    fun createAccount(
+        token: String,
+        email: String,
+        firstName: String,
+        lastName: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/create"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("firstName", firstName)
+            .add("lastName", lastName)
+            .add("email", email)
+            .build()
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        val call = client.newCall(request)
+
+        onRespond(ApiResult(call.execute()))
+    }
+
     /** Retries the information about the users that the token belongs too */
     fun getUserData(token: String, onRespond: (result: ApiResult) -> Unit) {
         val urlPath = "/api/user"
