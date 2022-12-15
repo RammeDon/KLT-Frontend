@@ -103,6 +103,26 @@ object ApiConnector {
         val call = client.newCall(request)
         onRespond(ApiResult(call.execute()))
     }
+
+    
+    /** Api call to delete an user */
+    fun deleteUser(
+        token: String,
+        userId: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/deleteAccount/$userId"
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .delete()
+            .build()
+
+        val call = client.newCall(request)
+
+        onRespond(ApiResult(call.execute()))
+    }
 }
 
 
