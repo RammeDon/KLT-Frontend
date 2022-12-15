@@ -2,6 +2,8 @@ package com.klt.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -78,8 +80,9 @@ fun ClientScreen(
                     navController = navController,
                     destination = Tasks.route,
                     items = listOfClients,
-                    repeats = 20,
-                    color = Color.LightGray
+                    repeats = 5,
+                    color = Color.LightGray,
+                    icon = Icons.Outlined.PushPin
                 )
                 Spacer(modifier = Modifier.height(15.dp))
                 TitledDivider(title = "All Clients")
@@ -87,7 +90,7 @@ fun ClientScreen(
                     navController = navController,
                     destination = Tasks.route, // we don't yet have an ActiveTask screen
                     items = listOfTasks,
-                    repeats = 20,
+                    repeats = 5,
                     color = Color.Red
                 )
             }

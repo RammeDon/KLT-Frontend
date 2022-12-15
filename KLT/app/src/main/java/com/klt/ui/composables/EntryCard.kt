@@ -1,6 +1,7 @@
 package com.klt.ui.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -11,15 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.ui.navigation.Login
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EntryCard(
     text: String,
@@ -42,9 +44,7 @@ fun EntryCard(
             .padding(horizontal = 15.dp)
             .height(50.dp) // make dynamic
             .background(cardColor.value, shape = RoundedCornerShape(5.dp))
-            .pointerInteropFilter {
-                when (it.action)
-            }
+            .clickable { } // Make box background color change
             .then(modifier),
         contentAlignment = Alignment.Center
     ) {
