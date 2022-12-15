@@ -409,6 +409,40 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
                 OnSelfClick = { navController.navigateSingleTopTo(ForgotPassword.route) }
             )
         }
+
+        composable(
+            route = ActiveTask.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            }
+        ) {
+
+            ActiveTaskScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(ActiveTask.route) }
+            )
+        }
     }
 }
 
