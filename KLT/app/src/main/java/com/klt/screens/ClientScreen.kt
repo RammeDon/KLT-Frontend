@@ -80,9 +80,10 @@ fun ClientScreen(
                     navController = navController,
                     destination = Tasks.route,
                     items = listOfClients,
-                    repeats = 5,
+                    repeats = 1,
                     color = Color.LightGray,
-                    icon = Icons.Outlined.PushPin
+                    icon = Icons.Outlined.PushPin,
+                    modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.height(15.dp))
                 TitledDivider(title = "All Clients")
@@ -90,8 +91,9 @@ fun ClientScreen(
                     navController = navController,
                     destination = Tasks.route, // we don't yet have an ActiveTask screen
                     items = listOfTasks,
-                    repeats = 5,
-                    color = Color.Red
+                    repeats = 10,
+                    color = Color.Red,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }

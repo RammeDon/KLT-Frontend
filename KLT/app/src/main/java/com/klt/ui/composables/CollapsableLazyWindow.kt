@@ -31,34 +31,42 @@ fun CollapsableLazyWindow(
 
     var collapsed by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .clickable { collapsed = !collapsed }
-                .height(30.dp)
-        ) {
-            Text(
-                text = windowTitle,
+    Column(
+        modifier = Modifier
+    ) {
+        Column(modifier = Modifier) {
+            Row(
                 modifier = Modifier
-                    .weight(3f),
-                fontWeight = FontWeight.Bold
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .clickable { collapsed = !collapsed }
+                    .height(30.dp)
 
-            Icon(
-                imageVector = if (collapsed) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
-                contentDescription = "keyboard up/down icon"
-            )
+            ) {
+                Text(
+                    text = windowTitle,
+                    modifier = Modifier
+                        .weight(3f),
+                    fontWeight = FontWeight.Bold
+                )
+
+                Icon(
+                    imageVector = if (collapsed) Icons.Sharp.KeyboardArrowUp else Icons.Sharp.KeyboardArrowDown,
+                    contentDescription = "keyboard up/down icon"
+                )
+            }
         }
+        LazyWindow(
+            navController = navController,
+            destination = Login.route, // change it so that it takes the destination parameter as value
+            items = items,
+            repeats = 10,
+            color = color,
+            icon = icon,
+            collapsed = collapsed,
+            modifier = Modifier.weight(1f)
+        )
     }
-    LazyWindow(
-        navController = navController,
-        destination = Login.route,
-        items = items,
-        repeats = 5,
-        color = color,
-        icon = icon,
-        collapsed = collapsed
-    )
+
+
 }
