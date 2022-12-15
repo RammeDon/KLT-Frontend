@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.ScaffoldState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -15,10 +13,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.R
-import kotlinx.coroutines.launch
 
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TopBar(modifier: Modifier = Modifier, navController: NavController, state: ScaffoldState) {
+fun TopBar(modifier: Modifier = Modifier, navController: NavController) {
     val scale = 2f
     Row(modifier = modifier.then(Modifier.fillMaxWidth())) {
         Icon(
@@ -31,7 +30,9 @@ fun TopBar(modifier: Modifier = Modifier, navController: NavController, state: S
         )
         Spacer(modifier = Modifier.weight(3f))
 
-        val coroutine = rememberCoroutineScope()
+        var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+
         var menuOpened by remember {
             mutableStateOf(false)
         }
@@ -40,12 +41,18 @@ fun TopBar(modifier: Modifier = Modifier, navController: NavController, state: S
             mutableStateOf(-1)
         }
 
+        Drawer(
+            navController = navController,
+            state = drawerState,
+            updateState = { newState -> drawerState.v=  }
+        )
+
+
+
+
+
         IconButton(
             onClick = {
-                coroutine.launch {
-                    if (state.drawerState.isClosed) state.drawerState.open()
-                    else state.drawerState.close()
-                }
                 menuOpened = !menuOpened
                 iconDisplayed = if (menuOpened) 1 else 0
             }, modifier = Modifier.padding(end = 15.dp, top = 10.dp)
