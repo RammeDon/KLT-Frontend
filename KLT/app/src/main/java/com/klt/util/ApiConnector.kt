@@ -68,7 +68,7 @@ object ApiConnector {
     }
 
     /** Api call to change password */
-    fun createAccount(
+    fun changePassword(
         token: String,
         currentPassword: String,
         newPassword: String,
