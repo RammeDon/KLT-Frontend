@@ -1,10 +1,7 @@
 package com.klt.util
 
-import android.util.Log
 import okhttp3.*
 import org.json.JSONObject
-import java.io.IOException
-import java.net.URL
 
 /** The Api Connector has all the functions for talking to the API,
  *  each function will return an onRespond Callback that has an parameter of
@@ -131,24 +128,19 @@ data class ApiResult(
     val response: Response
 ) {
     fun getData(): JSONObject { return JSONObject(response.body?.string() ?: "{}")  }
-    fun httpCode(): HttpStatus { return HttpStatus.values().find { it.code == response.code }!! }
+    fun httpCode(): HttpStatus {
+        return when (response.code) {
+            in 100..299 -> { HttpStatus.SUCCESS }
+            in 300..499 -> { HttpStatus.UNAUTHORIZED }
+            else -> { HttpStatus.FAILED }
+        }
+    }
 }
 
 
 /** Http status enum */
-enum class HttpStatus(val code: Int) {
-    OK(200),
-    CREATED(201),
-    ACCEPTED(202),
-    BAD_REQUEST(400),
-    UNAUTHORIZED(401),
-    FORBIDDEN(403),
-    NOT_FOUND(404),
-    METHOD_NOT_ALLOWED(405),
-    REQUEST_TIMEOUT(408),
-    UN_PROCESSABLE_ENTITY(422),
-    INTERNAL_SERVER_ERROR(500),
-    BAD_GATEWAY(502),
-    SERVICE_UNAVAILABLE(503),
-    GATEWAY_TIMEOUT(504)
+enum class HttpStatus {
+    SUCCESS,
+    UNAUTHORIZED,
+    FAILED,
 }
