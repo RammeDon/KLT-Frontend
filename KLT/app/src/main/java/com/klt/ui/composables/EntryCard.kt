@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.screens.Customer
 import com.klt.screens.Task
-import com.klt.ui.navigation.Login
 import kotlinx.coroutines.launch
 
 @Composable
@@ -37,11 +36,9 @@ fun EntryCard(
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.LightGray,
     hasIcon: Boolean = true,
-    iconDestination: String = "",  // route for pin/unpin sep. paths
     isInsideDrawer: Boolean = false,
     icon: ImageVector? = null,
     job: () -> Unit = { }
-
 ) {
     val coroutine = rememberCoroutineScope()
     val padding = 15.dp
@@ -77,12 +74,19 @@ fun EntryCard(
                 .weight(1f),
                 onClick = {
                     navController.navigate(destination)
+                    // TODO - add conditional logic below for job to run on show/hide pin icon for
+                    //  cards in ClientScreen
                     if (isInsideDrawer) coroutine.launch { job() }
                 }) {
                 /* intentionally left blank */
             }
             if (hasIcon) {
-                IconButton(onClick = { navController.navigate(Login.route) }) {
+                IconButton(onClick = {
+                    // TODO - add conditional logic below for job to run on show/hide pin icon for
+                    //  cards in ClientScreen
+                    if (isInsideDrawer) coroutine.launch { job() }
+                    navController.navigate(destination)
+                }) {
                     Icon(
                         imageVector = when (item) {
                             is Customer -> Icons.Outlined.PushPin
