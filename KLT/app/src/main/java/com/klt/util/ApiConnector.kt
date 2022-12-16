@@ -1,10 +1,7 @@
 package com.klt.util
 
-import android.util.Log
 import okhttp3.*
 import org.json.JSONObject
-import java.io.IOException
-import java.net.URL
 
 /** The Api Connector has all the functions for talking to the API,
  *  each function will return an onRespond Callback that has an parameter of
@@ -35,9 +32,7 @@ object ApiConnector {
             .post(formBody)
             .build()
 
-        val call = client.newCall(request)
-
-        onRespond(ApiResult(call.execute()))
+        onRespond(callAPI(request))
     }
 
     /** Api Call for creating an account */
@@ -62,9 +57,7 @@ object ApiConnector {
             .post(formBody)
             .build()
 
-        val call = client.newCall(request)
-
-        onRespond(ApiResult(call.execute()))
+        onRespond(callAPI(request))
     }
 
     /** Api call to change password */
@@ -87,9 +80,7 @@ object ApiConnector {
             .post(formBody)
             .build()
 
-        val call = client.newCall(request)
-
-        onRespond(ApiResult(call.execute()))
+        onRespond(callAPI(request))
     }
 
 
@@ -100,8 +91,8 @@ object ApiConnector {
             .header(Values.AUTH_TOKEN_NAME, token)
             .url(Values.BACKEND_IP + urlPath)
             .build()
-        val call = client.newCall(request)
-        onRespond(ApiResult(call.execute()))
+
+        onRespond(callAPI(request))
     }
 
     
@@ -119,36 +110,40 @@ object ApiConnector {
             .delete()
             .build()
 
-        val call = client.newCall(request)
+        onRespond(callAPI(request))
+    }
 
-        onRespond(ApiResult(call.execute()))
+    private fun callAPI(request: Request): ApiResult {
+        return try {
+            val apiResult = client.newCall(request).execute()
+            val jsonData = apiResult.body?.string() ?: "{}"
+            ApiResult(jsonData, apiResult.code)
+        } catch (_: java.lang.Exception) {
+            ApiResult("{msg: \"Connection timeout\"}")
+        }
     }
 }
 
 
 /** Data class for easily manipulate the respond from the api */
 data class ApiResult(
-    val response: Response
+    private val data: String = "{}",
+    private val code: Number = 500
 ) {
-    fun getData(): JSONObject { return JSONObject(response.body?.string() ?: "{}")  }
-    fun httpCode(): HttpStatus { return HttpStatus.values().find { it.code == response.code }!! }
+    fun status(): HttpStatus {
+        return when (code) {
+            in 100..299 -> { HttpStatus.SUCCESS }
+            in 300..499 -> { HttpStatus.UNAUTHORIZED }
+            else -> { HttpStatus.FAILED }
+        }
+    }
+
+    fun data(): JSONObject { return JSONObject(data) }
 }
 
-
 /** Http status enum */
-enum class HttpStatus(val code: Int) {
-    OK(200),
-    CREATED(201),
-    ACCEPTED(202),
-    BAD_REQUEST(400),
-    UNAUTHORIZED(401),
-    FORBIDDEN(403),
-    NOT_FOUND(404),
-    METHOD_NOT_ALLOWED(405),
-    REQUEST_TIMEOUT(408),
-    UN_PROCESSABLE_ENTITY(422),
-    INTERNAL_SERVER_ERROR(500),
-    BAD_GATEWAY(502),
-    SERVICE_UNAVAILABLE(503),
-    GATEWAY_TIMEOUT(504)
+enum class HttpStatus {
+    SUCCESS,
+    UNAUTHORIZED,
+    FAILED,
 }
