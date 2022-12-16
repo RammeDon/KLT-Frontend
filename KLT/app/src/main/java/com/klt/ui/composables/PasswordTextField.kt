@@ -76,14 +76,13 @@ fun PasswordTextField(
             println("container $pwContainer")
         }
     }
-    Column {
+    Column(modifier = Modifier) {
         if (title != "")
             TextFieldTitle(title)
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = semanticContentDescription }
-                .padding(horizontal = 12.dp),
+                .semantics { contentDescription = semanticContentDescription },
             value = pwStateValue,
             label = { Text(labelText) },
             onValueChange = { if (it != " ") pwStateValue = it },

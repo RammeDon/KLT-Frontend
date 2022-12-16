@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.colorResource
@@ -90,14 +91,29 @@ fun UserScreen(
                 EditableCards(
                     text = "**************",
                     icon = Icons.Filled.Lock,
-                    editOn = editState
+                    editOn = editState,
+                    editPassword = editState
                 )
+                if (editState) { // instead of textfield it should be passwordtextfield
+
+                    EditableCards(
+                        text = "**************",
+                        icon = Icons.Filled.Lock,
+                        editOn = editState,
+                        editPassword = editState
+                    )
+                }
 
             }
-            Box(modifier = Modifier) {
-                Spacer(modifier = Modifier)
-                Button(onClick = { /*TODO*/ },) {
-
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Button(onClick = { editState = !editState }) {
+                    Text(text = "Edit Profile")
                 }
             }
 

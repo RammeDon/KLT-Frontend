@@ -20,9 +20,9 @@ fun EditableCards(
     icon: ImageVector? = null,
 
     text: String,
+    editPassword: Boolean = false
 
-    ) {
-    val editState by remember { mutableStateOf(editOn) }
+) {
     var nameEdit by remember {
         mutableStateOf("")
     }
@@ -38,7 +38,7 @@ fun EditableCards(
                 .fillMaxWidth()
                 .height(50.dp)
                 .background(color = Color.LightGray, shape = RoundedCornerShape(5.dp))
-                .padding(horizontal = 15.dp),
+                .padding(start = 15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (icon != null) {
@@ -46,9 +46,13 @@ fun EditableCards(
             }
             Spacer(modifier = Modifier.width(20.dp))
 
-            if (!editState) {
+            if (!editOn) {
                 Text(text = text)
-            } else {
+            }
+            if (editOn && editPassword) {
+                PasswordTextField()
+            }
+            if (editOn && !editPassword) {
                 TextField(
                     value = nameEdit,
                     onValueChange = { nameEdit = it },
@@ -56,7 +60,11 @@ fun EditableCards(
                         Text(
                             text = text
                         )
-                    })
+                    },
+                    modifier = Modifier
+                        .background(color = Color.LightGray)
+                        .weight(1f)
+                )
             }
 
         }

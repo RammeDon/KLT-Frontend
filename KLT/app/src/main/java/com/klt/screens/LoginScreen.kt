@@ -32,6 +32,7 @@ fun LoginScreen(
                     Color(0xFFE9E9E9)
                 )
                 .fillMaxWidth()
+                .padding(15.dp)
         ) {
 
             Spacer(Modifier.padding(vertical = 8.dp))

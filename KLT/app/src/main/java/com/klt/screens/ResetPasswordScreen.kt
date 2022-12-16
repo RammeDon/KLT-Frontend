@@ -24,7 +24,9 @@ fun ResetPasswordScreen(
 
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PasswordTextField(labelText = "Token from email")
@@ -35,7 +37,7 @@ fun ResetPasswordScreen(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = 10.dp),
             onClick = {
                 if (isMatching && pwContainer != HashUtils.sha256("")) navController.navigate(Login.route)
             }
