@@ -127,8 +127,8 @@ object ApiConnector {
 
 /** Data class for easily manipulate the respond from the api */
 data class ApiResult(
-    val data: String = "{}",
-    val code: Number = 500
+    private val data: String = "{}",
+    private val code: Number = 500
 ) {
     fun status(): HttpStatus {
         return when (code) {
