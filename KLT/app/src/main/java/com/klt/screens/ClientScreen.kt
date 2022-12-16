@@ -67,14 +67,6 @@ object Task2 : Task {
     override val timePaused = 2L
 }
 
-/*
-    The most generic parent can be used as a type when passing arguments (e.g., Any)
-    This means List<KLTItem> accepts both descendants from the Client and Task interface, but
-    List<Client> only accepts objects inherited from Client, and List<Task> only accepts objects
-    inherited from Task
- */
-
-
 val listOfClients = listOf(Customer1, Customer2)
 val listOfTasks = listOf(Task1, Task2)
 

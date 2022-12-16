@@ -58,5 +58,7 @@ fun TopBar(modifier: Modifier = Modifier, navController: NavController, state: S
                 modifier = Modifier.scale(scale)
             )
         }
+
+
     }
 }
