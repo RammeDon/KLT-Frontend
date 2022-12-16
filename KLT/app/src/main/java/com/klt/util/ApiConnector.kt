@@ -32,9 +32,7 @@ object ApiConnector {
             .post(formBody)
             .build()
 
-        val call = client.newCall(request)
-
-        onRespond(ApiResult(call.execute()))
+        onRespond(callAPI(request))
     }
 
     /** Api Call for creating an account */
@@ -59,9 +57,7 @@ object ApiConnector {
             .post(formBody)
             .build()
 
-        val call = client.newCall(request)
-
-        onRespond(ApiResult(call.execute()))
+        onRespond(callAPI(request))
     }
 
     /** Api call to change password */
@@ -84,9 +80,7 @@ object ApiConnector {
             .post(formBody)
             .build()
 
-        val call = client.newCall(request)
-
-        onRespond(ApiResult(call.execute()))
+        onRespond(callAPI(request))
     }
 
 
@@ -97,8 +91,8 @@ object ApiConnector {
             .header(Values.AUTH_TOKEN_NAME, token)
             .url(Values.BACKEND_IP + urlPath)
             .build()
-        val call = client.newCall(request)
-        onRespond(ApiResult(call.execute()))
+
+        onRespond(callAPI(request))
     }
 
     
@@ -116,27 +110,36 @@ object ApiConnector {
             .delete()
             .build()
 
-        val call = client.newCall(request)
+        onRespond(callAPI(request))
+    }
 
-        onRespond(ApiResult(call.execute()))
+    private fun callAPI(request: Request): ApiResult {
+        return try {
+            val apiResult = client.newCall(request).execute()
+            val jsonData = apiResult.body?.string() ?: "{}"
+            ApiResult(jsonData, apiResult.code)
+        } catch (_: java.lang.Exception) {
+            ApiResult("{msg: Connection timeout}")
+        }
     }
 }
 
 
 /** Data class for easily manipulate the respond from the api */
 data class ApiResult(
-    val response: Response
+    val data: String = "{}",
+    val code: Number = 500
 ) {
-    fun getData(): JSONObject { return JSONObject(response.body?.string() ?: "{}")  }
-    fun httpCode(): HttpStatus {
-        return when (response.code) {
+    fun status(): HttpStatus {
+        return when (code) {
             in 100..299 -> { HttpStatus.SUCCESS }
             in 300..499 -> { HttpStatus.UNAUTHORIZED }
             else -> { HttpStatus.FAILED }
         }
     }
-}
 
+    fun data(): JSONObject { return JSONObject(data) }
+}
 
 /** Http status enum */
 enum class HttpStatus {
