@@ -291,7 +291,7 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier, navController: NavHostCont
             route = User.route,
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Down,
                     tween(defaultTween)
                 )
             },
@@ -303,7 +303,7 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier, navController: NavHostCont
             },
             exitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Up,
                     tween(defaultTween)
                 )
             },
