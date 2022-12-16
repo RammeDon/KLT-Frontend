@@ -15,31 +15,41 @@ import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.screens.Customer
-import com.klt.screens.KLTItem
 import com.klt.screens.Task
-import com.klt.ui.navigation.Login
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EntryCard(
-    item: KLTItem,
+    item: Any,
     textColor: Color,
     navController: NavController,
     destination: String,
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.LightGray,
-    hasIcon: Boolean = true
+    hasIcon: Boolean = true,
+    isInsideDrawer: Boolean = false,
+    icon: ImageVector? = null,
+    job: () -> Unit = { }
 ) {
+    val coroutine = rememberCoroutineScope()
     val padding = 15.dp
     val cardColor = remember { mutableStateOf(backgroundColor) }
+
+    val text = when (item) {
+        is Customer -> item.name
+        is Task -> item.name
+        is String -> item
+        else -> ""
+    }
 
     Box(
         modifier = Modifier
@@ -52,7 +62,7 @@ fun EntryCard(
         contentAlignment = Alignment.Center
     ) {
         Row(modifier = Modifier.padding(padding)) {
-            Text(text = item.name, color = textColor)
+            Text(text = text, color = textColor)
             Spacer(modifier = Modifier.weight(1f))
         }
         Row(
@@ -61,18 +71,27 @@ fun EntryCard(
         ) {
             Button(modifier = Modifier
                 .alpha(0f)
-                .weight(1f), onClick = {
-                navController.navigate(destination)
-            }) {
+                .weight(1f),
+                onClick = {
+                    navController.navigate(destination)
+                    // TODO - add conditional logic below for job to run on show/hide pin icon for
+                    //  cards in ClientScreen
+                    if (isInsideDrawer) coroutine.launch { job() }
+                }) {
                 /* intentionally left blank */
             }
             if (hasIcon) {
-                IconButton(onClick = { navController.navigate(Login.route) }) {
+                IconButton(onClick = {
+                    // TODO - add conditional logic below for job to run on show/hide pin icon for
+                    //  cards in ClientScreen
+                    if (isInsideDrawer) coroutine.launch { job() }
+                    navController.navigate(destination)
+                }) {
                     Icon(
                         imageVector = when (item) {
                             is Customer -> Icons.Outlined.PushPin
                             is Task -> Icons.Rounded.ArrowForward
-                            else -> Icons.Default.BrokenImage // in case of error
+                            else -> icon ?: Icons.Default.BrokenImage // in case of error
                         }, contentDescription = "card-icon", tint = textColor
                     )
                 }

@@ -35,7 +35,6 @@ fun TaskScreen(
         modifier = Modifier
             .padding(20.dp)
     ) {
-
         Scaffold(
             topBar = {
                 Row(
@@ -58,7 +57,6 @@ fun TaskScreen(
                         colors = ButtonDefaults.buttonColors(backgroundColor = completedColor)
                     ) {
                         Text(text = "Completed")
-
                     }
                     Spacer(modifier = Modifier.width(5.dp))
                     Button(
@@ -98,8 +96,6 @@ fun TaskScreen(
                         )
                     }
                 }
-
-
             }
         )
     }

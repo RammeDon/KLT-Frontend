@@ -30,7 +30,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.klt.screens.*
 
 /**
@@ -38,9 +37,8 @@ import com.klt.screens.*
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AnimatedAppNavHost(modifier: Modifier = Modifier) {
+fun AnimatedAppNavHost(modifier: Modifier = Modifier, navController: NavHostController) {
     // Calls the navigate function to control movement between views/screens in the app
-    val navController = rememberAnimatedNavController()
     val defaultTween = 650
 
     AnimatedNavHost(

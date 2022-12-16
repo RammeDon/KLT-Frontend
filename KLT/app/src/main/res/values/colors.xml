@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="KLT_Red">#FFE30613</color>
+    <color name="KLT_WhiteGray1">#FFF9F9F9</color>
+    <color name="KLT_WhiteGray2">#FFF4F4F4</color>
+    <color name="KLT_DarkGray1">#FF424242</color>
 </resources>
