@@ -119,7 +119,7 @@ object ApiConnector {
             val jsonData = apiResult.body?.string() ?: "{}"
             ApiResult(jsonData, apiResult.code)
         } catch (_: java.lang.Exception) {
-            ApiResult("{msg: Connection timeout}")
+            ApiResult("{msg: \"Connection timeout\"}")
         }
     }
 }
