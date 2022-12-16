@@ -1,9 +1,15 @@
 package com.klt.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Phone
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.colorResource
@@ -13,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.R
+import com.klt.ui.composables.EditableCards
 import com.klt.ui.composables.ScreenSubTitle
 
 /*  ------  TODO: When time for adding functionality the this kotlin file will be turned into a
@@ -25,6 +32,9 @@ fun UserScreen(
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
+
+    var editState by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -57,6 +67,39 @@ fun UserScreen(
                 color = colorResource(id = R.color.KLT_Red),
                 thickness = 2.dp
             )
+            Spacer(modifier = Modifier.height(20.dp))
+            Column(
+                modifier = Modifier,
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                EditableCards(
+                    text = "Emil Henriksen",
+                    icon = Icons.Outlined.Person,
+                    editOn = editState
+                )
+                EditableCards(
+                    text = "+46 0734587234",
+                    icon = Icons.Outlined.Phone,
+                    editOn = editState
+                )
+                EditableCards(
+                    text = "emilhentriksen@example.com",
+                    icon = Icons.Outlined.Email,
+                    editOn = editState
+                )
+                EditableCards(
+                    text = "**************",
+                    icon = Icons.Filled.Lock,
+                    editOn = editState
+                )
+
+            }
+            Box(modifier = Modifier) {
+                Spacer(modifier = Modifier)
+                Button(onClick = { /*TODO*/ },) {
+
+                }
+            }
 
         }
 
