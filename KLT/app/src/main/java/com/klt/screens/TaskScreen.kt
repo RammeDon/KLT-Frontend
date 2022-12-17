@@ -2,12 +2,15 @@ package com.klt.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.ui.composables.DualLazyWindow
+import com.klt.ui.navigation.ActiveTask
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -16,16 +19,20 @@ fun TaskScreen(
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
-    val selectedColor = Color(0XFFbf9494)
-    val unSelectedColor = Color(0xFFC5C5C5)
-    var completedTasksSelected by remember { mutableStateOf(false) }
-    var completedColor by remember { mutableStateOf(unSelectedColor) }
-    var unCompletedColor by remember { mutableStateOf(selectedColor) }
-
     Box(
         modifier = Modifier
-            .padding(20.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp)
     ) {
-        DualLazyWindow(navController = navController)
+        DualLazyWindow(
+            navController = navController,
+            leftButtonText = "Completed",
+            rightButtonText = "Uncompleted",
+            leftLazyItems = listOfTasks,
+            rightLazyItems = listOfTasks,
+            leftIcons = Icons.Outlined.Done,
+            rightIcons = Icons.Outlined.ArrowForward,
+            leftDestination = ActiveTask.route,
+            rightDestination = ActiveTask.route
+        )
     }
 }

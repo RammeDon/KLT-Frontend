@@ -1,26 +1,20 @@
 package com.klt.ui.composables
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowForward
-import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.R
-import com.klt.screens.listOfTasks
-import com.klt.ui.navigation.Login
-import com.klt.ui.navigation.Tasks
+import com.klt.screens.KLTItem
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -28,6 +22,15 @@ import com.klt.ui.navigation.Tasks
 fun DualLazyWindow(
     modifier: Modifier = Modifier,
     navController: NavController,
+    leftButtonText: String,
+    rightButtonText: String,
+    leftLazyItems: List<KLTItem>,
+    rightLazyItems: List<KLTItem>,
+    leftIcons: ImageVector? = null,
+    rightIcons: ImageVector? = null,
+    leftDestination: String,
+    rightDestination: String
+
 ) {
     val buttonSelectedColor = colorResource(id = R.color.KLT_DarkGray1)
     val buttonUnSelectedColor = Color(0xFFC5C5C5)
@@ -60,7 +63,7 @@ fun DualLazyWindow(
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = leftButtonColor)
                     ) {
-                        Text(text = "Completed")
+                        Text(text = leftButtonText)
                     }
                     Spacer(modifier = Modifier.width(5.dp))
                     Button(
@@ -75,40 +78,31 @@ fun DualLazyWindow(
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = rightButtonColor)
                     ) {
-                        Text(text = "Uncompleted")
+                        Text(text = rightButtonText)
                     }
                 }
             }, content = {
                 Box(
                     modifier = Modifier
                         .padding(top = 10.dp)
-                        .background(color = Color(0xFFE9E9E9))
                 ) {
                     if (completedTasksSelected) {
                         LazyWindow(
                             navController = navController,
-                            destination = Login.route, // change it so that it takes the destination parameter as value
-                            items = listOfTasks,
-                            repeats = 1,
+                            destination = leftDestination, // change it so that it takes the destination parameter as value
+                            items = leftLazyItems,
+                            repeats = 3,
                             color = Color(0XFFC85250),
-                            icon = Icons.Outlined.Done,
-                            modifier = Modifier.background(
-                                color = Color(0XFFAEAEAE),
-                                shape = RoundedCornerShape(5.dp)
-                            )
+                            icon = leftIcons,
                         )
                     } else {
                         LazyWindow(
                             navController = navController,
-                            destination = Tasks.route,
-                            items = listOfTasks,
+                            destination = rightDestination,
+                            items = rightLazyItems,
                             repeats = 15,
                             color = Color.LightGray,
-                            icon = Icons.Outlined.ArrowForward,
-                            modifier = Modifier.background(
-                                color = Color(0XFFAEAEAE),
-                                shape = RoundedCornerShape(5.dp)
-                            )
+                            icon = rightIcons
                         )
                     }
                 }

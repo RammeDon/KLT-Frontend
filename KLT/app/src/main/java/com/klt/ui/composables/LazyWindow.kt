@@ -2,6 +2,7 @@ package com.klt.ui.composables
 
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,7 +30,9 @@ fun LazyWindow(
     collapsed: Boolean = false,
 ) {
     LazyColumn(
-        modifier = Modifier.then(modifier)
+        modifier = Modifier
+            .fillMaxHeight()
+            .then(modifier)
     ) {
         items(items = items, key = { item -> item.name }) { item ->
             repeat(repeats) {
