@@ -14,7 +14,11 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun NormalTextField(labelText: String, horizontalPadding: Dp = 15.dp, title: String = "") {
+fun NormalTextField(
+    labelText: String, horizontalPadding: Dp = 15.dp,
+    title: String = "",
+    singleLine: Boolean = true
+) {
     Column {
         if (title != "")
             TextFieldTitle(title)
@@ -29,7 +33,8 @@ fun NormalTextField(labelText: String, horizontalPadding: Dp = 15.dp, title: Str
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            singleLine = singleLine
         )
     }
 }

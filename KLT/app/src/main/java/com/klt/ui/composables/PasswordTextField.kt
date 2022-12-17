@@ -50,7 +50,8 @@ fun PasswordTextField(
     hasError: Boolean = false,
     title: String = "",
     checkPasswordStrength: Boolean = false,
-    performMatchCheck: Boolean = false
+    performMatchCheck: Boolean = false,
+    singleLine: Boolean = true
 ) {
     val focusManager = LocalFocusManager.current
     val showPassword = remember { mutableStateOf(false) }
@@ -96,7 +97,7 @@ fun PasswordTextField(
                     focusManager.clearFocus()
                 }
             ),
-            singleLine = true,
+            singleLine = singleLine,
             isError = hasError,
             visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
         )
