@@ -136,9 +136,8 @@ class SideDrawer(
                     hasIcon = it.icon != null,
                     icon = it.icon,
                     isInsideDrawer = true,
-                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1),
-                    job = { coroutine.launch { drawerState.close() } }
-                )
+                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1)
+                ) { coroutine.launch { drawerState.close() } }
                 Spacer(modifier = Modifier.height(5.dp))
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -156,9 +155,8 @@ class SideDrawer(
                     hasIcon = it.icon != null,
                     icon = it.icon,
                     isInsideDrawer = true,
-                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1),
-                    job = { coroutine.launch { drawerState.close() } }
-                )
+                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1)
+                ) { coroutine.launch { drawerState.close() } }
                 Spacer(modifier = Modifier.height(5.dp))
             }
             Spacer(modifier = Modifier.weight(2f))

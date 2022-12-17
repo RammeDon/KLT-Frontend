@@ -26,13 +26,14 @@ fun LazyWindow(
     repeats: Int = 1,
     color: Color,
     icon: ImageVector? = null,
-    collapsed: Boolean = false
+    collapsed: Boolean = false,
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier = Modifier.then(modifier)
     ) {
         items(items = items, key = { item -> item.name }) { item ->
             repeat(repeats) {
+                Spacer(modifier = Modifier.height(7.dp))
                 val bgColor: Color = when (item) {
                     is Customer -> Color.LightGray
                     is Task -> colorResource(id = R.color.KLT_Red) // KLT Red
@@ -50,7 +51,7 @@ fun LazyWindow(
                     hasIcon = item.hasIcon,
                     backgroundColor = bgColor
                 )
-                Spacer(modifier = Modifier.height(7.dp))
+
             }
         }
     }
