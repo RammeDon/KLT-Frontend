@@ -121,6 +121,7 @@ class SideDrawer(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
+            Spacer(modifier = Modifier.weight(0.25f))
             TitledDivider(
                 title = "User",
                 dividerCol = dividerCol,
@@ -171,7 +172,7 @@ class SideDrawer(
             modifier = Modifier
                 .background(colorResource(id = R.color.KLT_DarkGray1))
                 .height(
-                    LocalConfiguration.current.screenHeightDp.dp / 6
+                    LocalConfiguration.current.screenHeightDp.dp / 20
                 )
         ) {
             Spacer(Modifier.weight(1f))
@@ -180,11 +181,11 @@ class SideDrawer(
                     id = R.color.KLT_WhiteGray1
                 ), modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 20.dp)
                     .alpha(0.5f),
                 textAlign = TextAlign.Center, fontSize = 12.sp
 
             )
+            Spacer(Modifier.weight(1f))
         }
     }
 }
