@@ -28,7 +28,6 @@ fun NormalTextField(labelText: String, horizontalPadding: Dp = 15.dp, title: Str
             onValueChange = { if (it != " ") stateValue = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp)
                 .padding(bottom = 10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
