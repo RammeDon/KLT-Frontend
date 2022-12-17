@@ -43,9 +43,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RunApp() {
     val navController = rememberAnimatedNavController()
-    val state = rememberScaffoldState(
-        rememberDrawerState(initialValue = DrawerValue.Closed)
-    )
+    val state = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
@@ -79,8 +77,6 @@ fun RunApp() {
                 }
             },
             drawerGesturesEnabled = state.drawerState.isOpen,
-            bottomBar = { }
-
         )
     }
 }
