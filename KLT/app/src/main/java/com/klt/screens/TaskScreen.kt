@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.klt.ui.composables.BottomDrawer
+import com.klt.drawers.BottomDrawer
 import com.klt.ui.composables.DualLazyWindow
 import com.klt.ui.navigation.ActiveTask
 
@@ -29,13 +29,13 @@ fun TaskScreen(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         //sheetBackgroundColor = colorResource(R.color.KLT_DarkGray1),
-        sheetPeekHeight = 40.dp,
+        sheetPeekHeight = 30.dp,
         sheetContent = {
             BottomDrawer()
         }) {
         Box(
             modifier = Modifier
-                .padding(25.dp)
+                .padding(20.dp)
         ) {
             Column(modifier = Modifier) {
                 Text(text = "Tasks", fontSize = 26.sp, fontWeight = FontWeight.Bold)
