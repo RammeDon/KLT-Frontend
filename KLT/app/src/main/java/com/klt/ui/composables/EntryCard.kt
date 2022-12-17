@@ -1,13 +1,9 @@
 package com.klt.ui.composables
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.outlined.PushPin
@@ -16,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.screens.Customer
 import com.klt.screens.Task
@@ -41,7 +37,6 @@ fun EntryCard(
     job: () -> Unit = { }
 ) {
     val coroutine = rememberCoroutineScope()
-    val padding = 15.dp
     val cardColor = remember { mutableStateOf(backgroundColor) }
 
     val text = when (item) {
@@ -50,35 +45,35 @@ fun EntryCard(
         is String -> item
         else -> ""
     }
-    Box(
+
+    Button(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(horizontal = 15.dp)
-            .height(50.dp) // make dynamic
-            .background(cardColor.value, shape = RoundedCornerShape(5.dp))
-            .clickable { } // Make box background color change
-            .then(modifier),
-        contentAlignment = Alignment.Center
+            .height(50.dp),
+        onClick = {
+            if (isInsideDrawer) coroutine.launch { job() }
+            navController.navigate(destination)
+        },
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = cardColor.value
+        ),
+        shape = RoundedCornerShape(5.dp),
+        elevation = null
     ) {
-        Row(modifier = Modifier.padding(padding)) {
-            Text(text = text, color = textColor)
-            Spacer(modifier = Modifier.weight(1f))
-        }
         Row(
             modifier = Modifier
                 .fillMaxSize()
+                .then(modifier)
+                .background(Color.Transparent)
         ) {
-            Button(modifier = Modifier
-                .alpha(0f)
-                .weight(1f),
-                onClick = {
-                    navController.navigate(destination)
-                    // TODO - add conditional logic below for job to run on show/hide pin icon for
-                    //  cards in ClientScreen
-                    if (isInsideDrawer) coroutine.launch { job() }
-                }) {
-                /* intentionally left blank */
+            Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+                Text(
+                    text = text, color = textColor,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp
+                )
             }
+            Spacer(modifier = Modifier.weight(1f))
             if (hasIcon) {
                 IconButton(onClick = {
                     // TODO - add conditional logic below for job to run on show/hide pin icon for
