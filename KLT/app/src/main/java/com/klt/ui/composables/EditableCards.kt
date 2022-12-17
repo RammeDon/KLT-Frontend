@@ -19,8 +19,7 @@ fun EditableCards(
     editOn: Boolean = false,
     icon: ImageVector? = null,
 
-    text: String,
-    editPassword: Boolean = false
+    text: String
 
 ) {
     var nameEdit by remember {
@@ -48,11 +47,7 @@ fun EditableCards(
 
             if (!editOn) {
                 Text(text = text)
-            }
-            if (editOn && editPassword) {
-                PasswordTextField()
-            }
-            if (editOn && !editPassword) {
+            } else {
                 TextField(
                     value = nameEdit,
                     onValueChange = { nameEdit = it },
@@ -66,7 +61,6 @@ fun EditableCards(
                         .weight(1f)
                 )
             }
-
         }
     }
 

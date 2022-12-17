@@ -116,7 +116,7 @@ fun PasswordTextField(
                 color = Color.Red,
                 modifier = Modifier
                     .alpha(if (isMatch || pwStateValue == "") 0f else 100f)
-                    .padding(start = 12.dp, top = 10.dp)
+                    .padding(top = 3.dp)
             )
         }
     }
@@ -138,7 +138,7 @@ private fun CheckPasswordStrength(
         }
         Text(
             modifier = Modifier
-                .padding(start = 12.dp, top = 10.dp)
+                .padding(top = 3.dp)
                 .semantics {
                     contentDescription = "StrengthPasswordMessage"
                 }
