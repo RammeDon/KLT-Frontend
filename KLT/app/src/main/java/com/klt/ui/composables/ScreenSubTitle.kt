@@ -1,6 +1,5 @@
 package com.klt.ui.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -19,10 +18,10 @@ import androidx.navigation.NavController
 
 @Composable
 fun ScreenSubTitle(
-        navController: NavController,
-        onBackNavigation: String,
-        bigText: String,
-        smallText: String
+    navController: NavController,
+    onBackNavigation: String,
+    bigText: String,
+    smallText: String
 ) {
     Column(
         modifier = Modifier
@@ -30,7 +29,9 @@ fun ScreenSubTitle(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.height(50.dp).padding(top = 20.dp)
+            modifier = Modifier
+                .height(50.dp)
+                .padding(top = 20.dp)
 
         ) {
             IconButton(onClick = { navController.navigate(onBackNavigation) }) {
@@ -40,15 +41,12 @@ fun ScreenSubTitle(
                     tint = Color.Black
                 )
             }
-
             Text(
                 text = bigText,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
         }
-
-
         Text(
             text = smallText,
             color = Color.LightGray,

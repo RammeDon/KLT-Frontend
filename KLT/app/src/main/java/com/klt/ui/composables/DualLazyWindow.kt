@@ -10,10 +10,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.klt.R
 import com.klt.screens.KLTItem
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -32,9 +30,9 @@ fun DualLazyWindow(
     rightDestination: String
 
 ) {
-    val buttonSelectedColor = colorResource(id = R.color.KLT_DarkGray1)
+    val buttonSelectedColor = Color(0XFF746C70)
     val buttonUnSelectedColor = Color(0xFFC5C5C5)
-    var completedTasksSelected by remember { mutableStateOf(false) }
+    var leftButtonSelected by remember { mutableStateOf(false) }
     var leftButtonColor by remember { mutableStateOf(buttonUnSelectedColor) }
     var rightButtonColor by remember { mutableStateOf(buttonSelectedColor) }
 
@@ -50,20 +48,21 @@ fun DualLazyWindow(
                         .height(50.dp)
                         .padding(horizontal = 10.dp)
                 ) {
-
                     Button(
                         modifier = Modifier
                             .fillMaxSize()
                             .weight(1f),
                         onClick = {
-                            completedTasksSelected = true
+                            leftButtonSelected = true
                             leftButtonColor = buttonSelectedColor
                             rightButtonColor = buttonUnSelectedColor
-
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = leftButtonColor)
                     ) {
-                        Text(text = leftButtonText)
+                        Text(
+                            text = leftButtonText,
+                            color = if (leftButtonSelected) Color.White else Color.Black
+                        )
                     }
                     Spacer(modifier = Modifier.width(5.dp))
                     Button(
@@ -71,14 +70,16 @@ fun DualLazyWindow(
                             .fillMaxSize()
                             .weight(1f),
                         onClick = {
-                            completedTasksSelected = false
+                            leftButtonSelected = false
                             rightButtonColor = buttonSelectedColor
                             leftButtonColor = buttonUnSelectedColor
-
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = rightButtonColor)
                     ) {
-                        Text(text = rightButtonText)
+                        Text(
+                            text = rightButtonText,
+                            color = if (!leftButtonSelected) Color.White else Color.Black
+                        )
                     }
                 }
             }, content = {
@@ -86,7 +87,7 @@ fun DualLazyWindow(
                     modifier = Modifier
                         .padding(top = 10.dp)
                 ) {
-                    if (completedTasksSelected) {
+                    if (leftButtonSelected) {
                         LazyWindow(
                             navController = navController,
                             destination = leftDestination, // change it so that it takes the destination parameter as value

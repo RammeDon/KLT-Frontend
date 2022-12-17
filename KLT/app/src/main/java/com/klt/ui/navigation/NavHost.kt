@@ -200,10 +200,16 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier, navController: NavHostCont
                 )
             },
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                when (targetState.destination.route) {
+                    ActiveTask.route -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                    else -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                }
             },
             popExitTransition = {
                 slideOutOfContainer(
