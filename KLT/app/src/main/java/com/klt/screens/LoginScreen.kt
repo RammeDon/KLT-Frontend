@@ -33,11 +33,11 @@ fun LoginScreen(
             modifier = Modifier
                 .padding(horizontal = initialHorizontalPadding)
                 .padding(bottom = 56.dp) // push up to make up for TopBar
-                .shadow(10.dp, shape = RoundedCornerShape(30.dp))
+                .shadow(10.dp, shape = RoundedCornerShape(10.dp))
         ) {
             Column(
                 modifier = Modifier
-                    .background(Color(0xFFE9E9E9), shape = RoundedCornerShape(15.dp))
+                    .background(Color(0xFFE9E9E9), shape = RoundedCornerShape(5.dp))
                     .fillMaxWidth()
                     .padding(vertical = 20.dp)
                     .padding(horizontal = initialHorizontalPadding * 2)
