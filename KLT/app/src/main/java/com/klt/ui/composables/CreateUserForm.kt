@@ -1,7 +1,5 @@
 package com.klt.ui.composables
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,25 +8,21 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.MutableLiveData
 import com.klt.util.ApiConnector
 import com.klt.util.ApiResult
 import com.klt.util.HttpStatus
-import com.klt.util.TimeManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @Composable
-fun CreateUserForm() {
-    Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .fillMaxSize()
+fun CreateUserForm(modifier: Modifier = Modifier) {
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize()
+            .then(modifier)
     ) {
 
 
@@ -46,12 +40,12 @@ fun CreateUserForm() {
         }
 
 
-        val onCreateAccount: (ApiResult) -> Unit ={
+        val onCreateAccount: (ApiResult) -> Unit = {
 
             val data: JSONObject = it.data()
             val msg: String = data.get("msg") as String
 
-            when (it.status()){
+            when (it.status()) {
                 HttpStatus.SUCCESS -> updateAlert(msg, FormAlertMsgState.GOOD)
                 HttpStatus.UNAUTHORIZED -> updateAlert(msg, FormAlertMsgState.BAD)
                 HttpStatus.FAILED -> updateAlert(msg, FormAlertMsgState.BAD)
@@ -60,12 +54,17 @@ fun CreateUserForm() {
 
 
         // Date container
-        Column(modifier = Modifier
-            .fillMaxSize()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
 
-            Box(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp)) {
-                FormAlertMsg(msg = alertMsg, state = alertState )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 5.dp)
+            ) {
+                FormAlertMsg(msg = alertMsg, state = alertState)
             }
 
             TextField(
@@ -97,7 +96,7 @@ fun CreateUserForm() {
                     .fillMaxWidth()
                     .padding(vertical = 5.dp)
             )
-            
+
             Button(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
@@ -116,11 +115,13 @@ fun CreateUserForm() {
                         vertical = 20.dp,
                         horizontal = 50.dp
                     )
-            ) { Text(
-                text = "Create Account",
-                modifier = Modifier
-                    .padding(vertical = 10.dp)
-            )}
+            ) {
+                Text(
+                    text = "Create Account",
+                    modifier = Modifier
+                        .padding(vertical = 10.dp)
+                )
+            }
         }
     }
 }

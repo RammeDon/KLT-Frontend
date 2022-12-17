@@ -1,11 +1,13 @@
 package com.klt.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.klt.ui.composables.CreateUserForm
 
 @Composable
 fun CreateUserScreen(
@@ -20,14 +22,6 @@ fun CreateUserScreen(
     ) {
         /*TODO */
         // template column
-        Column(modifier = Modifier.fillMaxSize()) {
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Screen: ${navController.currentBackStackEntry?.destination?.route}",
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
+        CreateUserForm(modifier = Modifier.padding(horizontal = 35.dp))
     }
 }
