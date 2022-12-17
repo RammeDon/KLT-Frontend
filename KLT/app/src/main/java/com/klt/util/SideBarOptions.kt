@@ -3,9 +3,7 @@ package com.klt.util
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.klt.ui.navigation.Login
-import com.klt.ui.navigation.Settings
-import com.klt.ui.navigation.User
+import com.klt.ui.navigation.*
 
 enum class SideBarUserOptions(val title: String, val icon: ImageVector?, val route: String) {
     PROFILE("Profile", Icons.Rounded.Person, User.route),
@@ -15,8 +13,8 @@ enum class SideBarUserOptions(val title: String, val icon: ImageVector?, val rou
 
 
 enum class SideBarAdminOptions(val title: String, val icon: ImageVector?, val route: String) {
-    USER_CONTROL("User control", Icons.Rounded.AdminPanelSettings, route = Login.route),
-    CLIENT_CONTROL("Client control", Icons.Rounded.AddBusiness, route = Login.route),
-    TASK_TEMPLATES("Task templates", Icons.Rounded.Description, route = Login.route),
+    USER_CONTROL("User control", Icons.Rounded.AdminPanelSettings, route = CreateUser.route),
+    CLIENT_CONTROL("Client control", Icons.Rounded.AddBusiness, route = Clients.route),
+    TASK_TEMPLATES("Task templates", Icons.Rounded.Description, route = Tasks.route),
     PERFORMANCE("Performance", Icons.Rounded.Analytics, route = Login.route)
 }
