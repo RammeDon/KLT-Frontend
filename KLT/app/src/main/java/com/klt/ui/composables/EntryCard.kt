@@ -50,7 +50,6 @@ fun EntryCard(
         is String -> item
         else -> ""
     }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()

@@ -124,7 +124,6 @@ fun UserScreen(
                             )
                         }
                     }
-                    Spacer(modifier = Modifier.height(5.dp))
                     Box(modifier = Modifier.padding(horizontal = 30.dp)) {
                         Row(
                             modifier = Modifier
