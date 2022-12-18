@@ -18,3 +18,10 @@ enum class SideBarAdminOptions(val title: String, val icon: ImageVector?, val ro
     TASK_TEMPLATES("Task templates", Icons.Rounded.Description, route = Tasks.route),
     PERFORMANCE("Performance", Icons.Rounded.Analytics, route = Login.route)
 }
+
+enum class Measurements(val M: String) {
+    ST("ST"),
+    KG("KG"),
+    Gr("Gr"),
+    L("L")
+}
