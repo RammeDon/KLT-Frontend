@@ -24,8 +24,10 @@ fun TaskScreen(
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
+    val something: Any
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
+    val scope = rememberCoroutineScope()
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         //sheetBackgroundColor = colorResource(R.color.KLT_DarkGray1),

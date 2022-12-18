@@ -13,6 +13,8 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.AnnotatedString
@@ -22,15 +24,18 @@ import com.klt.R
 import com.klt.util.Measurements
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomDrawer(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val height = LocalConfiguration.current.screenHeightDp / 1.6
     val textFieldWidth = LocalConfiguration.current.screenWidthDp / 1.65
     val taskListHeight = LocalConfiguration.current.screenWidthDp / 1.4
     var taskNumber by remember { mutableStateOf(1) }
     var taskName by remember { mutableStateOf("") }
+    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
 
 
     Box(
@@ -75,21 +80,32 @@ fun BottomDrawer(
                 modifier = Modifier
                     .height(50.dp)
                     .width(textFieldWidth.dp),
-                placeholder = { Text(text = "Task Name...") }
+                placeholder = {
+                    Text(
+                        text = "Task Name...",
+                        color = colorResource(id = R.color.KLT_DarkGray1)
+                    )
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
+                    unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
+                )
             )
             Spacer(modifier = Modifier.height(10.dp))
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                modifier = Modifier.heightIn(0.dp, taskListHeight.dp),
+                modifier = Modifier.height(taskListHeight.dp),
                 content = {
                     for (i in 1..taskNumber) {
                         item {
                             CreateTaskGoal(
                                 Modifier,
-                                taskNumber,
-                                textFieldWidth
-                            ) // task number should enumerate for each
+                                i,
+                                textFieldWidth,
+                                taskNumberUpdater = { newTaskNumber -> taskNumber = newTaskNumber },
+                                totalTasks = taskNumber
+                            )
                         }
                     }
                     item {
@@ -99,27 +115,40 @@ fun BottomDrawer(
                         ) {
                             ClickableText(
                                 text = AnnotatedString("Add New Goal"),
-                                onClick = { taskNumber++ }
+                                onClick = { taskNumber++ },
+                                modifier = Modifier.alpha(0.6f)
                             )
                         }
 
                     }
                 })
             Spacer(modifier = Modifier.height(10.dp))
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "Create New Task")
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(
+                    onClick = { /*TODO*/ },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),
+                ) {
+                    Text(text = "Create New Task", color = Color.White)
 
+                }
             }
+
 
         }
     }
 }
 
+
 @Composable
 fun CreateTaskGoal(
     modifier: Modifier = Modifier,
     taskNumber: Int,
-    textFieldWidth: Double
+    textFieldWidth: Double,
+    taskNumberUpdater: (Int) -> Unit,
+    totalTasks: Int
 ) {
     var taskDescription by remember { mutableStateOf("") }
     val textFieldWidth = LocalConfiguration.current.screenWidthDp / 1.65
@@ -134,14 +163,23 @@ fun CreateTaskGoal(
             OutlinedTextField(
                 value = taskDescription,
                 onValueChange = { taskDescription = it },
-                label = { Text(text = "Task $taskNumber") },
-                modifier = Modifier.width(textFieldWidth.dp)
+                label = {
+                    Text(
+                        text = "Task $taskNumber",
+                        color = colorResource(id = R.color.KLT_DarkGray1)
+                    )
+                },
+                modifier = Modifier.width(textFieldWidth.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
+                    unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
+                )
             )
             Spacer(modifier = Modifier.width(5.dp))
             DropDownMenu()
             Spacer(modifier = Modifier.width(10.dp))
             IconButton(
-                onClick = { },
+                onClick = { taskNumberUpdater(totalTasks - 1) },
                 modifier = Modifier
                     .width(40.dp)
                     .padding(top = 10.dp)
@@ -181,7 +219,10 @@ fun DropDownMenu(
                     expanded = expanded
                 )
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
+                unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
+            )
         )
 
         ExposedDropdownMenu(
