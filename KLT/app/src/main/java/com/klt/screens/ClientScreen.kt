@@ -16,6 +16,12 @@ import androidx.navigation.NavController
 import com.klt.ui.composables.DualLazyWindow
 import com.klt.ui.navigation.Tasks
 
+object CustomerSelected {
+    var name = ""
+    var id = ""
+    var hasIcon = false
+}
+
 
 interface KLTItem {
     val name: String
@@ -32,14 +38,14 @@ interface Task : KLTItem { // inherits all abstracts properties from KLTItem + s
 }
 
 // Client -> Client Interface -> KLT Item interface
-object Customer1 : Customer {
+private object Customer1 : Customer {
     // only needs to override values specified in super parent (KLTItem)
     override val name = "KLT Internal Client Example"
     override val id = "BABAGOCLIENT"
     override val hasIcon = true
 }
 
-object Customer2 : Customer {
+private object Customer2 : Customer {
     // only needs to override values specified in super parent (KLTItem)
     override val name = "Krinova Client Example"
     override val id = "BABAGOCLIENT2"
@@ -47,7 +53,7 @@ object Customer2 : Customer {
 }
 
 // Task -> Task Interface -> KLT Item interface
-object Task1 : Task {
+private object Task1 : Task {
     // needs to override values specified in super parent (KLTItem)
     override val name = "KLT Internal Task Example"
     override val id = "BABAGOTASK"
@@ -58,7 +64,7 @@ object Task1 : Task {
 }
 
 
-object Task2 : Task {
+private object Task2 : Task {
     // needs to override values specified in super parent (KLTItem)
     override val name = "Krinova Task Example"
     override val id = "BABAGOTASK2"

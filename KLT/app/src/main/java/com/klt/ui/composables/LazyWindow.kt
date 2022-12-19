@@ -30,9 +30,10 @@ fun LazyWindow(
     collapsed: Boolean = false,
 ) {
     LazyColumn(
+        // TODO -- ADD VERTICAL ARRANGEMENT AND TAKE OUT REPEATS
         modifier = Modifier
             .fillMaxHeight()
-            .then(modifier)
+            .then(modifier),
     ) {
         items(items = items, key = { item -> item.name }) { item ->
             repeat(repeats) {
@@ -54,7 +55,6 @@ fun LazyWindow(
                     hasIcon = item.hasIcon,
                     backgroundColor = bgColor
                 )
-
             }
         }
     }

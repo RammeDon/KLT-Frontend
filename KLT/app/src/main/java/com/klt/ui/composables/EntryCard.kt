@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.screens.Customer
+import com.klt.screens.CustomerSelected
 import com.klt.screens.Task
 import kotlinx.coroutines.launch
 
@@ -52,6 +53,11 @@ fun EntryCard(
             .height(50.dp),
         onClick = {
             if (isInsideDrawer) coroutine.launch { job() }
+            if (item is Customer) {
+                CustomerSelected.name = item.name
+                CustomerSelected.id = item.id
+                CustomerSelected.hasIcon = item.hasIcon
+            }
             navController.navigate(destination)
         },
         colors = ButtonDefaults.buttonColors(
