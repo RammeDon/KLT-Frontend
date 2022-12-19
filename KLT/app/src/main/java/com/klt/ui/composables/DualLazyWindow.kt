@@ -2,21 +2,25 @@ package com.klt.ui.composables
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.klt.R
 import com.klt.screens.KLTItem
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-
 fun DualLazyWindow(
     modifier: Modifier = Modifier,
     navController: NavController,
@@ -30,28 +34,39 @@ fun DualLazyWindow(
     rightDestination: String
 
 ) {
-    val buttonSelectedColor = Color(0XFF746C70)
-    val buttonUnSelectedColor = Color(0xFFC5C5C5)
+    val buttonSelectedColor = Color.LightGray
+    val buttonUnSelectedColor = colorResource(id = R.color.KLT_WhiteGray2)
     var leftButtonSelected by remember { mutableStateOf(false) }
     var leftButtonColor by remember { mutableStateOf(buttonUnSelectedColor) }
     var rightButtonColor by remember { mutableStateOf(buttonSelectedColor) }
 
     Box(
         modifier = Modifier
-            .padding(20.dp)
+            .padding(bottom = 20.dp)
+            .then(modifier)
     ) {
         Scaffold(
             topBar = {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
+                        .height(55.dp)
                         .padding(horizontal = 10.dp)
                 ) {
                     Button(
+                        shape = RectangleShape,
                         modifier = Modifier
                             .fillMaxSize()
-                            .weight(1f),
+                            .weight(1f)
+                            .alpha(if (leftButtonSelected) 1f else 0.7f)
+                            .clip(
+                                RoundedCornerShape(
+                                    topStart = 10.dp,
+                                    topEnd = 0.dp,
+                                    bottomStart = 10.dp,
+                                    bottomEnd = 0.dp,
+                                )
+                            ),
                         onClick = {
                             leftButtonSelected = true
                             leftButtonColor = buttonSelectedColor
@@ -59,16 +74,39 @@ fun DualLazyWindow(
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = leftButtonColor)
                     ) {
-                        Text(
-                            text = leftButtonText,
-                            color = if (leftButtonSelected) Color.White else Color.Black
-                        )
+                        Column {
+                            Text(
+                                text = leftButtonText,
+                                color = if (leftButtonSelected) Color.Black else Color.Black,
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                text = "Int",
+                                color = Color.Black,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .alpha(0.5f)
+                                    .scale(0.75f),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
-                    Spacer(modifier = Modifier.width(5.dp))
                     Button(
+                        shape = RectangleShape,
                         modifier = Modifier
                             .fillMaxSize()
-                            .weight(1f),
+                            .weight(1f)
+                            .alpha(if (!leftButtonSelected) 1f else 0.7f)
+                            .clip(
+                                RoundedCornerShape(
+                                    topStart = 0.dp,
+                                    topEnd = 10.dp,
+                                    bottomStart = 0.dp,
+                                    bottomEnd = 10.dp,
+                                )
+                            ),
                         onClick = {
                             leftButtonSelected = false
                             rightButtonColor = buttonSelectedColor
@@ -76,17 +114,28 @@ fun DualLazyWindow(
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = rightButtonColor)
                     ) {
-                        Text(
-                            text = rightButtonText,
-                            color = if (!leftButtonSelected) Color.White else Color.Black
-                        )
+                        Column {
+                            Text(
+                                text = rightButtonText,
+                                color = Color.Black,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                text = "Int",
+                                color = Color.Black,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .alpha(0.5f)
+                                    .scale(0.75f),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
+//
             }, content = {
-                Box(
-                    modifier = Modifier
-                        .padding(top = 10.dp)
-                ) {
+                Box(modifier = Modifier.padding(top = 15.dp)) {
                     if (leftButtonSelected) {
                         LazyWindow(
                             navController = navController,

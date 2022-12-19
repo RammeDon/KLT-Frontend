@@ -21,22 +21,20 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.klt.R
+import com.klt.screens.CustomerSelected
 import com.klt.util.Measurements
-
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomDrawer(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    sheetState: BottomSheetState
 ) {
     val height = LocalConfiguration.current.screenHeightDp / 1.6
     val textFieldWidth = LocalConfiguration.current.screenWidthDp / 1.65
     val taskListHeight = LocalConfiguration.current.screenWidthDp / 1.4
     var taskNumber by remember { mutableStateOf(1) }
     var taskName by remember { mutableStateOf("") }
-    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
-    val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
-
 
     Box(
         modifier = Modifier
@@ -62,12 +60,9 @@ fun BottomDrawer(
                         color = colorResource(R.color.KLT_DarkGray2)
                     )
             )
-            Spacer(
-                modifier = Modifier
-                    .height(30.dp)
-            )
+            Spacer(modifier = Modifier.height(30.dp))
             Text(
-                text = "Create new task for -current client-",
+                text = "Create new task for ${CustomerSelected.name}",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -132,11 +127,8 @@ fun BottomDrawer(
                     colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),
                 ) {
                     Text(text = "Create New Task", color = Color.White)
-
                 }
             }
-
-
         }
     }
 }
@@ -197,10 +189,7 @@ fun CreateTaskGoal(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropDownMenu(
-    modifier: Modifier = Modifier,
-
-    ) {
+fun DropDownMenu(modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf(Measurements.KG) }
 
