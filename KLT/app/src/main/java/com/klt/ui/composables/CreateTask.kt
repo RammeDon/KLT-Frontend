@@ -33,9 +33,10 @@ import kotlinx.coroutines.launch
  */
 
 @OptIn(ExperimentalMaterialApi::class)
-val CreateTaskComposable: @Composable (
+@Composable
+fun CreateTaskComposable(
     BottomSheetStateCurrent: BottomSheetState
-) -> Unit = {
+) {
     val textFieldWidth = LocalConfiguration.current.screenWidthDp / 1.65
     val taskListHeight = LocalConfiguration.current.screenWidthDp / 1.4
     var taskNumber by remember { mutableStateOf(1) }
@@ -103,7 +104,7 @@ val CreateTaskComposable: @Composable (
         Button(
             onClick = {
                 coroutine.launch {
-
+                    BottomSheetStateCurrent.collapse()
                 }
             },
             colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),

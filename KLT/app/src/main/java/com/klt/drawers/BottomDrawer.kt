@@ -19,6 +19,7 @@ import com.klt.R
 fun BottomDrawer(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
+    drawerScreen: () -> Unit
 ) {
     Column(
         modifier = Modifier
