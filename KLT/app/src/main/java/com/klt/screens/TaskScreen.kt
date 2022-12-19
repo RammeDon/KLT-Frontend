@@ -86,8 +86,7 @@ fun TaskScreen(
         }) {
         Box(
             modifier = Modifier
-                .padding(20.dp)
-                .padding(top = 0.dp)
+                .padding(horizontal = 20.dp)
         ) {
             Column {
                 DualLazyWindow(
