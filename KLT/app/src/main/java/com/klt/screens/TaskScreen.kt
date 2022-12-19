@@ -37,8 +37,9 @@ fun TaskScreen(
     val scope = rememberCoroutineScope()
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
+        sheetGesturesEnabled = scaffoldState.bottomSheetState.isExpanded,
         //sheetBackgroundColor = colorResource(R.color.KLT_DarkGray1),
-        sheetPeekHeight = 30.dp,
+        sheetPeekHeight = 0.dp,
         topBar = {
             Column(verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
@@ -78,7 +79,11 @@ fun TaskScreen(
 
             }
         },
-        sheetContent = { BottomDrawer(sheetState = scaffoldState.bottomSheetState) }) {
+        sheetContent = {
+            BottomDrawer(
+                content = { CreateTaskComposable(BottomSheetStateCurrent = sheetState) }
+            )
+        }) {
         Box(
             modifier = Modifier
                 .padding(20.dp)
