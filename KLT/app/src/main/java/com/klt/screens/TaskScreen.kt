@@ -20,6 +20,7 @@ import com.klt.drawers.BottomDrawer
 import com.klt.ui.composables.DualLazyWindow
 import com.klt.ui.composables.KLTDivider
 import com.klt.ui.navigation.ActiveTask
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -29,7 +30,7 @@ fun TaskScreen(
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {},
 ) {
-    val something: Any
+    val coroutine = rememberCoroutineScope()
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
     val scope = rememberCoroutineScope()
@@ -56,10 +57,18 @@ fun TaskScreen(
                     ClickableText(
                         text = AnnotatedString("Add Task"),
                         modifier = Modifier.padding(top = 14.dp),
-                        onClick = {},
+                        onClick = {
+                            coroutine.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        },
                     )
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            coroutine.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        },
                         modifier = Modifier.padding(end = 30.dp)
                     ) {
                         Icon(Icons.Default.Add, contentDescription = "")
@@ -68,14 +77,13 @@ fun TaskScreen(
 
             }
         },
-        sheetContent = { BottomDrawer() }) {
+        sheetContent = { BottomDrawer(sheetState = scaffoldState.bottomSheetState) }) {
         Box(
             modifier = Modifier
                 .padding(20.dp)
                 .padding(top = 0.dp)
         ) {
             Column {
-//                Spacer(Modifier.padding(vertical = 8.dp))
                 DualLazyWindow(
                     navController = navController,
                     leftButtonText = "Completed",
