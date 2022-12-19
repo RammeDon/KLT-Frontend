@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.drawers.BottomDrawer
+import com.klt.ui.composables.CreateTaskComposable
 import com.klt.ui.composables.DualLazyWindow
 import com.klt.ui.navigation.ActiveTask
 
@@ -25,7 +26,7 @@ fun TaskScreen(
     OnSelfClick: () -> Unit = {}
 ) {
     val something: Any
-    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    var sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
     val scope = rememberCoroutineScope()
     BottomSheetScaffold(
@@ -33,7 +34,11 @@ fun TaskScreen(
         //sheetBackgroundColor = colorResource(R.color.KLT_DarkGray1),
         sheetPeekHeight = 30.dp,
         sheetContent = {
-            BottomDrawer()
+            BottomDrawer {
+                CreateTaskComposable(
+                    BottomSheetStateCurrent = sheetState
+                )
+            }
         }) {
         Box(
             modifier = Modifier
