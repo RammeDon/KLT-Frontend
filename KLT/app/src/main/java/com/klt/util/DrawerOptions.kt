@@ -6,9 +6,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.klt.ui.navigation.*
 
 enum class SideBarUserOptions(val title: String, val icon: ImageVector?, val route: String) {
-    PROFILE("Profile", Icons.Rounded.Person, User.route),
-    SETTINGS("Settings", Icons.Rounded.Settings, Settings.route),
-    EXPORT("Export", null, Login.route) /* TODO -- ROUTE STILL NEEDED */
+    PROFILE("Profile", User.icon, User.route),
+    SETTINGS("Settings", Settings.icon, Settings.route),
+    EXPORT("Export", null, Login.route), /* TODO -- ROUTE STILL NEEDED */
+    LOGOUT("Logout", null, Logout.route)
 }
 
 
