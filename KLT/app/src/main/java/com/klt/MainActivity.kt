@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.datastore.dataStore
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.klt.drawers.SideDrawer
 import com.klt.ui.composables.TopBar
@@ -31,10 +30,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-val Context.dataStore by dataStore(
-    fileName = "user-settings.json",
-    serializer = UserSettingsSerializer(CryptoManager())
-)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,9 +59,7 @@ fun RunApp() {
     val state = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val context = LocalContext.current
     val coroutine = rememberCoroutineScope()
-    var userToken: UserToken? by remember {
-        mutableStateOf(UserToken())
-    }
+
 
     var startScreen: String = Login.route
 
@@ -97,10 +90,6 @@ fun RunApp() {
 
 
     coroutine.launch {
-        context.dataStore.data.first().token?.let {
-            ApiConnector.getUserData(token = it, onRespond = onAuthenticationAttempt)
-        }
-        
 
     }
 

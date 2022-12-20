@@ -1,6 +1,7 @@
 package com.klt.screens
 
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,10 +16,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.klt.dataStore
 import com.klt.ui.composables.NormalTextField
 import com.klt.ui.composables.PasswordTextField
 import com.klt.ui.navigation.Clients
@@ -26,7 +27,7 @@ import com.klt.ui.navigation.ForgotPassword
 import com.klt.util.ApiConnector
 import com.klt.util.ApiResult
 import com.klt.util.HttpStatus.*
-import com.klt.util.UserToken
+import com.klt.util.Token
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -60,51 +61,59 @@ fun LoginScreen(
                 Spacer(Modifier.padding(vertical = 8.dp))
                 PasswordTextField(title = "Password")
 
-                var authenticated by remember {
-                    mutableStateOf(false)
+                // Auth state
+                var auth by remember { mutableStateOf(Pair(false, "")) }
+
+                // Called if we already have an valid token
+                val onAuth : (ApiResult) -> Unit = {
+                    when (it.status()) {
+                        SUCCESS -> auth = Pair(true, Token.get(context))    // we are already logged in
+                        else -> {}
+                    }
                 }
 
-                var tokenContainer: String? = null
-                LaunchedEffect(authenticated) {
-                    launch {
-                        if (authenticated) {
-                            context.dataStore.updateData { UserToken(token = tokenContainer) }
-                            navController.navigate(Clients.route)
+                // Called on response from login call
+                val onLoginRespond: (ApiResult) -> Unit = {
+                    val data: JSONObject = it.data()
+                    val msg: String = data.get("msg") as String
+                    when (it.status()) {
+                        SUCCESS -> {
+                            val token: String = data.get("token") as String
+                            auth = Pair(true, token)
+                        }
+                        UNAUTHORIZED -> {
+                            Looper.prepare()
+                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                            Looper.loop()
+                        }
+                        FAILED -> {
+                            Looper.prepare()
+                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                            Looper.loop()
                         }
                     }
                 }
 
-                val onLoginRespond: (ApiResult) -> Unit = {
-                    val data: JSONObject = it.data()
-                    when (it.status()) {
-                        SUCCESS -> {
-                            val token: String = data.get("token") as String
-                            authenticated = true
-                            Looper.prepare()
-                            Toast.makeText(context, token, Toast.LENGTH_LONG).show()
-                            Looper.loop()
-                            tokenContainer = token
-                        }
-                        UNAUTHORIZED -> {
-                            val msg: String = data.get("msg") as String
-                            Looper.prepare()
-                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                            Looper.loop()
-                            authenticated = false
-                        }
-                        FAILED -> {
-                            val msg: String = data.get("msg") as String
-                            Looper.prepare()
-                            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                            Looper.loop()
-                            authenticated = false
+
+                LaunchedEffect(auth) {
+                    launch {
+                        if (auth.first) {
+                            Token.save(context, auth.second)
+                            navController.navigate(Clients.route)
+                        } else {
+                            // Check with backend if we are auth
+                            coroutine.launch(Dispatchers.IO) {
+                                ApiConnector.getUserData(
+                                    token = Token.get(context),
+                                    onRespond = onAuth
+                                )
+                            }
                         }
                     }
                 }
 
                 Button(
                     onClick = {
-                        // ! TODO -- if data found in database, then:
                         coroutine.launch(Dispatchers.IO) {
                             ApiConnector.login(
                                 "Test@Test.com",
