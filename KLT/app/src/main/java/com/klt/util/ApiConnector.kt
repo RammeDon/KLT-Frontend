@@ -61,6 +61,25 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    /** Api call to create customer */
+    fun createCustomer(
+        name: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/ts/c/new"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("name", name)
+            .build()
+
+        val request: Request = Request.Builder()
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
     /** Api call to change password */
     fun changePassword(
         token: String,
