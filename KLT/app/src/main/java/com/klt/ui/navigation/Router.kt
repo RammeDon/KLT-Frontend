@@ -54,7 +54,7 @@ object Settings : NavPath {
 }
 
 object CreateUser : NavPath {
-    override val icon = Icons.Rounded.Settings
+    override val icon = Icons.Rounded.Person
     override val route = "create-user"
 }
 
@@ -64,7 +64,7 @@ object Admin : NavPath {
 }
 
 object User : NavPath {
-    override val icon = Icons.Rounded.Settings
+    override val icon = Icons.Rounded.Person
     override val route = "user"
 }
 
@@ -81,4 +81,9 @@ object ForgotPassword : NavPath {
 object ActiveTask : NavPath {
     override val icon = Icons.Rounded.TaskAlt
     override val route = "active-task"
+}
+
+object Logout : NavPath {
+    override val icon = Icons.Rounded.TaskAlt
+    override val route = "logout"
 }
