@@ -68,7 +68,7 @@ fun RunApp() {
         mutableStateOf(UserToken())
     }
 
-    var startScreen: String = Login.route
+    var startScreen: String = Clients.route
 
     val onAuthenticationAttempt: (ApiResult) -> Unit = {
         val data: JSONObject = it.data()
