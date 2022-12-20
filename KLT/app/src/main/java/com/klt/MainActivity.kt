@@ -61,7 +61,7 @@ fun RunApp() {
     val coroutine = rememberCoroutineScope()
 
 
-    var startScreen: String = Login.route
+    var startScreen: String = Clients.route
 
     val onAuthenticationAttempt: (ApiResult) -> Unit = {
         val data: JSONObject = it.data()
@@ -71,7 +71,7 @@ fun RunApp() {
 //                Looper.prepare()
 //                Toast.makeText(context, token, Toast.LENGTH_LONG).show()
 //                Looper.loop()
-                startScreen = Clients.route
+                startScreen = Login.route
             }
             HttpStatus.UNAUTHORIZED -> {
                 val msg: String = data.get("msg") as String
