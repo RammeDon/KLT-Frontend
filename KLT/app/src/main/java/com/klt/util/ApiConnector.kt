@@ -114,43 +114,6 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
-    /** Api call to Create customer */
-    fun createCustomer(
-        name: String,
-        onRespond: (result: ApiResult) -> Unit
-    ) {
-        val urlPath = "/api/ts/c/new"
-
-        val formBody: RequestBody = FormBody.Builder()
-            .add("name", name)
-            .build()
-
-        val request: Request = Request.Builder()
-            .url(Values.BACKEND_IP + urlPath)
-            .post(formBody)
-            .build()
-
-        onRespond(callAPI(request))
-    }
-
-    fun getAllCustomers(
-        name: String,
-        onRespond: (result: ApiResult) -> Unit
-    ) {
-        val urlPath = "/api/ts/c/new"
-
-        val formBody: RequestBody = FormBody.Builder()
-            .add("name", name)
-            .build()
-
-        val request: Request = Request.Builder()
-            .url(Values.BACKEND_IP + urlPath)
-            .post(formBody)
-            .build()
-
-        onRespond(callAPI(request))
-    }
-
     private fun callAPI(request: Request): ApiResult {
         return try {
             val apiResult = client.newCall(request).execute()
@@ -177,7 +140,7 @@ data class ApiResult(
         }
     }
 
-    fun data(): JSONObject { return JSONObject(data)}
+    fun data(): JSONObject { return JSONObject(data) }
 }
 
 /** Http status enum */
