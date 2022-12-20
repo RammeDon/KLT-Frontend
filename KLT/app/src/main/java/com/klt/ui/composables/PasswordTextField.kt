@@ -68,13 +68,10 @@ fun PasswordTextField(
     LaunchedEffect(pwStateValue) {
         launch {
             hashedPW = HashUtils.sha256(pwStateValue)
-            println("check: $performMatchCheck")
-            println("hashedPw $hashedPW")
             if (performMatchCheck) {
                 isMatch = (pwContainer == hashedPW && pwStateValue != "")
                 isMatching = isMatch // update global var
             } else pwContainer = hashedPW
-            println("container $pwContainer")
         }
     }
     Column(modifier = Modifier) {

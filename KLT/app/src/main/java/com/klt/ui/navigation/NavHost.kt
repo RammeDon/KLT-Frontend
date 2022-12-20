@@ -32,18 +32,26 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.klt.screens.*
 
+
+object ActiveUser {
+    var isLoggedIn: Boolean = false
+}
+
 /**
  * Docs: https://google.github.io/accompanist/navigation-animation/
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AnimatedAppNavHost(modifier: Modifier = Modifier, navController: NavHostController) {
+fun AnimatedAppNavHost(
+    modifier: Modifier = Modifier, navController: NavHostController,
+    startDestination: String
+) {
     // Calls the navigate function to control movement between views/screens in the app
     val defaultTween = 650
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = Login.route,
+        startDestination = startDestination,
         modifier = modifier
     ) {
 
@@ -441,7 +449,6 @@ fun AnimatedAppNavHost(modifier: Modifier = Modifier, navController: NavHostCont
                 )
             }
         ) {
-
             ActiveTaskScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(ActiveTask.route) }
