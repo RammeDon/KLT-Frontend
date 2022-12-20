@@ -1,6 +1,7 @@
 package com.klt.ui.composables
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
@@ -21,8 +22,9 @@ fun CreateClientComposable(
     var clientName by remember { mutableStateOf("") }
     val coroutine = rememberCoroutineScope()
 
-    Text(text = "Client name")
 
+    Text(text = "Client name")
+    Spacer(modifier = Modifier.height(5.dp))
     OutlinedTextField(
         value = clientName,
         onValueChange = { clientName = it },
@@ -40,11 +42,11 @@ fun CreateClientComposable(
             unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
         )
     )
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
                 coroutine.launch {

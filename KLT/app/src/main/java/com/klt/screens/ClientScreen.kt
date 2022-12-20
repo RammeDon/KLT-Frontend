@@ -114,7 +114,7 @@ fun ClientScreen(
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     ClickableText(
-                        text = AnnotatedString("Add Task"),
+                        text = AnnotatedString("Add Client"),
                         modifier = Modifier.padding(top = 14.dp),
                         onClick = {
                             coroutine.launch {
@@ -143,10 +143,10 @@ fun ClientScreen(
         }) {
         Box(
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .padding(horizontal = 20.dp)
         ) {
             Column(modifier = Modifier) {
-                Spacer(Modifier.padding(vertical = 8.dp))
+                
                 DualLazyWindow(
                     navController = navController,
                     leftButtonText = "Unpinned",
