@@ -39,7 +39,6 @@ fun CreateTaskComposable(
 ) {
     val textFieldWidth = LocalConfiguration.current.screenWidthDp / 1.65
     val taskListHeight = LocalConfiguration.current.screenWidthDp / 1.4
-    var checkedState by remember { mutableStateOf(false) }
     var taskNumber by remember { mutableStateOf(1) }
     var taskName by remember { mutableStateOf("") }
     val coroutine = rememberCoroutineScope()
@@ -50,30 +49,23 @@ fun CreateTaskComposable(
     )
     Spacer(modifier = Modifier.height(10.dp))
     Text(text = "Task name")
-    Row(modifier = Modifier) {
-        OutlinedTextField(
-            value = taskName,
-            onValueChange = { taskName = it },
-            modifier = Modifier
-                .height(50.dp)
-                .width(textFieldWidth.dp),
-            placeholder = {
-                Text(
-                    text = "Task Name...",
-                    color = colorResource(id = R.color.KLT_DarkGray1)
-                )
-            },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
-                unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
+    OutlinedTextField(
+        value = taskName,
+        onValueChange = { taskName = it },
+        modifier = Modifier
+            .height(50.dp)
+            .width(textFieldWidth.dp),
+        placeholder = {
+            Text(
+                text = "Task Name...",
+                color = colorResource(id = R.color.KLT_DarkGray1)
             )
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
+            unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
         )
-        Spacer(modifier = Modifier)
-        Checkbox(
-            checked = checkedState,
-            onCheckedChange = { checkedState = it })
-    }
-
+    )
     Spacer(modifier = Modifier.height(10.dp))
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
