@@ -50,6 +50,7 @@ fun EditableCards(
             } else {
                 TextField(
                     value = nameEdit,
+                    singleLine = true,
                     onValueChange = { nameEdit = it },
                     placeholder = {
                         Text(
