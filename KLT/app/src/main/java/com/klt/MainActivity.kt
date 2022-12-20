@@ -1,7 +1,6 @@
 package com.klt
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.os.Looper
 import android.widget.Toast
@@ -22,11 +21,9 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.klt.drawers.SideDrawer
 import com.klt.ui.composables.TopBar
 import com.klt.ui.navigation.AnimatedAppNavHost
-import com.klt.ui.navigation.Clients
 import com.klt.ui.navigation.Login
 import com.klt.ui.theme.KLTTheme
 import com.klt.util.*
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -61,7 +58,7 @@ fun RunApp() {
     val coroutine = rememberCoroutineScope()
 
 
-    var startScreen: String = Clients.route
+    var startScreen: String = Login.route
 
     val onAuthenticationAttempt: (ApiResult) -> Unit = {
         val data: JSONObject = it.data()
