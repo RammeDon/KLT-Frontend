@@ -61,7 +61,7 @@ fun RunApp() {
     val coroutine = rememberCoroutineScope()
 
 
-    var startScreen: String = Clients.route
+    var startScreen: String = Login.route
 
     val onAuthenticationAttempt: (ApiResult) -> Unit = {
         val data: JSONObject = it.data()
