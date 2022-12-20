@@ -2,8 +2,6 @@ package com.klt
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Looper
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -17,15 +15,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.klt.drawers.SideDrawer
 import com.klt.ui.composables.TopBar
-import com.klt.ui.navigation.AnimatedAppNavHost
-import com.klt.ui.navigation.Login
+import com.klt.ui.navigation.*
 import com.klt.ui.theme.KLTTheme
 import com.klt.util.*
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 
 class MainActivity : ComponentActivity() {
@@ -53,50 +50,38 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RunApp() {
     val navController = rememberAnimatedNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     val state = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val context = LocalContext.current
-    val coroutine = rememberCoroutineScope()
+    var startScreen: String =
+        if (Token.get(context = context).isBlank()) Login.route else Clients.route
+    var showHamburger by remember {
+        mutableStateOf(false)
+    }
 
+    LaunchedEffect(navBackStackEntry) {
+        launch {
+            startScreen =
+                if (Token.get(context = context).isBlank()) Login.route else Clients.route
 
-    var startScreen: String = Login.route
-
-    val onAuthenticationAttempt: (ApiResult) -> Unit = {
-        val data: JSONObject = it.data()
-        when (it.status()) {
-            HttpStatus.SUCCESS -> {
-//                val token: String = data.get("token") as String
-//                Looper.prepare()
-//                Toast.makeText(context, token, Toast.LENGTH_LONG).show()
-//                Looper.loop()
-                startScreen = Login.route
-            }
-            HttpStatus.UNAUTHORIZED -> {
-                val msg: String = data.get("msg") as String
-                Looper.prepare()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-            HttpStatus.FAILED -> {
-                val msg: String = data.get("msg") as String
-                Looper.prepare()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
+            showHamburger = !listOf(
+                Login.route,
+                ForgotPassword.route,
+                ResetPassword.route
+            ).contains(navController.currentBackStackEntry?.destination?.route)
         }
     }
-
-
-    coroutine.launch {
-
-    }
-
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
             scaffoldState = state,
             topBar = {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    TopBar(navController = navController, state = state)
+                    TopBar(
+                        navController = navController,
+                        state = state,
+                        showHamburger = showHamburger
+                    )
                 }
             },
             content = {

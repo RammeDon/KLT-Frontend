@@ -1,7 +1,6 @@
 package com.klt.screens
 
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,7 +15,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -31,7 +29,6 @@ import com.klt.util.Token
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-
 
 @Composable
 fun LoginScreen(
@@ -65,9 +62,10 @@ fun LoginScreen(
                 var auth by remember { mutableStateOf(Pair(false, "")) }
 
                 // Called if we already have an valid token
-                val onAuth : (ApiResult) -> Unit = {
+                val onAuth: (ApiResult) -> Unit = {
                     when (it.status()) {
-                        SUCCESS -> auth = Pair(true, Token.get(context))    // we are already logged in
+                        SUCCESS -> auth =
+                            Pair(true, Token.get(context))    // we are already logged in
                         else -> {}
                     }
                 }
@@ -93,7 +91,6 @@ fun LoginScreen(
                         }
                     }
                 }
-
 
                 LaunchedEffect(auth) {
                     launch {
