@@ -417,6 +417,7 @@ fun AnimatedAppNavHost(
             )
         }
 
+        // ACTIVE TASK
         composable(
             route = ActiveTask.route,
             enterTransition = {
@@ -447,6 +448,40 @@ fun AnimatedAppNavHost(
             ActiveTaskScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(ActiveTask.route) }
+            )
+        }
+
+        // LOGOUT
+        composable(
+            route = Logout.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            }
+        ) {
+            LogoutScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(Logout.route) }
             )
         }
     }
