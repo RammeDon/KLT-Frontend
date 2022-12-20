@@ -1,5 +1,6 @@
 package com.klt.util
 
+import android.util.Log
 import okhttp3.*
 import org.json.JSONObject
 
@@ -118,7 +119,8 @@ object ApiConnector {
             val apiResult = client.newCall(request).execute()
             val jsonData = apiResult.body?.string() ?: "{}"
             ApiResult(jsonData, apiResult.code)
-        } catch (_: java.lang.Exception) {
+        } catch (e: java.lang.Exception) {
+            Log.d("TOKEN_LOAD", e.toString())
             ApiResult("{msg: \"Connection timeout\"}")
         }
     }
