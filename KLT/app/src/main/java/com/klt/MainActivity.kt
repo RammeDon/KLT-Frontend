@@ -1,24 +1,40 @@
 package com.klt
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.os.Looper
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.datastore.dataStore
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.klt.drawers.SideDrawer
 import com.klt.ui.composables.TopBar
 import com.klt.ui.navigation.AnimatedAppNavHost
+import com.klt.ui.navigation.Clients
+import com.klt.ui.navigation.Login
 import com.klt.ui.theme.KLTTheme
+import com.klt.util.*
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+
+val Context.dataStore by dataStore(
+    fileName = "user-settings.json",
+    serializer = UserSettingsSerializer(CryptoManager())
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,14 +52,58 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 /**
  *  Initializes the NavController and sets the NavHost on startup
  */
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun RunApp() {
     val navController = rememberAnimatedNavController()
     val state = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
+    val context = LocalContext.current
+    val coroutine = rememberCoroutineScope()
+    var userToken: UserToken? by remember {
+        mutableStateOf(UserToken())
+    }
+
+    var startScreen: String = Login.route
+
+    val onAuthenticationAttempt: (ApiResult) -> Unit = {
+        val data: JSONObject = it.data()
+        when (it.status()) {
+            HttpStatus.SUCCESS -> {
+//                val token: String = data.get("token") as String
+//                Looper.prepare()
+//                Toast.makeText(context, token, Toast.LENGTH_LONG).show()
+//                Looper.loop()
+                startScreen = Clients.route
+            }
+            HttpStatus.UNAUTHORIZED -> {
+                val msg: String = data.get("msg") as String
+                Looper.prepare()
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                Looper.loop()
+            }
+            HttpStatus.FAILED -> {
+                val msg: String = data.get("msg") as String
+                Looper.prepare()
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                Looper.loop()
+            }
+        }
+    }
+
+
+    coroutine.launch {
+        context.dataStore.data.first().token?.let {
+            ApiConnector.getUserData(token = it, onRespond = onAuthenticationAttempt)
+        }
+        
+
+    }
+
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
@@ -61,7 +121,12 @@ fun RunApp() {
                             // set height of padding equal to 1/x of device screen current height
                             .padding(top = (LocalConfiguration.current.screenHeightDp / 23).dp)
                     ) {
-                        AnimatedAppNavHost(navController = navController)
+                        // see if user is logged in already
+                        AnimatedAppNavHost(
+                            navController = navController,
+                            startDestination = startScreen
+                        )
+
                     }
                 }
             },

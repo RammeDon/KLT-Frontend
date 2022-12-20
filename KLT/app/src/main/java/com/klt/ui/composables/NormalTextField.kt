@@ -12,29 +12,36 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+var username: String? = null
 
 @Composable
 fun NormalTextField(
     labelText: String, horizontalPadding: Dp = 15.dp,
     title: String = "",
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    forUsername: Boolean = false,
+    updateState: (String) -> Unit = {}
 ) {
     Column {
         if (title != "")
             TextFieldTitle(title)
-
         var stateValue: String by remember {
             mutableStateOf("")
         }
         TextField(
             stateValue,
             label = { Text(labelText) },
-            onValueChange = { if (it != " ") stateValue = it },
+            onValueChange = {
+                stateValue = it
+                if (forUsername) username = stateValue
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = singleLine
         )
+
+
     }
 }
