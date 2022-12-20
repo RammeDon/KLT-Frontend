@@ -32,11 +32,6 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.klt.screens.*
 
-
-object ActiveUser {
-    var isLoggedIn: Boolean = false
-}
-
 /**
  * Docs: https://google.github.io/accompanist/navigation-animation/
  */
