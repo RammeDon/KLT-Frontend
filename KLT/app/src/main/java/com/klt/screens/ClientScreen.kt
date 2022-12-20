@@ -1,20 +1,26 @@
 package com.klt.screens
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.klt.drawers.BottomDrawer
+import com.klt.ui.composables.CreateClientComposable
 import com.klt.ui.composables.DualLazyWindow
+import com.klt.ui.composables.KLTDivider
 import com.klt.ui.navigation.Tasks
+import kotlinx.coroutines.launch
 
 object CustomerSelected {
     var name = ""
@@ -77,31 +83,84 @@ private object Task2 : Task {
 val listOfClients = listOf(Customer1, Customer2)
 val listOfTasks = listOf(Task1, Task2)
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ClientScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
-    Box(
-        modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp, top = 20.dp)
-    ) {
-        Column(modifier = Modifier) {
-            Text(text = "Clients", fontSize = 26.sp, fontWeight = FontWeight.Bold)
-            Text(text = "Click on a client to show its tasks", fontSize = 14.sp)
-            Spacer(Modifier.padding(vertical = 8.dp))
-            DualLazyWindow(
-                navController = navController,
-                leftButtonText = "Unpinned",
-                rightButtonText = "Pinned",
-                leftLazyItems = listOfClients,
-                rightLazyItems = listOfClients,
-                rightIcons = Icons.Outlined.PushPin,
-                leftDestination = Tasks.route,
-                rightDestination = Tasks.route
-            )
-        }
+    val coroutine = rememberCoroutineScope()
+    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetGesturesEnabled = scaffoldState.bottomSheetState.isExpanded,
+        sheetPeekHeight = 0.dp,
+        topBar = {
+            Column(verticalArrangement = Arrangement.SpaceEvenly) {
+                Text(
+                    text = "Clients: Select a client",
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    textAlign = TextAlign.Center
+                )
+                KLTDivider()
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    ClickableText(
+                        text = AnnotatedString("Add Client"),
+                        modifier = Modifier.padding(top = 14.dp),
+                        onClick = {
+                            coroutine.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        },
+                    )
+                    IconButton(
+                        onClick = {
+                            coroutine.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        },
+                        modifier = Modifier.padding(end = 30.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "")
+                    }
+                }
 
+            }
+
+        },
+        sheetContent = {
+            BottomDrawer(content = { CreateClientComposable(BottomSheetStateCurrent = sheetState) })
+
+        }) {
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+        ) {
+            Column(modifier = Modifier) {
+                
+                DualLazyWindow(
+                    navController = navController,
+                    leftButtonText = "Unpinned",
+                    rightButtonText = "Pinned",
+                    leftLazyItems = listOfClients,
+                    rightLazyItems = listOfClients,
+                    rightIcons = Icons.Outlined.PushPin,
+                    leftDestination = Tasks.route,
+                    rightDestination = Tasks.route
+                )
+            }
+
+        }
     }
+
+
 }

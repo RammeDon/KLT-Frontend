@@ -2,17 +2,17 @@ package com.klt.screens
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.material.SwitchDefaults.colors
+import androidx.compose.material.Button
+import androidx.compose.material.Slider
+import androidx.compose.material.SliderDefaults
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -23,13 +23,12 @@ import com.klt.ui.navigation.Tasks
 import com.klt.util.ITask
 import com.klt.util.TimeManager
 import kotlinx.coroutines.delay
-import java.util.Objects
 import java.util.concurrent.TimeUnit
 
 
 object ThisTask : ITask {
     override val id: String = "1"
-    override val taskName: String = "Move Boxes"
+    override var taskName: String = "Move Boxes"
     override val goals: Array<ITask.IGoal> = emptyArray()
     override val completedAtLeastOnceToday: Boolean = false
 }
@@ -84,7 +83,7 @@ fun ActiveTaskScreen(
     }
 
     fun getTimeElapsedAsString(): String {
-        val sec = timeElapsed/1000L
+        val sec = timeElapsed / 1000L
         val hours = TimeUnit.SECONDS.toHours(sec)
         val minutes = TimeUnit.SECONDS.toMinutes(sec) % TimeUnit.HOURS.toMinutes(1)
         val secs = TimeUnit.SECONDS.toSeconds(sec) % TimeUnit.MINUTES.toSeconds(1)
@@ -106,12 +105,13 @@ fun ActiveTaskScreen(
                 bigText = "Task: " + task.taskName,
                 smallText = taskCompletedSubHeaderString()
             )
-            
+
             Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp / 10).dp))
 
-            Column(modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .wrapContentSize()
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .wrapContentSize()
             ) {
 
                 // Date container
