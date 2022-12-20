@@ -12,7 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.klt.R
+import com.klt.util.ApiConnector
+import com.klt.util.ApiResult
+import com.klt.util.HttpStatus
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -22,12 +27,33 @@ fun CreateClientComposable(
     var clientName by remember { mutableStateOf("") }
     val coroutine = rememberCoroutineScope()
 
+    var alertState by remember { mutableStateOf(FormAlertMsgState.NOT_ACTIVE) }
+    var alertMsg by remember { mutableStateOf("") }
+
+    fun updateAlert(msg: String, state: FormAlertMsgState) {
+        alertState = state
+        alertMsg = msg
+    }
+
+    val onCreateCustomer: (ApiResult) -> Unit = {
+
+        val data: JSONObject = it.data()
+        val msg: String = data.get("msg") as String
+
+        when (it.status()) {
+            HttpStatus.SUCCESS -> updateAlert(msg, FormAlertMsgState.GOOD)
+            HttpStatus.UNAUTHORIZED -> updateAlert(msg, FormAlertMsgState.BAD)
+            HttpStatus.FAILED -> updateAlert(msg, FormAlertMsgState.BAD)
+        }
+    }
+
 
     Text(text = "Client name")
     Spacer(modifier = Modifier.height(5.dp))
     OutlinedTextField(
         value = clientName,
         onValueChange = { clientName = it },
+        singleLine = true,
         modifier = Modifier
             .height(50.dp)
             .fillMaxWidth(),
@@ -49,8 +75,13 @@ fun CreateClientComposable(
         Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {
-                coroutine.launch {
+                coroutine.launch(Dispatchers.IO) {
+                    ApiConnector.createCustomer(
+                        name = clientName,
+                        onRespond = onCreateCustomer
+                    )
                     BottomSheetStateCurrent.collapse()
+                    clientName = ""
                 }
             },
             colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),
