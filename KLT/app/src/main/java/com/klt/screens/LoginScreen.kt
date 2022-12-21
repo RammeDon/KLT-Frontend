@@ -61,15 +61,6 @@ fun LoginScreen(
                 // Auth state
                 var auth by remember { mutableStateOf(Pair(false, "")) }
 
-                // Called if we already have an valid token
-                val onAuth: (ApiResult) -> Unit = {
-                    when (it.status()) {
-                        SUCCESS -> auth =
-                            Pair(true, Token.get(context))    // we are already logged in
-                        else -> {}
-                    }
-                }
-
                 // Called on response from login call
                 val onLoginRespond: (ApiResult) -> Unit = {
                     val data: JSONObject = it.data()
@@ -97,14 +88,6 @@ fun LoginScreen(
                         if (auth.first) {
                             Token.save(context, auth.second)
                             navController.navigate(Clients.route)
-                        } else {
-                            // Check with backend if we are auth
-                            coroutine.launch(Dispatchers.IO) {
-                                ApiConnector.getUserData(
-                                    token = Token.get(context),
-                                    onRespond = onAuth
-                                )
-                            }
                         }
                     }
                 }

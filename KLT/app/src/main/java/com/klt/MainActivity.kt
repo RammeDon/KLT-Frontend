@@ -18,10 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.klt.drawers.SideDrawer
+import com.klt.ui.composables.Loading
 import com.klt.ui.composables.TopBar
 import com.klt.ui.navigation.*
 import com.klt.ui.theme.KLTTheme
 import com.klt.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -54,16 +57,27 @@ fun RunApp() {
     val state = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val context = LocalContext.current
 
-    var startScreen: String =
-        if (Token.get(context = context).isBlank()) Login.route else Clients.route
-    var showHamburger by remember {
-        mutableStateOf(false)
+    var showHamburger by remember { mutableStateOf(false) }
+    var isAuth by remember { mutableStateOf(false) }
+    var loading by remember { mutableStateOf(true) }
+
+    // Backend respond, if we have an valid token
+    val onAuth: (ApiResult) -> Unit = {
+        isAuth = (it.status() == HttpStatus.SUCCESS)
+        loading = false
     }
 
+    val coroutine = rememberCoroutineScope()
     LaunchedEffect(navBackStackEntry) {
         launch {
-            startScreen =
-                if (Token.get(context = context).isBlank()) Login.route else Clients.route
+
+            // Call backend to check if we already have an valid token
+            coroutine.launch(Dispatchers.IO) {
+                ApiConnector.getUserData(
+                    token = Token.get(context),
+                    onRespond = { onAuth(it) }
+                )
+            }
 
             showHamburger = !listOf(
                 Login.route,
@@ -93,12 +107,13 @@ fun RunApp() {
                             // set height of padding equal to 1/x of device screen current height
                             .padding(top = (LocalConfiguration.current.screenHeightDp / 23).dp)
                     ) {
-                        // see if user is logged in already
-                        AnimatedAppNavHost(
-                            navController = navController,
-                            startDestination = startScreen
-                        )
 
+                        if (!loading) {
+                            AnimatedAppNavHost(
+                                navController = navController,
+                                startDestination = if (isAuth) Clients.route else Login.route
+                            )
+                        } else { Loading() }
                     }
                 }
             },
