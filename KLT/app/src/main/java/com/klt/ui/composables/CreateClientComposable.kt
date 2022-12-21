@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,13 +48,11 @@ fun CreateClientComposable(
         }
     }
 
-
     Text(text = "Client name")
     Spacer(modifier = Modifier.height(5.dp))
     OutlinedTextField(
         value = clientName,
         onValueChange = { clientName = it },
-        singleLine = true,
         modifier = Modifier
             .height(50.dp)
             .fillMaxWidth(),
@@ -87,7 +86,6 @@ fun CreateClientComposable(
             colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),
         ) {
             Text(text = "Create New Client", color = Color.White)
-
         }
     }
 }
