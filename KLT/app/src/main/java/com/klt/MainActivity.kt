@@ -53,6 +53,7 @@ fun RunApp() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val state = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     val context = LocalContext.current
+
     var startScreen: String =
         if (Token.get(context = context).isBlank()) Login.route else Clients.route
     var showHamburger by remember {

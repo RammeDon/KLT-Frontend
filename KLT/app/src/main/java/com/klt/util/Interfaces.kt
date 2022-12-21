@@ -34,6 +34,7 @@ interface ITask {
     val completedAtLeastOnceToday: Boolean
     val taskName: String
     val goals: Array<IGoal>
+    val requireOrderNumber: Boolean
 }
 
 /** Interface for customer */
