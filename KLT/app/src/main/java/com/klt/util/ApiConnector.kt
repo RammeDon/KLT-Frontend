@@ -151,6 +151,20 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    /** API Call to retrieve a task from the id */
+    fun getTask(
+        taskId: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/ts/t/$taskId"
+
+        val request: Request = Request.Builder()
+            .url(Values.BACKEND_IP + urlPath)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
     private fun callAPI(request: Request): ApiResult {
         return try {
             val apiResult = client.newCall(request).execute()

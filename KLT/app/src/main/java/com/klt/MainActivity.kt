@@ -61,32 +61,7 @@ fun RunApp() {
     val coroutine = rememberCoroutineScope()
 
 
-    var startScreen: String = Clients.route
-
-    val onAuthenticationAttempt: (ApiResult) -> Unit = {
-        val data: JSONObject = it.data()
-        when (it.status()) {
-            HttpStatus.SUCCESS -> {
-//                val token: String = data.get("token") as String
-//                Looper.prepare()
-//                Toast.makeText(context, token, Toast.LENGTH_LONG).show()
-//                Looper.loop()
-                startScreen = Clients.route
-            }
-            HttpStatus.UNAUTHORIZED -> {
-                val msg: String = data.get("msg") as String
-                Looper.prepare()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-            HttpStatus.FAILED -> {
-                val msg: String = data.get("msg") as String
-                Looper.prepare()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-        }
-    }
+    var startScreen: String = Login.route
 
 
     coroutine.launch {
