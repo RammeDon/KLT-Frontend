@@ -3,6 +3,7 @@ package com.klt.ui.composables
 import android.annotation.SuppressLint
 import android.view.WindowInsets.Side
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -36,8 +37,7 @@ fun DualLazyWindow(
     rightIcons: ImageVector? = null,
     leftDestination: String,
     rightDestination: String,
-    itemType: ItemType,
-    job: () -> Unit = { }
+    itemType: ItemType
 ) {
     val buttonSelectedColor = Color.LightGray
     val buttonUnSelectedColor = colorResource(id = R.color.KLT_WhiteGray2)
@@ -141,26 +141,47 @@ fun DualLazyWindow(
 //
             }, content = {
                 Box(modifier = Modifier.padding(top = 15.dp)) {
+
+                    LazyColumn(
+                        // TODO -- ADD VERTICAL ARRANGEMENT AND TAKE OUT REPEATS
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .then(modifier),
+                    ) {
+
                     if (leftButtonSelected) {
-                        LazyWindow(
-                            navController = navController,
-                            destination = leftDestination, // change it so that it takes the destination parameter as value
-                            items = leftLazyItems,
-                            color = Color(0XFFC85250),
-                            icon = leftIcons,
-                            itemType = itemType,
-                            side = Sides.LEFT
-                        ){job()}
+
+                        (0 until leftLazyItems.length()).forEach {
+                            val customer = leftLazyItems.getJSONObject(it)
+                            item{
+                                Spacer(modifier = Modifier.height(7.dp))
+                                EntryCard(
+                                    item = customer,
+                                    textColor = Color.Black,
+                                    navController = navController,
+                                    destination = leftDestination,
+                                    itemType = itemType,
+                                    side = Sides.LEFT
+                                )
+                            }
+                        }
                     } else {
-                        LazyWindow(
-                            navController = navController,
-                            destination = rightDestination,
-                            items = rightLazyItems,
-                            color = Color.LightGray,
-                            icon = rightIcons,
-                            itemType = itemType,
-                            side = Sides.RIGHT
-                        ){job()}
+                        (0 until rightLazyItems.length()).forEach {
+                            val customer = rightLazyItems.getJSONObject(it)
+                            item{
+                                Spacer(modifier = Modifier.height(7.dp))
+                                EntryCard(
+                                    item = customer,
+                                    textColor = Color.Black,
+                                    navController = navController,
+                                    destination = leftDestination,
+                                    itemType = itemType,
+                                    side = Sides.RIGHT
+                                )
+                            }
+                        }
+                    }
+
                     }
                 }
             }

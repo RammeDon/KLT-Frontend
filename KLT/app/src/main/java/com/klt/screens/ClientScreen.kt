@@ -180,12 +180,8 @@ fun ClientScreen(
                     leftDestination = Tasks.route,
                     rightDestination = Tasks.route,
                     itemType = ItemType.CLIENT
-                ){doSomething()}
+                )
             }
         }
     }
-}
-
-fun doSomething() {
-
 }
