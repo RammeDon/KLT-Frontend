@@ -48,18 +48,7 @@ fun EntryCard(
 ) {
     val coroutine = rememberCoroutineScope()
     val cardColor = remember { mutableStateOf(backgroundColor) }
-    //var cardText = ""
-
-
-    /**if (item is JSONObject) {// make dynamic
-        CustomerSelected.name = item.get("name").toString()
-        CustomerSelected.id = item.get("_id") as String
-    }*/
-    /**if (item is JSONObject) {
-        cardText = if (itemType == ItemType.CLIENT || itemType == ItemType.TASK) {
-            item.get("name") as String
-        }else item.toString()
-    }*/
+    
     Button(
         modifier = Modifier
             .padding(horizontal = 15.dp)
@@ -97,7 +86,7 @@ fun EntryCard(
                     // TODO - add conditional logic below for job to run on show/hide pin icon for
                     //  cards in ClientScreen
                     if (isInsideDrawer) coroutine.launch { job() }
-                    navController.navigate(destination)
+                    //navController.navigate(destination)
                 }) {
                     Icon(
                         imageVector = when (itemType) {
