@@ -31,7 +31,7 @@ import org.json.JSONObject
 
 @Composable
 fun EntryCard(
-    item: Any,
+    item: JSONObject = JSONObject("{}"),
     textColor: Color,
     navController: NavController,
     destination: String,
@@ -42,31 +42,33 @@ fun EntryCard(
     icon: ImageVector? = null,
     itemType: ItemType,
     side: Sides,
+    itemSelected: (JSONObject) -> Unit = {},
+    cardText: String = "",
     job: () -> Unit = { }
 ) {
     val coroutine = rememberCoroutineScope()
     val cardColor = remember { mutableStateOf(backgroundColor) }
-    var cardText = ""
+    //var cardText = ""
 
-    if (item is JSONObject) {// make dynamic
-        CustomerSelected.name = item.get("name") as String
+
+    /**if (item is JSONObject) {// make dynamic
+        CustomerSelected.name = item.get("name").toString()
         CustomerSelected.id = item.get("_id") as String
-    }
-    if (item is JSONObject) {
+    }*/
+    /**if (item is JSONObject) {
         cardText = if (itemType == ItemType.CLIENT || itemType == ItemType.TASK) {
             item.get("name") as String
         }else item.toString()
-    }
+    }*/
     Button(
         modifier = Modifier
             .padding(horizontal = 15.dp)
             .height(50.dp),
         onClick = {
+            println("------------ This is the customer name $")
             if (isInsideDrawer) coroutine.launch { job() }
-            if (item is JSONObject) {
-                CustomerSelected.name = item.get("name") as String
-                CustomerSelected.id = item.get("_id") as String
-            }
+            CustomerSelected.name = item.get("name") as String
+            CustomerSelected.id = item.get("_id") as String
             navController.navigate(destination)
         },
         colors = ButtonDefaults.buttonColors(
@@ -83,7 +85,8 @@ fun EntryCard(
         ) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
                 Text(
-                    text = cardText, color = textColor,
+                    text = if (cardText != "") cardText else item.get("name").toString(),
+                    color = textColor,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp
                 )
@@ -108,3 +111,4 @@ fun EntryCard(
         }
     }
 }
+

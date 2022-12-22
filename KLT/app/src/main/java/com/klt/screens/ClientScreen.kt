@@ -169,7 +169,6 @@ fun ClientScreen(
                 .padding(horizontal = 20.dp)
         ) {
             Column(modifier = Modifier) {
-                
                 DualLazyWindow(
                     navController = navController,
                     leftButtonText = "Unpinned",

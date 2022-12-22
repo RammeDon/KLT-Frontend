@@ -132,7 +132,7 @@ class SideDrawer(
 
             SideBarUserOptions.values().forEach {
                 EntryCard(
-                    item = it.title,
+                    cardText = it.title,
                     textColor = colorResource(id = R.color.KLT_DarkGray1),
                     navController = this@SideDrawer.navController,
                     destination = it.route,
@@ -153,7 +153,7 @@ class SideDrawer(
             )
             SideBarAdminOptions.values().forEach {
                 EntryCard(
-                    item = it.title,
+                    cardText = it.title,
                     textColor = colorResource(id = R.color.KLT_DarkGray1),
                     navController = this@SideDrawer.navController,
                     destination = it.route,

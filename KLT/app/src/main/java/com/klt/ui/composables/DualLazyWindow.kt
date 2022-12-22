@@ -23,6 +23,7 @@ import com.klt.screens.KLTItem
 import com.klt.util.ItemType
 import com.klt.util.Sides
 import org.json.JSONArray
+import org.json.JSONObject
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -37,6 +38,7 @@ fun DualLazyWindow(
     rightIcons: ImageVector? = null,
     leftDestination: String,
     rightDestination: String,
+    itemSelected: (JSONObject) -> Unit = {},
     itemType: ItemType
 ) {
     val buttonSelectedColor = Color.LightGray
@@ -153,6 +155,7 @@ fun DualLazyWindow(
 
                         (0 until leftLazyItems.length()).forEach {
                             val customer = leftLazyItems.getJSONObject(it)
+                            println("---------- this customer ${customer.get("name")}")
                             item{
                                 Spacer(modifier = Modifier.height(7.dp))
                                 EntryCard(
@@ -174,14 +177,13 @@ fun DualLazyWindow(
                                     item = customer,
                                     textColor = Color.Black,
                                     navController = navController,
-                                    destination = leftDestination,
+                                    destination = rightDestination,
                                     itemType = itemType,
                                     side = Sides.RIGHT
                                 )
                             }
                         }
-                    }
-
+                        }
                     }
                 }
             }
