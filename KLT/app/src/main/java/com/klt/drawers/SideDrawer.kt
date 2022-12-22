@@ -23,8 +23,10 @@ import androidx.navigation.NavController
 import com.klt.R
 import com.klt.ui.composables.EntryCard
 import com.klt.ui.composables.TitledDivider
+import com.klt.util.ItemType
 import com.klt.util.SideBarAdminOptions
 import com.klt.util.SideBarUserOptions
+import com.klt.util.Sides
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -137,7 +139,9 @@ class SideDrawer(
                     hasIcon = it.icon != null,
                     icon = it.icon,
                     isInsideDrawer = true,
-                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1)
+                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1),
+                    itemType = ItemType.SIDEBAR,
+                    side = Sides.NONE
                 ) { coroutine.launch { drawerState.close() } }
                 Spacer(modifier = Modifier.height(5.dp))
             }
@@ -156,7 +160,9 @@ class SideDrawer(
                     hasIcon = it.icon != null,
                     icon = it.icon,
                     isInsideDrawer = true,
-                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1)
+                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1),
+                    itemType = ItemType.SIDEBAR,
+                    side = Sides.NONE
                 ) { coroutine.launch { drawerState.close() } }
                 Spacer(modifier = Modifier.height(5.dp))
             }

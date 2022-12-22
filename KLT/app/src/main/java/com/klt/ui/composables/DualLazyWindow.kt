@@ -1,6 +1,7 @@
 package com.klt.ui.composables
 
 import android.annotation.SuppressLint
+import android.view.WindowInsets.Side
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -18,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.R
 import com.klt.screens.KLTItem
+import com.klt.util.ItemType
+import com.klt.util.Sides
 import org.json.JSONArray
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -32,8 +35,9 @@ fun DualLazyWindow(
     leftIcons: ImageVector? = null,
     rightIcons: ImageVector? = null,
     leftDestination: String,
-    rightDestination: String
-
+    rightDestination: String,
+    itemType: ItemType,
+    job: () -> Unit = { }
 ) {
     val buttonSelectedColor = Color.LightGray
     val buttonUnSelectedColor = colorResource(id = R.color.KLT_WhiteGray2)
@@ -144,15 +148,19 @@ fun DualLazyWindow(
                             items = leftLazyItems,
                             color = Color(0XFFC85250),
                             icon = leftIcons,
-                        )
+                            itemType = itemType,
+                            side = Sides.LEFT
+                        ){job()}
                     } else {
                         LazyWindow(
                             navController = navController,
                             destination = rightDestination,
                             items = rightLazyItems,
                             color = Color.LightGray,
-                            icon = rightIcons
-                        )
+                            icon = rightIcons,
+                            itemType = itemType,
+                            side = Sides.RIGHT
+                        ){job()}
                     }
                 }
             }

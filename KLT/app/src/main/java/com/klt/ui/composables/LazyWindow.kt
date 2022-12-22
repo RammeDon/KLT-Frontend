@@ -17,6 +17,8 @@ import com.klt.R
 import com.klt.screens.Customer
 import com.klt.screens.KLTItem
 import com.klt.screens.Task
+import com.klt.util.ItemType
+import com.klt.util.Sides
 import org.json.JSONArray
 
 @Composable
@@ -29,6 +31,9 @@ fun LazyWindow(
     color: Color,
     icon: ImageVector? = null,
     collapsed: Boolean = false,
+    itemType: ItemType,
+    side: Sides,
+    job: () -> Unit = { }
 ) {
     LazyColumn(
         // TODO -- ADD VERTICAL ARRANGEMENT AND TAKE OUT REPEATS
@@ -45,8 +50,9 @@ fun LazyWindow(
                     textColor = Color.Black,
                     navController = navController,
                     destination = destination,
-                    backgroundColor = Color.LightGray
-                )
+                    itemType = itemType,
+                    side = side
+                ) {job()}
             }
         }
     }

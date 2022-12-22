@@ -19,13 +19,12 @@ import com.klt.ui.composables.CreateClientComposable
 import com.klt.ui.composables.DualLazyWindow
 import com.klt.ui.composables.KLTDivider
 import com.klt.ui.navigation.Tasks
-import com.klt.util.ApiConnector
 import com.klt.util.ApiConnector.getAllCustomers
 import com.klt.util.ApiResult
+import com.klt.util.ItemType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.json.JSONObject
 
 object CustomerSelected {
     var name = ""
@@ -109,6 +108,13 @@ fun ClientScreen(
     val onGetAllCustomers: (ApiResult) -> Unit ={
         customers = it.arrayData()
     }
+    LaunchedEffect(customers) {
+        coroutine.launch(Dispatchers.IO) {
+            getAllCustomers(
+                onRespond = { onGetAllCustomers(it) }
+            )
+        }
+    }
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -136,9 +142,6 @@ fun ClientScreen(
                         onClick = {
                             coroutine.launch(Dispatchers.IO) {
                                 scaffoldState.bottomSheetState.expand()
-                                getAllCustomers(
-                                    onRespond = { onGetAllCustomers(it) }
-                                )
                             }
                         },
                     )
@@ -175,12 +178,14 @@ fun ClientScreen(
                     rightLazyItems = customers,
                     rightIcons = Icons.Outlined.PushPin,
                     leftDestination = Tasks.route,
-                    rightDestination = Tasks.route
-                )
+                    rightDestination = Tasks.route,
+                    itemType = ItemType.CLIENT
+                ){doSomething()}
             }
-
         }
     }
+}
 
+fun doSomething() {
 
 }

@@ -6,8 +6,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
+import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +24,8 @@ import androidx.navigation.NavController
 import com.klt.screens.Customer
 import com.klt.screens.CustomerSelected
 import com.klt.screens.Task
+import com.klt.util.ItemType
+import com.klt.util.Sides
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -36,17 +40,23 @@ fun EntryCard(
     hasIcon: Boolean = true,
     isInsideDrawer: Boolean = false,
     icon: ImageVector? = null,
+    itemType: ItemType,
+    side: Sides,
     job: () -> Unit = { }
 ) {
     val coroutine = rememberCoroutineScope()
     val cardColor = remember { mutableStateOf(backgroundColor) }
+    var cardText = ""
 
     if (item is JSONObject) {// make dynamic
         CustomerSelected.name = item.get("name") as String
         CustomerSelected.id = item.get("_id") as String
     }
-
-
+    if (item is JSONObject) {
+        cardText = if (itemType == ItemType.CLIENT || itemType == ItemType.TASK) {
+            item.get("name") as String
+        }else item.toString()
+    }
     Button(
         modifier = Modifier
             .padding(horizontal = 15.dp)
@@ -73,7 +83,7 @@ fun EntryCard(
         ) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
                 Text(
-                    text = CustomerSelected.name, color = textColor,
+                    text = cardText, color = textColor,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp
                 )
@@ -87,9 +97,9 @@ fun EntryCard(
                     navController.navigate(destination)
                 }) {
                     Icon(
-                        imageVector = when (item) {
-                            is Customer -> Icons.Outlined.PushPin
-                            is Task -> Icons.Rounded.ArrowForward
+                        imageVector = when (itemType) {
+                            ItemType.CLIENT-> if (side == Sides.LEFT) Icons.Outlined.CheckBoxOutlineBlank else Icons.Outlined.PushPin
+                            ItemType.TASK -> if (side == Sides.LEFT) Icons.Rounded.Check else Icons.Rounded.ArrowForward
                             else -> icon ?: Icons.Default.BrokenImage // in case of error
                         }, contentDescription = "card-icon", tint = textColor
                     )
