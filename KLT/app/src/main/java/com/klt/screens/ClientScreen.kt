@@ -6,8 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -20,7 +19,13 @@ import com.klt.ui.composables.CreateClientComposable
 import com.klt.ui.composables.DualLazyWindow
 import com.klt.ui.composables.KLTDivider
 import com.klt.ui.navigation.Tasks
+import com.klt.util.ApiConnector
+import com.klt.util.ApiConnector.getAllCustomers
+import com.klt.util.ApiResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
 
 object CustomerSelected {
     var name = ""
@@ -28,6 +33,11 @@ object CustomerSelected {
     var hasIcon = false
 }
 
+class CustomerOBJ{
+    val firstName: String = ""
+    val lastName: String = ""
+    val email: String = ""
+}
 
 interface KLTItem {
     val name: String
@@ -93,6 +103,13 @@ fun ClientScreen(
     val coroutine = rememberCoroutineScope()
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
+    val empty = JSONArray()
+    var customers by remember { mutableStateOf(empty) }
+
+    val onGetAllCustomers: (ApiResult) -> Unit ={
+        customers = it.arrayData()
+    }
+
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetGesturesEnabled = scaffoldState.bottomSheetState.isExpanded,
@@ -117,8 +134,11 @@ fun ClientScreen(
                         text = AnnotatedString("Add Client"),
                         modifier = Modifier.padding(top = 14.dp),
                         onClick = {
-                            coroutine.launch {
+                            coroutine.launch(Dispatchers.IO) {
                                 scaffoldState.bottomSheetState.expand()
+                                getAllCustomers(
+                                    onRespond = { onGetAllCustomers(it) }
+                                )
                             }
                         },
                     )
@@ -151,8 +171,8 @@ fun ClientScreen(
                     navController = navController,
                     leftButtonText = "Unpinned",
                     rightButtonText = "Pinned",
-                    leftLazyItems = listOfClients,
-                    rightLazyItems = listOfClients,
+                    leftLazyItems = customers,
+                    rightLazyItems = customers,
                     rightIcons = Icons.Outlined.PushPin,
                     leftDestination = Tasks.route,
                     rightDestination = Tasks.route

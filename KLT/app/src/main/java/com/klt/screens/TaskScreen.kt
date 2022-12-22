@@ -89,6 +89,7 @@ fun TaskScreen(
                 .padding(horizontal = 20.dp)
         ) {
             Column {
+                /**
                 DualLazyWindow(
                     navController = navController,
                     leftButtonText = "Completed",
@@ -99,7 +100,7 @@ fun TaskScreen(
                     rightIcons = Icons.Outlined.ArrowForward,
                     leftDestination = ActiveTask.route,
                     rightDestination = ActiveTask.route
-                )
+                )*/
             }
         }
     }

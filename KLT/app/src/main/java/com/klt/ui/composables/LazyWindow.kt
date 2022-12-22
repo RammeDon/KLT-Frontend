@@ -17,13 +17,14 @@ import com.klt.R
 import com.klt.screens.Customer
 import com.klt.screens.KLTItem
 import com.klt.screens.Task
+import org.json.JSONArray
 
 @Composable
 fun LazyWindow(
     modifier: Modifier = Modifier,
     navController: NavController,
     destination: String,
-    items: List<KLTItem>,
+    items: JSONArray,
     repeats: Int = 1,
     color: Color,
     icon: ImageVector? = null,
@@ -35,25 +36,16 @@ fun LazyWindow(
             .fillMaxHeight()
             .then(modifier),
     ) {
-        items(items = items, key = { item -> item.name }) { item ->
-            repeat(repeats) {
+        (0 until items.length()).forEach {
+            val customer = items.getJSONObject(it)
+            item{
                 Spacer(modifier = Modifier.height(7.dp))
-                val bgColor: Color = when (item) {
-                    is Customer -> Color.LightGray
-                    is Task -> colorResource(id = R.color.KLT_Red) // KLT Red
-                    else -> Color.Transparent
-                }
-                val textColor: Color = when (item) {
-                    is Task -> Color.White
-                    else -> Color.Black
-                }
                 EntryCard(
-                    item = item,
-                    textColor = textColor,
+                    item = customer,
+                    textColor = Color.Black,
                     navController = navController,
                     destination = destination,
-                    hasIcon = item.hasIcon,
-                    backgroundColor = bgColor
+                    backgroundColor = Color.LightGray
                 )
             }
         }

@@ -2,6 +2,7 @@ package com.klt.util
 
 import android.util.Log
 import okhttp3.*
+import org.json.JSONArray
 import org.json.JSONObject
 
 /** The Api Connector has all the functions for talking to the API,
@@ -134,22 +135,18 @@ object ApiConnector {
     }
 
     fun getAllCustomers(
-        name: String,
         onRespond: (result: ApiResult) -> Unit
     ) {
-        val urlPath = "/api/ts/c/new"
+        val urlPath = "/api/ts/c/all"
 
-        val formBody: RequestBody = FormBody.Builder()
-            .add("name", name)
-            .build()
 
         val request: Request = Request.Builder()
             .url(Values.BACKEND_IP + urlPath)
-            .post(formBody)
             .build()
 
         onRespond(callAPI(request))
     }
+
 
     /** API Call to retrieve a task from the id */
     fun getTask(
@@ -190,8 +187,8 @@ data class ApiResult(
             else -> { HttpStatus.FAILED }
         }
     }
-
     fun data(): JSONObject { return JSONObject(data) }
+    fun arrayData(): JSONArray { return JSONArray(data) }
 }
 
 /** Http status enum */

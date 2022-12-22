@@ -23,6 +23,7 @@ import com.klt.screens.Customer
 import com.klt.screens.CustomerSelected
 import com.klt.screens.Task
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 @Composable
 fun EntryCard(
@@ -40,12 +41,11 @@ fun EntryCard(
     val coroutine = rememberCoroutineScope()
     val cardColor = remember { mutableStateOf(backgroundColor) }
 
-    val text = when (item) {
-        is Customer -> item.name
-        is Task -> item.name
-        is String -> item
-        else -> ""
+    if (item is JSONObject) {// make dynamic
+        CustomerSelected.name = item.get("name") as String
+        CustomerSelected.id = item.get("_id") as String
     }
+
 
     Button(
         modifier = Modifier
@@ -53,10 +53,9 @@ fun EntryCard(
             .height(50.dp),
         onClick = {
             if (isInsideDrawer) coroutine.launch { job() }
-            if (item is Customer) {
-                CustomerSelected.name = item.name
-                CustomerSelected.id = item.id
-                CustomerSelected.hasIcon = item.hasIcon
+            if (item is JSONObject) {
+                CustomerSelected.name = item.get("name") as String
+                CustomerSelected.id = item.get("_id") as String
             }
             navController.navigate(destination)
         },
@@ -74,7 +73,7 @@ fun EntryCard(
         ) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
                 Text(
-                    text = text, color = textColor,
+                    text = CustomerSelected.name, color = textColor,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp
                 )

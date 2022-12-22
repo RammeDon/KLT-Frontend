@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.R
 import com.klt.screens.KLTItem
+import org.json.JSONArray
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -26,8 +27,8 @@ fun DualLazyWindow(
     navController: NavController,
     leftButtonText: String,
     rightButtonText: String,
-    leftLazyItems: List<KLTItem>,
-    rightLazyItems: List<KLTItem>,
+    leftLazyItems: JSONArray,
+    rightLazyItems: JSONArray,
     leftIcons: ImageVector? = null,
     rightIcons: ImageVector? = null,
     leftDestination: String,
@@ -141,7 +142,6 @@ fun DualLazyWindow(
                             navController = navController,
                             destination = leftDestination, // change it so that it takes the destination parameter as value
                             items = leftLazyItems,
-                            repeats = 3,
                             color = Color(0XFFC85250),
                             icon = leftIcons,
                         )
@@ -150,7 +150,6 @@ fun DualLazyWindow(
                             navController = navController,
                             destination = rightDestination,
                             items = rightLazyItems,
-                            repeats = 15,
                             color = Color.LightGray,
                             icon = rightIcons
                         )
