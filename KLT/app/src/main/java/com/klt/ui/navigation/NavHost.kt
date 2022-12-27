@@ -187,6 +187,40 @@ fun AnimatedAppNavHost(
             )
         }
 
+        // STATISTICS
+        composable(
+            route = Statistics.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            }
+        ) {
+            SettingsScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(Statistics.route) }
+            )
+        }
+
         // TASKS
         composable(
             route = Tasks.route,
