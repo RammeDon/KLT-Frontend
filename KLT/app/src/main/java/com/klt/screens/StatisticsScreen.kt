@@ -4,10 +4,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import com.klt.ui.composables.LazyWindow
+import com.klt.ui.navigation.ClientStatistics
 import com.klt.util.ApiConnector
 import com.klt.util.ApiResult
+
 
 
 @Composable
@@ -25,11 +29,14 @@ fun StatisticsScreen(
         // template column
         Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.weight(1f))
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Screen: ${navController.currentBackStackEntry?.destination?.route}",
-                textAlign = TextAlign.Center
+
+            LazyWindow(
+                navController = navController,
+                destination = ClientStatistics.route,
+                items = listOfClients,
+                color = Color.LightGray
             )
+
             Spacer(modifier = Modifier.weight(1f))
         }
     }

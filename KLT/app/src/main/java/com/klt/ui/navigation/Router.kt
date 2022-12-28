@@ -58,6 +58,11 @@ object Statistics : NavPath {
     override val route = "statistics"
 }
 
+object ClientStatistics : NavPath {
+    override val icon = Icons.Rounded.Analytics
+    override val route = "client-statistics"
+}
+
 object CreateUser : NavPath {
     override val icon = Icons.Rounded.Person
     override val route = "create-user"

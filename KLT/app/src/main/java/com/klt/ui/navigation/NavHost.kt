@@ -215,9 +215,55 @@ fun AnimatedAppNavHost(
                 )
             }
         ) {
-            SettingsScreen(
+            StatisticsScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(Statistics.route) }
+            )
+        }
+
+        //CLIENT-STATISTICS
+        composable(
+            route = ClientStatistics.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popEnterTransition = {
+                when (initialState.destination.route) {
+                    Tasks.route -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(defaultTween)
+                    )
+                    else -> slideIntoContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                }
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Left,
+                    tween(defaultTween)
+                )
+            },
+            popExitTransition = {
+                when (targetState.destination.route) {
+                    Login.route -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Right,
+                        tween(defaultTween)
+                    )
+                    else -> slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Left,
+                        tween(defaultTween)
+                    )
+                }
+            }
+        ) {
+            ClientStatisticsScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(ClientStatistics.route) }
             )
         }
 
