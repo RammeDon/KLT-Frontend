@@ -3,20 +3,22 @@ package com.klt.util
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import com.klt.screens.ActiveTaskState
 import java.io.*
 
+/** Data Class that defines the data */
+class LocalStorageData: Serializable {
+
+    @SerializedName("token")
+    var token: String = ""
+    @SerializedName("activeTasks")
+    var activeTasks: MutableList<ActiveTaskState> = mutableListOf()
+}
 
 object LocalStorage {
 
     private var localStorageData: LocalStorageData = LocalStorageData()
     private const val FILENAME = "DATA.json"
-
-    /** Data Class that defines the data */
-    class LocalStorageData: Serializable {
-
-        @SerializedName("token")
-        var token: String = ""
-    }
 
     /** Quick function to save a new token */
     fun saveToken(context: Context, token: String) {
