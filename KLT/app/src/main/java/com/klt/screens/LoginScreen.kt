@@ -25,7 +25,7 @@ import com.klt.ui.navigation.ForgotPassword
 import com.klt.util.ApiConnector
 import com.klt.util.ApiResult
 import com.klt.util.HttpStatus.*
-import com.klt.util.Token
+import com.klt.util.LocalStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -86,7 +86,7 @@ fun LoginScreen(
                 LaunchedEffect(auth) {
                     launch {
                         if (auth.first) {
-                            Token.save(context, auth.second)
+                            LocalStorage.saveToken(context, auth.second)
                             navController.navigate(Clients.route)
                         }
                     }

@@ -39,6 +39,7 @@ fun TaskTimer(
 
         // Date container
         Column(modifier = Modifier.wrapContentSize()) {
+
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,

@@ -1,16 +1,11 @@
 package com.klt.screens
 
 import android.content.Context
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -21,12 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.R
-import com.klt.ui.composables.ScreenSubTitle
 import com.klt.ui.navigation.Clients
 import com.klt.ui.navigation.Login
-import com.klt.ui.navigation.Tasks
-import com.klt.util.TimeManager
-import com.klt.util.Token
+import com.klt.util.LocalStorage
 
 @Composable
 fun LogoutScreen(
@@ -73,7 +65,7 @@ fun LogoutScreen(
                             ),
                             modifier = Modifier.padding(10.dp),
                             onClick = {
-                                Token.save(context, "")
+                                LocalStorage.saveToken(context, "")
                                 navController.navigate(Login.route)
                                 navController.graph.clear()
                             })

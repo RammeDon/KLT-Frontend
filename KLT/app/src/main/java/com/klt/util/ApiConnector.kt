@@ -151,6 +151,26 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    fun sendTaskEntry(
+        token: String,
+        jsonData: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/ts/t/newentry"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("data", jsonData)
+            .build()
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
     /** API Call to retrieve a task from the id */
     fun getTask(
         taskId: String,
