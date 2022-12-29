@@ -446,9 +446,8 @@ fun AnimatedAppNavHost(
             }
         ) {
             ActiveTaskScreen(
-                navController = navController,
-                OnSelfClick = { navController.navigateSingleTopTo(ActiveTask.route) }
-            )
+                navController = navController
+            ) { navController.navigateSingleTopTo(ActiveTask.route) }
         }
 
         // LOGOUT

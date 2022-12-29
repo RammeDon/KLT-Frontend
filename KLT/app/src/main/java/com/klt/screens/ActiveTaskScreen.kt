@@ -2,6 +2,9 @@ package com.klt.screens
 
 
 import android.content.Context
+import android.os.Looper
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -9,37 +12,62 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import com.klt.ui.composables.OneLineInputForm
-import com.klt.ui.composables.DeviationForm
+import com.klt.ui.composables.*
+import com.klt.ui.navigation.Clients
 
-import com.klt.ui.composables.ScreenSubTitle
-import com.klt.ui.composables.TaskTimer
 import com.klt.ui.navigation.Tasks
-import com.klt.util.ITask
-import com.klt.util.LocalStorage
+import com.klt.util.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.io.Serializable
 import java.time.Duration
 import java.time.LocalDateTime
-import java.util.Date
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
+// TEMPORARY DATA - THIS ARE IMPORTED USING COMPOSE PARAMETER
+class g1() : ITask.IGoal {
+    override val name: String = "If something broke, what?"
+    override var value: Any? = null
+    override val unit: String = ""
+    override val type: ITask.GoalDataTypes = ITask.GoalDataTypes.Text
+}
+
+class g2() : ITask.IGoal {
+    override val name: String = "How many pallets was moved"
+    override var value: Any? = null
+    override val unit: String = "ST"
+    override val type: ITask.GoalDataTypes = ITask.GoalDataTypes.Number
+}
+
+class g3() : ITask.IGoal {
+    override val name: String = "How many stickers was placed"
+    override var value: Any? = null
+    override val unit: String = "ST"
+    override val type: ITask.GoalDataTypes = ITask.GoalDataTypes.Number
+}
+
+class g4() : ITask.IGoal {
+    override val name: String = "Did anything break?"
+    override var value: Any? = null
+    override val unit: String = ""
+    override val type: ITask.GoalDataTypes = ITask.GoalDataTypes.Boolean
+}
+
 object ThisTask : ITask {
-    override val id: String = "1"
+    override val id: String = "63a06af777a75cb3d428e52b"
     override var taskName: String = "Move Boxes"
-    override val goals: Array<ITask.IGoal> = emptyArray()
+    override val goals: Array<ITask.IGoal> = arrayOf(g2(), g3(), g4(), g1())
     override val requireOrderNumber: Boolean = true
     override val completedAtLeastOnceToday: Boolean = false
 }
 
-data class TaskTimestamp(
-    val start: Date,
-    val end: Date,
-    val comment: String
-)
-
+/** Enum for defining this views states */
 enum class TaskViewState() {
     ORDER_NUMBER,
     TASK,
@@ -47,8 +75,10 @@ enum class TaskViewState() {
     COMPLETE
 }
 
+
+
 class ActiveTaskState: Serializable {
-    @SerializedName("id")
+    @SerializedName("taskId")
     var id: String = ""
     @SerializedName("orderNumber")
     var orderNumber: String = ""
@@ -58,6 +88,10 @@ class ActiveTaskState: Serializable {
     var end: String = ""
     @SerializedName("pauses")
     var pauses: MutableList<Pause> = mutableListOf()
+    @SerializedName("timeSummary")
+    var timeSummary: Long = 0L
+    @SerializedName("goals")
+    var goals: MutableList<Goals> = mutableListOf()
 
     class Pause: Serializable {
         @SerializedName("start")
@@ -67,6 +101,17 @@ class ActiveTaskState: Serializable {
         @SerializedName("reason")
         var reason: String = ""
     }
+
+    class Goals: Serializable {
+        @SerializedName("name")
+        var name: String = ""
+        @SerializedName("value")
+        var value: Any = ""
+        @SerializedName("unit")
+        var unit: String = ""
+        @SerializedName("dataType")
+        var dataTypes: String = ""
+    }
 }
 
 @Composable
@@ -74,10 +119,11 @@ fun ActiveTaskScreen(
     navController: NavController,
     context: Context = LocalContext.current,
     modifier: Modifier = Modifier,
-    OnSelfClick: () -> Unit = {}
+    OnSelfClick: () -> Unit,
 ) {
 
     val task: ITask = ThisTask // TODO: ADD as an parameters
+
 
     // Check if this task is already active
     var initState: ActiveTaskState? = null
@@ -141,6 +187,7 @@ fun ActiveTaskScreen(
     var taskActive by remember { mutableStateOf(initState != null) }
     var sliderValue by remember { mutableStateOf(if(initState != null) 1.0F else 0.0F) }
     var taskPaused by remember { mutableStateOf(areWeInPause()) }
+    var finalTimeElapsed by remember { mutableStateOf(0L) }
     var orderNumber by remember { mutableStateOf(getActiveTaskState()?.orderNumber ?: "") }
     var state: TaskViewState by remember { mutableStateOf(
         if (task.requireOrderNumber && orderNumber == "") TaskViewState.ORDER_NUMBER else TaskViewState.TASK
@@ -179,15 +226,63 @@ fun ActiveTaskScreen(
 
     /** Function that is called when Swipe finished to the left */
     fun onStopTask() {
-        sliderValue = 0F
-        taskActive = false
-        timeElapsed = 0
-        taskPaused = false
-        // remove this task to local storage as active
-        localStorageData = LocalStorage.getLocalStorageData(context)
-        localStorageData.activeTasks.removeAll { it.id == task.id }
-        LocalStorage.saveLocalStorageData(context, localStorageData)
+        state = TaskViewState.COMPLETE
+        finalTimeElapsed = timeElapsed
+        val activeTaskState = getActiveTaskState()!!
+        activeTaskState.end = LocalDateTime.now().toString()
     }
+
+    /** On send task entry respond */
+    val onTaskEntryRespond: (ApiResult) -> Unit = { apiResult ->
+        val data: JSONObject = apiResult.data()
+        val msg: String = data.get("msg") as String
+        when (apiResult.status()) {
+            HttpStatus.SUCCESS -> {
+                sliderValue = 0F
+                taskActive = false
+                timeElapsed = 0
+                finalTimeElapsed = 0
+                taskPaused = false
+                state = TaskViewState.TASK
+                localStorageData = LocalStorage.getLocalStorageData(context)
+                localStorageData.activeTasks.removeAll { it.id == task.id }
+                LocalStorage.saveLocalStorageData(context, localStorageData)
+            }
+            HttpStatus.UNAUTHORIZED -> {
+
+            }
+            HttpStatus.FAILED -> {
+
+            }
+        }
+    }
+
+    fun onTaskDone() {
+
+        val taskEntry = getActiveTaskState()!!
+        var timeFrom: LocalDateTime = LocalDateTime.now()
+        if (areWeInPause()) {
+            timeFrom = LocalDateTime.parse(getActiveTaskState()!!.pauses.last().start)
+        }
+        taskEntry.end = timeFrom.toString()
+        taskEntry.timeSummary = finalTimeElapsed
+
+        for (g in task.goals) {
+            val goal = ActiveTaskState.Goals()
+            goal.name = g.name
+            goal.value = g.value!!
+            goal.unit = g.unit
+            goal.dataTypes = g.type.name
+            taskEntry.goals.add(goal)
+        }
+
+        ApiConnector.sendTaskEntry(
+            token = LocalStorage.getToken(context),
+            jsonData = Gson().toJson(taskEntry),
+            onRespond = onTaskEntryRespond
+        )
+    }
+
 
     /** Function that is called when "Pause" Button is pressed */
     fun onPauseTask() {
@@ -219,7 +314,7 @@ fun ActiveTaskScreen(
         val hours = TimeUnit.SECONDS.toHours(sec)
         val minutes = TimeUnit.SECONDS.toMinutes(sec) % TimeUnit.HOURS.toMinutes(1)
         val secs = TimeUnit.SECONDS.toSeconds(sec) % TimeUnit.MINUTES.toSeconds(1)
-        return String.format("%02d:%02d:%02d", hours, minutes, secs)
+        return String.format("%02d:%02d.%02d", hours, minutes, secs)
     }
 
     // The Layout -------------------------------------
@@ -238,7 +333,7 @@ fun ActiveTaskScreen(
                 smallText = "taskCompletedSubHeaderString()"
             )
 
-            Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp / 10).dp))
+            Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp /15).dp))
 
             when (state) {
                 TaskViewState.ORDER_NUMBER -> {
@@ -267,11 +362,25 @@ fun ActiveTaskScreen(
                     }
                 }
                 TaskViewState.DEVIATION -> { DeviationForm( onConfirm = {onDeviation(it)} ) }
-                TaskViewState.COMPLETE -> TODO()
+                TaskViewState.COMPLETE -> {
+                    val coroutine = rememberCoroutineScope()
+                    OnTaskDone(
+                        task = task,
+                        onTaskReportDone = {
+                            coroutine.launch(Dispatchers.IO) {
+                                onTaskDone()
+                            }
+                            navController.navigate(Clients.route)
+                        },
+                        activeTaskState = getActiveTaskState()!!,
+                        timeTaken = getTimeElapsedAsString(),
+                        modifier = Modifier.padding(horizontal = 40.dp)
+                    )}
             }
 
 
             Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp / 20).dp))
         }
     }
+
 }

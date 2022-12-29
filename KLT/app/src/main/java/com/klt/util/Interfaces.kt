@@ -34,7 +34,7 @@ interface ITask {
     /** Interface for goals in a task */
     interface IGoal {
         val name: String
-        val value: Any
+        var value: Any?
         val unit: String
         val type: GoalDataTypes
     }
