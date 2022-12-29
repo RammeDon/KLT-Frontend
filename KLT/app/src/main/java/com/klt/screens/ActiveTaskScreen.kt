@@ -40,12 +40,6 @@ data class TaskTimestamp(
     val comment: String
 )
 
-/** Data class for storing the data to create an task entry */
-data class TaskEntryData(
-    var orderNumber: String = "",
-    var TaskTimestamp: MutableList<TaskTimestamp> = mutableListOf()
-)
-
 enum class TaskViewState() {
     ORDER_NUMBER,
     TASK,
@@ -56,6 +50,8 @@ enum class TaskViewState() {
 class ActiveTaskState: Serializable {
     @SerializedName("id")
     var id: String = ""
+    @SerializedName("orderNumber")
+    var orderNumber: String = ""
     @SerializedName("start")
     var start: String = ""
     @SerializedName("end")
@@ -81,17 +77,15 @@ fun ActiveTaskScreen(
     OnSelfClick: () -> Unit = {}
 ) {
 
-    val taskEntryData = TaskEntryData()
     val task: ITask = ThisTask // TODO: ADD as an parameters
-    var state: TaskViewState by remember { mutableStateOf(
-        if (task.requireOrderNumber) TaskViewState.ORDER_NUMBER else TaskViewState.TASK
-    )}
 
+    // Check if this task is already active
     var initState: ActiveTaskState? = null
     var localStorageData = LocalStorage.getLocalStorageData(context)
     for (t in localStorageData.activeTasks) {
         if (t.id == task.id) {
             initState = t
+            break
         }
     }
 
@@ -128,21 +122,30 @@ fun ActiveTaskScreen(
         return  elapsed - totalTimePaused
     }
 
-    // Variables for this composable
-    var taskActive by remember { mutableStateOf(initState != null) }
-    var sliderValue by remember { mutableStateOf(if(initState != null) 1.0F else 0.0F) }
-    var taskPaused by remember { mutableStateOf(areWeInPause()) }
-    var timeElapsed by remember {
-        if(initState != null) {
+    fun getUpdateClock(): Long {
+        return if (initState != null) {
+
             var timeFrom: LocalDateTime = LocalDateTime.now()
 
             if (areWeInPause()) {
                 timeFrom = LocalDateTime.parse(getActiveTaskState()!!.pauses.last().start)
             }
 
-            mutableStateOf(summarizeTimeElapsed(timeFrom))
-        } else mutableStateOf(0L)
+            summarizeTimeElapsed(timeFrom)
+        } else 0
     }
+
+
+
+    // Variables for this composable
+    var taskActive by remember { mutableStateOf(initState != null) }
+    var sliderValue by remember { mutableStateOf(if(initState != null) 1.0F else 0.0F) }
+    var taskPaused by remember { mutableStateOf(areWeInPause()) }
+    var orderNumber by remember { mutableStateOf(getActiveTaskState()?.orderNumber ?: "") }
+    var state: TaskViewState by remember { mutableStateOf(
+        if (task.requireOrderNumber && orderNumber == "") TaskViewState.ORDER_NUMBER else TaskViewState.TASK
+    )}
+    var timeElapsed by remember { mutableStateOf(getUpdateClock()) }
 
 
     LaunchedEffect(
@@ -153,7 +156,8 @@ fun ActiveTaskScreen(
 
         if (taskActive && !taskPaused) {
             delay(100L)
-            timeElapsed += 100L
+            timeElapsed= getUpdateClock()
+
         }
 
     }
@@ -166,6 +170,7 @@ fun ActiveTaskScreen(
         // Add this task to local storage as active
         val newActiveTask: ActiveTaskState = ActiveTaskState()
         newActiveTask.id = task.id
+        newActiveTask.orderNumber = orderNumber
         newActiveTask.start = LocalDateTime.now().toString()
         localStorageData = LocalStorage.getLocalStorageData(context)
         localStorageData.activeTasks.add(newActiveTask)
@@ -199,15 +204,13 @@ fun ActiveTaskScreen(
     /** Function that is called when the deviation was confirmed */
     fun onDeviation(deviation: String) {
         state = TaskViewState.TASK
-
+        timeElapsed = getUpdateClock()
         val pause: ActiveTaskState.Pause = ActiveTaskState.Pause()
-
         pause.start = LocalDateTime.now().toString()
         pause.reason = deviation
-
         // store state to local storage
-        val activeTaskState = getActiveTaskState()
-        activeTaskState?.pauses?.add(pause)
+        val activeTaskState = getActiveTaskState()!!
+        activeTaskState.pauses.add(pause)
         LocalStorage.saveLocalStorageData(context, localStorageData)
     }
 
@@ -218,7 +221,6 @@ fun ActiveTaskScreen(
         val secs = TimeUnit.SECONDS.toSeconds(sec) % TimeUnit.MINUTES.toSeconds(1)
         return String.format("%02d:%02d:%02d", hours, minutes, secs)
     }
-
 
     // The Layout -------------------------------------
     Box(
@@ -243,7 +245,7 @@ fun ActiveTaskScreen(
                     OneLineInputForm(
                         text = "This task requires an order number",
                         onConfirm = {
-                            taskEntryData.orderNumber = it
+                            orderNumber = it
                             state = TaskViewState.TASK
                         },
                         placeholder = "Order number..",
@@ -251,15 +253,18 @@ fun ActiveTaskScreen(
                     )
                 }
                 TaskViewState.TASK -> {
-                    TaskTimer(
-                        taskActive = taskActive,
-                        taskPaused = taskPaused,
-                        elapsedTime = getTimeElapsedAsString(),
-                        onStartTask = { onStartTask() },
-                        onStopTask = { onStopTask() },
-                        onPauseTask = { onPauseTask() },
-                        sliderValue = sliderValue
-                    )
+
+                    Column {
+                        TaskTimer(
+                            taskActive = taskActive,
+                            taskPaused = taskPaused,
+                            elapsedTime = getTimeElapsedAsString(),
+                            onStartTask = { onStartTask() },
+                            onStopTask = { onStopTask() },
+                            onPauseTask = { onPauseTask() },
+                            sliderValue = sliderValue
+                        )
+                    }
                 }
                 TaskViewState.DEVIATION -> { DeviationForm( onConfirm = {onDeviation(it)} ) }
                 TaskViewState.COMPLETE -> TODO()
