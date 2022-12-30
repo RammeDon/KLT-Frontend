@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.screens.Customer
 import com.klt.screens.CustomerSelected
-import com.klt.screens.Task
+import com.klt.util.ITask
 import kotlinx.coroutines.launch
 
 @Composable
@@ -42,7 +42,7 @@ fun EntryCard(
 
     val text = when (item) {
         is Customer -> item.name
-        is Task -> item.name
+        is ITask -> item.name
         is String -> item
         else -> ""
     }
@@ -90,7 +90,7 @@ fun EntryCard(
                     Icon(
                         imageVector = when (item) {
                             is Customer -> Icons.Outlined.PushPin
-                            is Task -> Icons.Rounded.ArrowForward
+                            is ITask -> Icons.Rounded.ArrowForward
                             else -> icon ?: Icons.Default.BrokenImage // in case of error
                         }, contentDescription = "card-icon", tint = textColor
                     )

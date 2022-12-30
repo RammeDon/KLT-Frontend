@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.R
-import com.klt.screens.KLTItem
+import com.klt.util.IKLTItem
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -26,8 +26,8 @@ fun DualLazyWindow(
     navController: NavController,
     leftButtonText: String,
     rightButtonText: String,
-    leftLazyItems: List<KLTItem>,
-    rightLazyItems: List<KLTItem>,
+    leftLazyItems: List<IKLTItem>,
+    rightLazyItems: List<IKLTItem>,
     leftIcons: ImageVector? = null,
     rightIcons: ImageVector? = null,
     leftDestination: String,
@@ -83,7 +83,7 @@ fun DualLazyWindow(
                                 textAlign = TextAlign.Center
                             )
                             Text(
-                                text = "Int",
+                                text = leftLazyItems.count().toString(),
                                 color = Color.Black,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -122,7 +122,7 @@ fun DualLazyWindow(
                                 textAlign = TextAlign.Center
                             )
                             Text(
-                                text = "Int",
+                                text = rightLazyItems.count().toString(),
                                 color = Color.Black,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -137,23 +137,51 @@ fun DualLazyWindow(
             }, content = {
                 Box(modifier = Modifier.padding(top = 15.dp)) {
                     if (leftButtonSelected) {
-                        LazyWindow(
-                            navController = navController,
-                            destination = leftDestination, // change it so that it takes the destination parameter as value
-                            items = leftLazyItems,
-                            repeats = 3,
-                            color = Color(0XFFC85250),
-                            icon = leftIcons,
-                        )
+                        
+                        Column() {
+
+                            Text(
+                                text = "All $leftButtonText",
+                                modifier = Modifier
+                                    .padding(
+                                        horizontal = 20.dp,
+                                        vertical = 10.dp
+                                    )
+                            )
+
+                            LazyWindow(
+                                navController = navController,
+                                destination = leftDestination, // change it so that it takes the destination parameter as value
+                                items = leftLazyItems,
+                                repeats = 1,
+                                color = Color(0XFFC85250),
+                                icon = leftIcons,
+                            )
+                        }
+                        
                     } else {
-                        LazyWindow(
-                            navController = navController,
-                            destination = rightDestination,
-                            items = rightLazyItems,
-                            repeats = 15,
-                            color = Color.LightGray,
-                            icon = rightIcons
-                        )
+                        
+                        Column() {
+
+                            Text(
+                                text = "All $rightButtonText",
+                                modifier = Modifier
+                                    .padding(
+                                        horizontal = 20.dp,
+                                        vertical = 10.dp
+                                    )
+                            )
+
+                            LazyWindow(
+                                navController = navController,
+                                destination = rightDestination,
+                                items = rightLazyItems,
+                                repeats = 1,
+                                color = Color.LightGray,
+                                icon = rightIcons
+                            )
+                        }
+                        
                     }
                 }
             }

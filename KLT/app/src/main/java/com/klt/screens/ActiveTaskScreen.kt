@@ -64,7 +64,6 @@ object ThisTask : ITask {
     override var taskName: String = "Move Boxes"
     override val goals: Array<ITask.IGoal> = arrayOf(g2(), g3(), g4(), g1())
     override val requireOrderNumber: Boolean = true
-    override val completedAtLeastOnceToday: Boolean = false
 }
 
 /** Enum for defining this views states */

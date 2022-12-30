@@ -20,6 +20,7 @@ import com.klt.ui.composables.CreateClientComposable
 import com.klt.ui.composables.DualLazyWindow
 import com.klt.ui.composables.KLTDivider
 import com.klt.ui.navigation.Tasks
+import com.klt.util.IKLTItem
 import kotlinx.coroutines.launch
 
 object CustomerSelected {
@@ -28,15 +29,8 @@ object CustomerSelected {
     var hasIcon = false
 }
 
-
-interface KLTItem {
-    val name: String
-    val id: String
-    val hasIcon: Boolean
-}
-
-interface Customer : KLTItem //inherits all abstract properties from KLTItem
-interface Task : KLTItem { // inherits all abstracts properties from KLTItem + specify some new ones
+interface Customer : IKLTItem //inherits all abstract properties from KLTItem
+interface Task : IKLTItem { // inherits all abstracts properties from KLTItem + specify some new ones
     val timeTaken: Long
     val timePaused: Long
     override val hasIcon: Boolean // force default true
