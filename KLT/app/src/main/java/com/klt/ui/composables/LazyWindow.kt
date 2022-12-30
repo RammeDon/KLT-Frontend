@@ -15,15 +15,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.R
 import com.klt.screens.Customer
-import com.klt.screens.KLTItem
-import com.klt.screens.Task
+import com.klt.util.IKLTItem
+import com.klt.util.ITask
 
 @Composable
 fun LazyWindow(
     modifier: Modifier = Modifier,
     navController: NavController,
     destination: String,
-    items: List<KLTItem>,
+    items: List<IKLTItem>,
     repeats: Int = 1,
     color: Color,
     icon: ImageVector? = null,
@@ -40,11 +40,11 @@ fun LazyWindow(
                 Spacer(modifier = Modifier.height(7.dp))
                 val bgColor: Color = when (item) {
                     is Customer -> Color.LightGray
-                    is Task -> colorResource(id = R.color.KLT_Red) // KLT Red
+                    is ITask -> colorResource(id = R.color.KLT_Red) // KLT Red
                     else -> Color.Transparent
                 }
                 val textColor: Color = when (item) {
-                    is Task -> Color.White
+                    is ITask -> Color.White
                     else -> Color.Black
                 }
                 EntryCard(

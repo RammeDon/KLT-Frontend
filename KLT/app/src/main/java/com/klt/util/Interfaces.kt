@@ -22,7 +22,7 @@ interface ITaskEntry {
 }
 
 /** Interface for task's */
-interface ITask {
+interface ITask: IKLTItem {
 
     /** Enum for data types */
     enum class GoalDataTypes(text: String) {
@@ -39,16 +39,27 @@ interface ITask {
         val type: GoalDataTypes
     }
 
-    val id: String
-    val completedAtLeastOnceToday: Boolean
     val taskName: String
     val goals: Array<IGoal>
     val requireOrderNumber: Boolean
+
+
+    override val name: String
+        get() = taskName
+
+    override val hasIcon: Boolean
+        get() = true
 }
 
 /** Interface for customer */
 interface ICustomer {
     val id: String
     val customerName: String
-    val tasks: Array<ITask>
+}
+
+/** Interface for KLT Item */
+interface IKLTItem {
+    val name: String
+    val id: String
+    val hasIcon: Boolean
 }
