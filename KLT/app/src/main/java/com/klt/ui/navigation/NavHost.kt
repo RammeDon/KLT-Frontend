@@ -222,9 +222,8 @@ fun AnimatedAppNavHost(
             }
         ) {
             TaskScreen(
-                navController = navController,
-                OnSelfClick = { navController.navigateSingleTopTo(Tasks.route) }
-            )
+                navController = navController
+            ) { navController.navigateSingleTopTo(Tasks.route) }
         }
 
         // CREATE USER

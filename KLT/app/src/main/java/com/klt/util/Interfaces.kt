@@ -41,6 +41,7 @@ interface ITask: IKLTItem {
 
     val taskName: String
     val goals: Array<IGoal>
+    var pinned: Boolean
     val requireOrderNumber: Boolean
 
 
@@ -52,9 +53,8 @@ interface ITask: IKLTItem {
 }
 
 /** Interface for customer */
-interface ICustomer {
-    val id: String
-    val customerName: String
+interface ICustomer: IKLTItem {
+    val pinned: Boolean
 }
 
 /** Interface for KLT Item */

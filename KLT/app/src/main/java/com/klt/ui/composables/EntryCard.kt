@@ -19,8 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.klt.screens.Customer
-import com.klt.screens.CustomerSelected
+import com.klt.ui.navigation.ActiveTask
+import com.klt.ui.navigation.Tasks
+import com.klt.util.ICustomer
 import com.klt.util.ITask
 import kotlinx.coroutines.launch
 
@@ -41,7 +42,7 @@ fun EntryCard(
     val cardColor = remember { mutableStateOf(backgroundColor) }
 
     val text = when (item) {
-        is Customer -> item.name
+        is ICustomer -> item.name
         is ITask -> item.name
         is String -> item
         else -> ""
@@ -53,11 +54,8 @@ fun EntryCard(
             .height(50.dp),
         onClick = {
             if (isInsideDrawer) coroutine.launch { job() }
-            if (item is Customer) {
-                CustomerSelected.name = item.name
-                CustomerSelected.id = item.id
-                CustomerSelected.hasIcon = item.hasIcon
-            }
+            if (item is ICustomer) Tasks.customer = item
+            if (item is ITask) ActiveTask.task = item
             navController.navigate(destination)
         },
         colors = ButtonDefaults.buttonColors(
@@ -89,7 +87,7 @@ fun EntryCard(
                 }) {
                     Icon(
                         imageVector = when (item) {
-                            is Customer -> Icons.Outlined.PushPin
+                            is ICustomer -> Icons.Outlined.PushPin
                             is ITask -> Icons.Rounded.ArrowForward
                             else -> icon ?: Icons.Default.BrokenImage // in case of error
                         }, contentDescription = "card-icon", tint = textColor
