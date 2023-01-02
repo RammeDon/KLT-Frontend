@@ -15,6 +15,7 @@ import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.klt.ui.composables.*
+import com.klt.ui.navigation.ActiveTask
 import com.klt.ui.navigation.Clients
 
 import com.klt.ui.navigation.Tasks
@@ -64,6 +65,7 @@ object ThisTask : ITask {
     override var taskName: String = "Move Boxes"
     override val goals: Array<ITask.IGoal> = arrayOf(g2(), g3(), g4(), g1())
     override val requireOrderNumber: Boolean = true
+    override var pinned: Boolean = false
 }
 
 /** Enum for defining this views states */
@@ -118,11 +120,9 @@ fun ActiveTaskScreen(
     navController: NavController,
     context: Context = LocalContext.current,
     modifier: Modifier = Modifier,
+    task: ITask = ActiveTask.task!!,
     OnSelfClick: () -> Unit,
 ) {
-
-    val task: ITask = ThisTask // TODO: ADD as an parameters
-
 
     // Check if this task is already active
     var initState: ActiveTaskState? = null

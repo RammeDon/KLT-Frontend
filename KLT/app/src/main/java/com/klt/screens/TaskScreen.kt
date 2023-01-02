@@ -3,7 +3,6 @@ package com.klt.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
@@ -16,10 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.drawers.BottomDrawer
 import com.klt.ui.composables.*
@@ -31,18 +27,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-private object HardCodedCustomer: ICustomer {
-    override val id: String = "63a06ac56cd6333d54a4d465"
-    override val customerName: String = "Customer"
-}
-
 /* Item used to populate the task list */
 private class TaskItem: ITask {
     override var taskName: String = ""
     override val goals: Array<ITask.IGoal> = arrayOf()
     override var requireOrderNumber: Boolean = false
     override var id: String = ""
-
+    override var pinned: Boolean = false
 }
 
 
@@ -53,19 +44,14 @@ fun TaskScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     context: Context = LocalContext.current,
-    customer: ICustomer = HardCodedCustomer, // THIS SHOULD BE PASSED FROM CUSTOMER SCREEN
+    customer: ICustomer = Tasks.customer!!,
     OnSelfClick: () -> Unit = {},
 ) {
 
-
     val coroutine = rememberCoroutineScope()
-
     var haveFetchTasks by remember { mutableStateOf(false) }
-    val tasks = remember { mutableStateListOf<IKLTItem>() }
-
-    for (i in tasks) {
-        Log.d("KLT_API_CONNECTOR", i.name)
-    }
+    val allTasks = remember { mutableStateListOf<IKLTItem>() }
+    val pinnedTasks = remember { mutableStateListOf<IKLTItem>() }
 
     val onFetchTasks: (ApiResult) -> Unit = {
         val data: JSONObject = it.data()
@@ -79,7 +65,9 @@ fun TaskScreen(
                     t.id = item.getString("_id")
                     t.taskName = item.getString("name")
                     t.requireOrderNumber = item.getBoolean("requiresOrderNumber")
-                    tasks.add(t)
+                    t.pinned = false // TODO : Fetch from backend if its pinned
+                    allTasks.add(t)
+                    if (t.pinned) pinnedTasks.add(t)
                 }
                 haveFetchTasks = true
             }
@@ -97,7 +85,7 @@ fun TaskScreen(
     }
 
     // Fetch task's
-    LaunchedEffect(tasks) {
+    LaunchedEffect(allTasks) {
         if (!haveFetchTasks) {
             coroutine.launch(Dispatchers.IO) {
                 ApiConnector.getTasksFromCustomer(
@@ -129,7 +117,7 @@ fun TaskScreen(
                 ScreenSubTitle(
                     navController = navController,
                     onBackNavigation = Clients.route,
-                    bigText = CustomerSelected.name,
+                    bigText = customer.name,
                     smallText = ""
                 )
                 Row(
@@ -173,8 +161,8 @@ fun TaskScreen(
                     navController = navController,
                     leftButtonText = "Tasks",
                     rightButtonText = "favourite Tasks",
-                    leftLazyItems = tasks,
-                    rightLazyItems = tasks,
+                    leftLazyItems = allTasks,
+                    rightLazyItems = pinnedTasks,
                     leftIcons = Icons.Outlined.Done,
                     rightIcons = Icons.Outlined.ArrowForward,
                     leftDestination = ActiveTask.route,

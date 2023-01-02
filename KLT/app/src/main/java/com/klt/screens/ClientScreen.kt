@@ -1,14 +1,17 @@
 package com.klt.screens
 
+import android.content.Context
+import android.os.Looper
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,71 +23,78 @@ import com.klt.ui.composables.CreateClientComposable
 import com.klt.ui.composables.DualLazyWindow
 import com.klt.ui.composables.KLTDivider
 import com.klt.ui.navigation.Tasks
-import com.klt.util.IKLTItem
+import com.klt.util.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
-object CustomerSelected {
-    var name = ""
-    var id = ""
-    var hasIcon = false
+/* Item used to populate the customer list */
+private class CustomerItem: ICustomer {
+    override var id: String = "-1"
+    override val hasIcon: Boolean = false
+    override var name: String = "NAME"
+    override var pinned: Boolean = false
 }
-
-interface Customer : IKLTItem //inherits all abstract properties from KLTItem
-interface Task : IKLTItem { // inherits all abstracts properties from KLTItem + specify some new ones
-    val timeTaken: Long
-    val timePaused: Long
-    override val hasIcon: Boolean // force default true
-        get() = true
-}
-
-// Client -> Client Interface -> KLT Item interface
-private object Customer1 : Customer {
-    // only needs to override values specified in super parent (KLTItem)
-    override val name = "KLT Internal Client Example"
-    override val id = "BABAGOCLIENT"
-    override val hasIcon = true
-}
-
-private object Customer2 : Customer {
-    // only needs to override values specified in super parent (KLTItem)
-    override val name = "Krinova Client Example"
-    override val id = "BABAGOCLIENT2"
-    override val hasIcon = true
-}
-
-// Task -> Task Interface -> KLT Item interface
-private object Task1 : Task {
-    // needs to override values specified in super parent (KLTItem)
-    override val name = "KLT Internal Task Example"
-    override val id = "BABAGOTASK"
-
-    // also needs to override values specified in direct parent (Task)
-    override val timeTaken = 1L
-    override val timePaused = 2L
-}
-
-
-private object Task2 : Task {
-    // needs to override values specified in super parent (KLTItem)
-    override val name = "Krinova Task Example"
-    override val id = "BABAGOTASK2"
-
-    // also needs to override values specified in direct parent (Task)
-    override val timeTaken = 1L
-    override val timePaused = 2L
-}
-
-val listOfClients = listOf(Customer1, Customer2)
-val listOfTasks = listOf(Task1, Task2)
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ClientScreen(
     navController: NavController,
+    context: Context = LocalContext.current,
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
+
+
     val coroutine = rememberCoroutineScope()
+    var haveFetchCustomers by remember { mutableStateOf(false) }
+    val allCustomers = remember { mutableStateListOf<IKLTItem>() }
+    val pinnedCustomers = remember { mutableStateListOf<IKLTItem>() }
+
+    val onFetchTasks: (ApiResult) -> Unit = {
+        val data: JSONObject = it.data()
+        val msg: String = data.get("msg") as String
+        when (it.status()) {
+            HttpStatus.SUCCESS -> {
+                val itemsArray = data.getJSONArray("customers")
+                for (i in 0 until itemsArray.length()) {
+                    val item = itemsArray.getJSONObject(i)
+                    val c = CustomerItem()
+                    c.id = item.getString("_id")
+                    c.name = item.getString("name")
+                    c.pinned = false // TODO: Get from backend
+                    allCustomers.add(c)
+                    if (c.pinned) pinnedCustomers.add(c)
+                }
+                haveFetchCustomers = true
+            }
+            HttpStatus.UNAUTHORIZED -> {
+                Looper.prepare()
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                Looper.loop()
+            }
+            HttpStatus.FAILED -> {
+                Looper.prepare()
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                Looper.loop()
+            }
+        }
+    }
+
+    // Fetch customer's
+    LaunchedEffect(allCustomers) {
+        if (!haveFetchCustomers) {
+            coroutine.launch(Dispatchers.IO) {
+                ApiConnector.getAllCustomers(
+                    token = LocalStorage.getToken(context),
+                    onRespond = onFetchTasks
+                )
+            }
+        }
+
+
+    }
+
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
     BottomSheetScaffold(
@@ -145,8 +155,8 @@ fun ClientScreen(
                     navController = navController,
                     leftButtonText = "Unpinned",
                     rightButtonText = "Pinned",
-                    leftLazyItems = listOfClients,
-                    rightLazyItems = listOfClients,
+                    leftLazyItems = allCustomers,
+                    rightLazyItems = pinnedCustomers,
                     rightIcons = Icons.Outlined.PushPin,
                     leftDestination = Tasks.route,
                     rightDestination = Tasks.route

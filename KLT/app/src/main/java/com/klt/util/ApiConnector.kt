@@ -134,18 +134,14 @@ object ApiConnector {
     }
 
     fun getAllCustomers(
-        name: String,
+        token: String,
         onRespond: (result: ApiResult) -> Unit
     ) {
-        val urlPath = "/api/ts/c/new"
-
-        val formBody: RequestBody = FormBody.Builder()
-            .add("name", name)
-            .build()
+        val urlPath = "/api/ts/c/all"
 
         val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
             .url(Values.BACKEND_IP + urlPath)
-            .post(formBody)
             .build()
 
         onRespond(callAPI(request))
