@@ -17,7 +17,6 @@ import com.google.gson.annotations.SerializedName
 import com.klt.ui.composables.*
 import com.klt.ui.navigation.ActiveTask
 import com.klt.ui.navigation.Clients
-
 import com.klt.ui.navigation.Tasks
 import com.klt.util.*
 import kotlinx.coroutines.Dispatchers
@@ -30,43 +29,6 @@ import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-
-// TEMPORARY DATA - THIS ARE IMPORTED USING COMPOSE PARAMETER
-class g1() : ITask.IGoal {
-    override val name: String = "If something broke, what?"
-    override var value: Any? = null
-    override val unit: String = ""
-    override val type: ITask.GoalDataTypes = ITask.GoalDataTypes.Text
-}
-
-class g2() : ITask.IGoal {
-    override val name: String = "How many pallets was moved"
-    override var value: Any? = null
-    override val unit: String = "ST"
-    override val type: ITask.GoalDataTypes = ITask.GoalDataTypes.Number
-}
-
-class g3() : ITask.IGoal {
-    override val name: String = "How many stickers was placed"
-    override var value: Any? = null
-    override val unit: String = "ST"
-    override val type: ITask.GoalDataTypes = ITask.GoalDataTypes.Number
-}
-
-class g4() : ITask.IGoal {
-    override val name: String = "Did anything break?"
-    override var value: Any? = null
-    override val unit: String = ""
-    override val type: ITask.GoalDataTypes = ITask.GoalDataTypes.Boolean
-}
-
-object ThisTask : ITask {
-    override val id: String = "63a06af777a75cb3d428e52b"
-    override var taskName: String = "Move Boxes"
-    override val goals: Array<ITask.IGoal> = arrayOf(g2(), g3(), g4(), g1())
-    override val requireOrderNumber: Boolean = true
-    override var pinned: Boolean = false
-}
 
 /** Enum for defining this views states */
 enum class TaskViewState() {

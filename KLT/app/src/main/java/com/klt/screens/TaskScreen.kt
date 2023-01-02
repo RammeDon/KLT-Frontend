@@ -27,14 +27,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
+/* Item used to populate the goals */
+private class GoalItem: ITask.IGoal {
+    override var name: String = ""
+    override var value: Any? = null
+    override var unit: String = ""
+    override var type: ITask.GoalDataTypes = ITask.GoalDataTypes.Text
+}
+
 /* Item used to populate the task list */
 private class TaskItem: ITask {
     override var taskName: String = ""
-    override val goals: Array<ITask.IGoal> = arrayOf()
+    override var goals: MutableList<ITask.IGoal> = mutableListOf()
     override var requireOrderNumber: Boolean = false
     override var id: String = ""
     override var pinned: Boolean = false
 }
+
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -62,9 +71,19 @@ fun TaskScreen(
                 for (i in 0 until itemsArray.length()) {
                     val item = itemsArray.getJSONObject(i)
                     val t = TaskItem()
+                    val goalsArr = item.getJSONArray("goals")
+                    for (j in 0 until goalsArr.length()) {
+                        val goal = goalsArr.getJSONObject(i)
+                        val g = GoalItem()
+                        g.name = goal.getString("name")
+                        g.type = ITask.GoalDataTypes.valueOf(goal.getString("type"))
+                        g.unit = goal.getString("unit")
+                        t.goals.add(g)
+                    }
+
                     t.id = item.getString("_id")
                     t.taskName = item.getString("name")
-                    t.requireOrderNumber = item.getBoolean("requiresOrderNumber")
+                    t.requireOrderNumber = item.getBoolean("requireOrderNumber")
                     t.pinned = false // TODO : Fetch from backend if its pinned
                     allTasks.add(t)
                     if (t.pinned) pinnedTasks.add(t)

@@ -40,7 +40,7 @@ interface ITask: IKLTItem {
     }
 
     val taskName: String
-    val goals: Array<IGoal>
+    val goals: MutableList<IGoal>
     var pinned: Boolean
     val requireOrderNumber: Boolean
 
