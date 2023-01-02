@@ -23,6 +23,10 @@ fun ClientStatisticsScreen(
         // template column
         Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.weight(1f))
+            //Bar graph for amount of time spent on client jobs over a week
+            //Bar graph for amount of time spent on jobs
+            //Gantt chart for how time spent per day?
+            //Suggestions and emerging problem
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Screen: ${navController.currentBackStackEntry?.destination?.route}",
