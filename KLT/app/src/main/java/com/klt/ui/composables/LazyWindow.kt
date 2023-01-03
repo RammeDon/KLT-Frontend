@@ -28,6 +28,7 @@ fun LazyWindow(
     color: Color,
     icon: ImageVector? = null,
     collapsed: Boolean = false,
+    job: (item: IKLTItem?) -> Unit = { }
 ) {
     LazyColumn(
         // TODO -- ADD VERTICAL ARRANGEMENT AND TAKE OUT REPEATS
@@ -53,7 +54,8 @@ fun LazyWindow(
                     navController = navController,
                     destination = destination,
                     hasIcon = item.hasIcon,
-                    backgroundColor = bgColor
+                    backgroundColor = bgColor,
+                    job = job
                 )
             }
         }

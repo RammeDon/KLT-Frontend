@@ -31,8 +31,8 @@ fun DualLazyWindow(
     leftIcons: ImageVector? = null,
     rightIcons: ImageVector? = null,
     leftDestination: String,
-    rightDestination: String
-
+    rightDestination: String,
+    job: (item: IKLTItem?) -> Unit = { }
 ) {
     val buttonSelectedColor = Color.LightGray
     val buttonUnSelectedColor = colorResource(id = R.color.KLT_WhiteGray2)
@@ -156,6 +156,7 @@ fun DualLazyWindow(
                                 repeats = 1,
                                 color = Color(0XFFC85250),
                                 icon = leftIcons,
+                                job = job
                             )
                         }
                         
@@ -178,7 +179,8 @@ fun DualLazyWindow(
                                 items = rightLazyItems,
                                 repeats = 1,
                                 color = Color.LightGray,
-                                icon = rightIcons
+                                icon = rightIcons,
+                                job = job
                             )
                         }
                         

@@ -44,7 +44,6 @@ interface ITask: IKLTItem {
     var pinned: Boolean
     val requireOrderNumber: Boolean
 
-
     override val name: String
         get() = taskName
 
@@ -54,7 +53,7 @@ interface ITask: IKLTItem {
 
 /** Interface for customer */
 interface ICustomer: IKLTItem {
-    val pinned: Boolean
+    var pinned: Boolean
 }
 
 /** Interface for KLT Item */

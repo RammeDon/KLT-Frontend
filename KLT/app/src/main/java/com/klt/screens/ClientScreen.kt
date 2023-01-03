@@ -31,7 +31,7 @@ import org.json.JSONObject
 /* Item used to populate the customer list */
 private class CustomerItem: ICustomer {
     override var id: String = "-1"
-    override val hasIcon: Boolean = false
+    override var hasIcon: Boolean = true
     override var name: String = "NAME"
     override var pinned: Boolean = false
 }
@@ -57,12 +57,13 @@ fun ClientScreen(
         when (it.status()) {
             HttpStatus.SUCCESS -> {
                 val itemsArray = data.getJSONArray("customers")
+                val ls = LocalStorage.getLocalStorageData(context)
                 for (i in 0 until itemsArray.length()) {
                     val item = itemsArray.getJSONObject(i)
                     val c = CustomerItem()
                     c.id = item.getString("_id")
                     c.name = item.getString("name")
-                    c.pinned = false // TODO: Get from backend
+                    c.pinned = ls.pinnedCustomers.contains(c.id)
                     allCustomers.add(c)
                     if (c.pinned) pinnedCustomers.add(c)
                 }
@@ -91,9 +92,29 @@ fun ClientScreen(
                 )
             }
         }
-
-
     }
+
+    // On pin customer
+    val onPin: (item: IKLTItem?) -> Unit = {
+        if (it != null && it is ICustomer){
+            val ls = LocalStorage.getLocalStorageData(context)
+            if (!it.pinned) {
+                pinnedCustomers.add(it)
+                ls.pinnedCustomers.add(it.id)
+                it.pinned = true
+            } else {
+                pinnedCustomers.remove(it)
+                ls.pinnedCustomers.remove(it.id)
+                it.pinned = false
+            }
+            LocalStorage.saveLocalStorageData(context, ls)
+
+            // Force re-render
+            allCustomers.add(it)
+            allCustomers.removeLast()
+        }
+    }
+
 
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
@@ -153,13 +174,14 @@ fun ClientScreen(
                 
                 DualLazyWindow(
                     navController = navController,
-                    leftButtonText = "Unpinned",
-                    rightButtonText = "Pinned",
+                    leftButtonText = "Customers",
+                    rightButtonText = "Favorites",
                     leftLazyItems = allCustomers,
                     rightLazyItems = pinnedCustomers,
                     rightIcons = Icons.Outlined.PushPin,
                     leftDestination = Tasks.route,
-                    rightDestination = Tasks.route
+                    rightDestination = Tasks.route,
+                    job = onPin
                 )
             }
 
