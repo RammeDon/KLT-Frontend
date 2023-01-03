@@ -57,6 +57,8 @@ fun TaskScreen(
     OnSelfClick: () -> Unit = {},
 ) {
 
+
+
     val coroutine = rememberCoroutineScope()
     var haveFetchTasks by remember { mutableStateOf(false) }
     val allTasks = remember { mutableStateListOf<IKLTItem>() }
@@ -68,6 +70,7 @@ fun TaskScreen(
         when (it.status()) {
             HttpStatus.SUCCESS -> {
                 val itemsArray = data.getJSONArray("tasks")
+                val ls = LocalStorage.getLocalStorageData(context)
                 for (i in 0 until itemsArray.length()) {
                     val item = itemsArray.getJSONObject(i)
                     val t = TaskItem()
@@ -84,7 +87,7 @@ fun TaskScreen(
                     t.id = item.getString("_id")
                     t.taskName = item.getString("name")
                     t.requireOrderNumber = item.getBoolean("requireOrderNumber")
-                    t.pinned = false // TODO : Fetch from backend if its pinned
+                    t.pinned = ls.pinnedTasks.contains(t.id)
                     allTasks.add(t)
                     if (t.pinned) pinnedTasks.add(t)
                 }
@@ -100,6 +103,27 @@ fun TaskScreen(
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                 Looper.loop()
             }
+        }
+    }
+
+    // On pin task
+    val onPin: (item: IKLTItem?) -> Unit = {
+        if (it != null && it is ITask){
+            val ls = LocalStorage.getLocalStorageData(context)
+            if (!it.pinned) {
+                pinnedTasks.add(it)
+                ls.pinnedTasks.add(it.id)
+                it.pinned = true
+            } else {
+                pinnedTasks.remove(it)
+                ls.pinnedTasks.remove(it.id)
+                it.pinned = false
+            }
+            LocalStorage.saveLocalStorageData(context, ls)
+
+            // Force re-render
+            allTasks.add(it)
+            allTasks.removeLast()
         }
     }
 
@@ -186,7 +210,8 @@ fun TaskScreen(
                     rightIcons = Icons.Outlined.ArrowForward,
                     leftDestination = ActiveTask.route,
                     rightDestination = ActiveTask.route,
-                    modifier = Modifier.padding(top = 10.dp)
+                    modifier = Modifier.padding(top = 10.dp),
+                    job = onPin
                 )
             }
         }

@@ -13,6 +13,10 @@ class LocalStorageData: Serializable {
     var token: String = ""
     @SerializedName("activeTasks")
     var activeTasks: MutableList<ActiveTaskState> = mutableListOf()
+    @SerializedName("pinnedCustomer")
+    var pinnedCustomers: MutableList<String> = mutableListOf()
+    @SerializedName("pinnedTasks")
+    var pinnedTasks: MutableList<String> = mutableListOf()
 }
 
 object LocalStorage {
