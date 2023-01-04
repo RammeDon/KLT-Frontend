@@ -1,23 +1,34 @@
 package com.klt.ui.composables
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.klt.R
 import com.klt.util.ApiConnector
 import com.klt.util.ApiResult
 import com.klt.util.HttpStatus
+import com.klt.util.LocalStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @Composable
-fun CreateUserForm(modifier: Modifier = Modifier) {
+fun CreateUserForm(
+    modifier: Modifier = Modifier,
+    context: Context = LocalContext.current
+) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -43,6 +54,7 @@ fun CreateUserForm(modifier: Modifier = Modifier) {
         val onCreateAccount: (ApiResult) -> Unit = {
 
             val data: JSONObject = it.data()
+
             val msg: String = data.get("msg") as String
 
             when (it.status()) {
@@ -62,7 +74,7 @@ fun CreateUserForm(modifier: Modifier = Modifier) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 5.dp)
+                    .padding(vertical = 10.dp)
             ) {
                 FormAlertMsg(msg = alertMsg, state = alertState)
             }
@@ -74,7 +86,7 @@ fun CreateUserForm(modifier: Modifier = Modifier) {
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 5.dp)
+                    .padding(vertical = 10.dp)
             )
 
             TextField(
@@ -84,7 +96,7 @@ fun CreateUserForm(modifier: Modifier = Modifier) {
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 5.dp)
+                    .padding(vertical = 10.dp)
             )
 
             TextField(
@@ -94,14 +106,14 @@ fun CreateUserForm(modifier: Modifier = Modifier) {
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 5.dp)
+                    .padding(vertical = 10.dp)
             )
 
             Button(
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
                         ApiConnector.createAccount(
-                            "NO TOKEN",     // TODO: Add token
+                            LocalStorage.getToken(context),     // TODO: Add token
                             email,
                             firstName,
                             lastName,
@@ -111,15 +123,19 @@ fun CreateUserForm(modifier: Modifier = Modifier) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        vertical = 20.dp,
-                        horizontal = 50.dp
-                    )
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(vertical = 10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.KLT_Red)
+                )
             ) {
                 Text(
+                    color = Color.White,
                     text = "Create Account",
-                    modifier = Modifier
-                        .padding(vertical = 10.dp)
+                    modifier = Modifier.padding(
+                        vertical = 10.dp,
+                        horizontal = 22.dp
+                    )
                 )
             }
         }

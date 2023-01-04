@@ -11,13 +11,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.klt.R
 
-enum class FormAlertMsgState(val rgb: Color) {
-    GOOD(Color.Green),
-    BAD(Color.Red),
-    NOT_ACTIVE(Color.Transparent)
+enum class FormAlertMsgState {
+    GOOD,
+    BAD,
+    NOT_ACTIVE
 }
 
 @Composable
@@ -28,10 +30,19 @@ fun FormAlertMsg(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(state.rgb)
+            .background(
+                when (state) {
+                    FormAlertMsgState.GOOD -> colorResource(id = R.color.green)
+                    FormAlertMsgState.BAD -> colorResource(id = R.color.KLT_Red)
+                    FormAlertMsgState.NOT_ACTIVE -> Color.Transparent
+                }
+            )
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(vertical = 20.dp, horizontal = 10.dp)
+            .padding(
+                vertical = if (state == FormAlertMsgState.NOT_ACTIVE) 0.dp else 20.dp,
+                horizontal = 10.dp
+            )
     ) {
         Text(
             text = msg,
