@@ -116,7 +116,8 @@ fun UserScreen(
                             Spacer(modifier = Modifier.width(20.dp))
                             PasswordTextField(
                                 labelText = "New Password",
-                                checkPasswordStrength = true
+                                checkPasswordStrength = true,
+                                onUpdate = {}
                             )
                         }
                     }
@@ -145,7 +146,8 @@ fun UserScreen(
                             Spacer(modifier = Modifier.width(20.dp))
                             PasswordTextField(
                                 labelText = "confirm Password",
-                                performMatchCheck = true
+                                performMatchCheck = true,
+                                onUpdate = {}
                             )
                         }
                     }

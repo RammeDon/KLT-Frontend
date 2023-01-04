@@ -33,6 +33,7 @@ fun NormalTextField(
             label = { Text(labelText) },
             onValueChange = {
                 stateValue = it
+                updateState(it)
                 if (forUsername) username = stateValue
             },
             modifier = Modifier
