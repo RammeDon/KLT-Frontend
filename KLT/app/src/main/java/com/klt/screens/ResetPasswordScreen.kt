@@ -29,10 +29,10 @@ fun ResetPasswordScreen(
             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        PasswordTextField(labelText = "Token from email")
-        val newPW = PasswordTextField(labelText = "New Password", checkPasswordStrength = true)
+        PasswordTextField(labelText = "Token from email", onUpdate = {})
+        val newPW = PasswordTextField(labelText = "New Password", checkPasswordStrength = true, onUpdate = {})
         val confirmPW =
-            PasswordTextField(labelText = "Confirm new password", performMatchCheck = true)
+            PasswordTextField(labelText = "Confirm new password", performMatchCheck = true, onUpdate = {})
         Spacer(modifier = Modifier.weight(1f))
         Button(
             modifier = Modifier
