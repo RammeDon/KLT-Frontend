@@ -1,10 +1,10 @@
 package com.klt.ui.composables
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
+import android.content.Context
+import android.os.Looper
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,13 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.klt.R
-import com.klt.util.Measurements
+import com.klt.util.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.io.Serializable
 
 /*
  *
@@ -32,154 +39,352 @@ import kotlinx.coroutines.launch
  *
  */
 
+data class Task(
+    @SerializedName("taskName")
+    override var taskName: String = "",
+    @SerializedName("goals")
+    override val goals: MutableList<ITask.IGoal> = mutableStateListOf(),
+    @SerializedName("pinned")
+    override var pinned: Boolean = false,
+    @SerializedName("requireOrderNumber")
+    override var requireOrderNumber: Boolean = false,
+    @SerializedName("customerId")
+    override val id: String = "",
+    @SerializedName("taskType")
+    val taskType: String = "Daily"
+
+) : ITask, Serializable
+
+data class TaskGoal(
+    @SerializedName("name")
+    override var name: String,
+    @SerializedName("unit")
+    override var unit: String,
+    @SerializedName("type")
+    override var type: ITask.GoalDataTypes,
+    @SerializedName("value")
+    override var value: Any?
+) : ITask.IGoal, Serializable
+
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CreateTaskComposable(
-    BottomSheetStateCurrent: BottomSheetState
+    customer: ICustomer,
+    context: Context = LocalContext.current,
+    BottomSheetStateCurrent: BottomSheetState,
+    onTaskCreated: () -> Unit
 ) {
-    val textFieldWidth = LocalConfiguration.current.screenWidthDp / 1.65
+
     val taskListHeight = LocalConfiguration.current.screenWidthDp / 1.4
-    var taskNumber by remember { mutableStateOf(1) }
-    var taskName by remember { mutableStateOf("") }
-    val coroutine = rememberCoroutineScope()
-    Text(
-        text = "Create new task for -current client-",
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center
-    )
-    Spacer(modifier = Modifier.height(10.dp))
-    Text(text = "Task name")
-    OutlinedTextField(
-        value = taskName,
-        onValueChange = { taskName = it },
-        modifier = Modifier
-            .height(50.dp)
-            .width(textFieldWidth.dp),
-        placeholder = {
-            Text(
-                text = "Task Name...",
-                color = colorResource(id = R.color.KLT_DarkGray1)
-            )
-        },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
-            unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
+
+    val task by remember {
+        mutableStateOf(
+            Task(id = customer.id)
         )
-    )
+    }
+
+    var taskName by remember { mutableStateOf(task.taskName) }
+    var requireOrderNumber by remember { mutableStateOf(task.requireOrderNumber) }
+    val coroutine = rememberCoroutineScope()
+
+
+    // Called on response
+    val onAPIRespond: (ApiResult) -> Unit = {
+        val data: JSONObject = it.data()
+        val msg: String = data.get("msg") as String
+        when (it.status()) {
+            HttpStatus.SUCCESS -> {
+                onTaskCreated()
+                coroutine.launch {
+                    BottomSheetStateCurrent.collapse()
+                }
+                Looper.prepare()
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                Looper.loop()
+            }
+            HttpStatus.UNAUTHORIZED -> {
+                Looper.prepare()
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                Looper.loop()
+            }
+            HttpStatus.FAILED -> {
+                Looper.prepare()
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                Looper.loop()
+            }
+        }
+    }
+
+
     Spacer(modifier = Modifier.height(10.dp))
+
+    Text(
+        text = "Create new task for ${customer.name}",
+        textAlign = TextAlign.Center,
+        fontSize = 20.sp,
+        modifier = Modifier.fillMaxWidth(),
+    )
+
+    Spacer(modifier = Modifier.height(10.dp))
+
+    Text(
+        text = "Task name",
+        modifier = Modifier.padding(bottom = 10.dp)
+    )
+
+    Column() {
+        OutlinedTextField(
+            value = taskName,
+            onValueChange = {
+                taskName = it
+                task.taskName = it
+            },
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth(),
+            placeholder = {
+                Text(
+                    text = "Task Name..",
+                    color = colorResource(id = R.color.KLT_DarkGray1)
+                )
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
+                unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
+            )
+        )
+
+
+        Box(
+            contentAlignment = Alignment.CenterStart,
+            modifier = Modifier.fillMaxWidth()
+        ){
+
+            Row() {
+                Text(
+                    text = "Requires order number?",
+                    modifier = Modifier.padding(top = 10.dp)
+                )
+
+                Checkbox(
+                    checked = requireOrderNumber,
+                    onCheckedChange = {
+                        requireOrderNumber = !requireOrderNumber
+                        task.requireOrderNumber = requireOrderNumber
+                  },
+                )
+            }
+
+        }
+    }
+
+    Spacer(modifier = Modifier.height(10.dp))
+
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.height(taskListHeight.dp),
         content = {
-            for (i in 1..taskNumber) {
+
+
+            for ((index, item) in task.goals.withIndex()) {
                 item {
                     CreateTaskGoal(
                         Modifier,
-                        i,
-                        textFieldWidth,
-                        taskNumberUpdater = { newTaskNumber -> taskNumber = newTaskNumber },
-                        totalTasks = taskNumber
+                        index + 1,
+                        item as TaskGoal,
+                        onRemove = { task.goals.removeAt(index) }
                     )
                 }
             }
+
             item {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     ClickableText(
-                        text = AnnotatedString("Add New Goal"),
-                        onClick = { taskNumber++ },
-                        modifier = Modifier.alpha(0.6f)
+                        text = AnnotatedString("Add New Task Goal"),
+                        onClick = { task.goals.add(
+                            TaskGoal(
+                                name = "",
+                                unit = "",
+                                type = ITask.GoalDataTypes.Number,
+                                value = null
+                            )
+                        )},
+                        modifier = Modifier
+                            .alpha(0.6f)
+                            .padding(top = 10.dp)
                     )
                 }
-
             }
         })
+
     Spacer(modifier = Modifier.height(10.dp))
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Button(
             onClick = {
-                coroutine.launch {
-                    BottomSheetStateCurrent.collapse()
+
+                var allFieldsPopulated = (task.taskName != "" && task.goals.isNotEmpty())
+
+                task.goals.map {
+                    if (it.name == "") {
+                        allFieldsPopulated = false
+                    }
+                }
+
+                if (allFieldsPopulated) {
+
+                    coroutine.launch(Dispatchers.IO) {
+                        ApiConnector.createTask(
+                            token = LocalStorage.getToken(context),
+                            taskAsJson = Gson().toJson(task),
+                            onRespond = onAPIRespond
+                        )
+                    }
+                } else {
+                    Toast.makeText(context, "Not all fields are populated!", Toast.LENGTH_SHORT).show()
                 }
             },
-            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(vertical = 30.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colorResource(id = R.color.KLT_Red)
+            )
         ) {
-            Text(text = "Create New Task", color = Color.White)
-
+            Text(
+                color = Color.White,
+                text = "Create New Task",
+                modifier = Modifier.padding(
+                    vertical = 10.dp,
+                    horizontal = 22.dp
+                )
+            )
         }
     }
 }
 
+
+
+
 @Composable
 fun CreateTaskGoal(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     taskNumber: Int,
-    textFieldWidth: Double,
-    taskNumberUpdater: (Int) -> Unit,
-    totalTasks: Int
+    taskGoal: TaskGoal,
+    onRemove: () -> Unit,
 ) {
-    var taskDescription by remember { mutableStateOf("") }
-    val textFieldWidth = LocalConfiguration.current.screenWidthDp / 1.65
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .height(60.dp)
-        )
-        {
-            OutlinedTextField(
-                value = taskDescription,
-                onValueChange = { taskDescription = it },
-                label = {
-                    Text(
-                        text = "Task $taskNumber",
-                        color = colorResource(id = R.color.KLT_DarkGray1)
-                    )
-                },
-                modifier = Modifier.width(textFieldWidth.dp),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
-                    unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
-                )
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            DropDownMenu()
-            Spacer(modifier = Modifier.width(10.dp))
-            IconButton(
-                onClick = { taskNumberUpdater(totalTasks - 1) },
+
+    var taskGoalName by remember { mutableStateOf(taskGoal.name) }
+    var taskGoalUnit by remember { mutableStateOf(taskGoal.unit) }
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .then(modifier)) {
+        Column(modifier = Modifier.padding(top = 10.dp)) {
+
+            Text(text = "Task goal $taskNumber")
+
+            Box(
                 modifier = Modifier
-                    .width(40.dp)
-                    .padding(top = 10.dp)
-                    .border(
-                        BorderStroke(1.dp, colorResource(id = R.color.KLT_DarkGray1)),
-                        shape = RoundedCornerShape(5.dp)
-                    ),
+                    .wrapContentHeight()
+                    .fillMaxWidth()
             ) {
-                Icon(imageVector = Icons.Outlined.Delete, contentDescription = "delete-icon")
+
+                Column() {
+                    Row() {
+                        OutlinedTextField(
+                            value = taskGoalName,
+                            onValueChange = {
+                                taskGoalName = it
+                                taskGoal.name = it
+                            },
+                            label = {
+                                Text(
+                                    text = "Task goal name $taskNumber",
+                                    color = colorResource(id = R.color.KLT_DarkGray1)
+                                )
+                            },
+                            modifier = Modifier.padding(end = 10.dp),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
+                                unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
+                            )
+                        )
+
+                        OutlinedTextField(
+                            value = taskGoalUnit,
+                            onValueChange = {
+                                taskGoalUnit = it
+                                taskGoal.unit = it
+                            },
+                            label = {
+                                Text(
+                                    text = "Unit",
+                                    color = colorResource(id = R.color.KLT_DarkGray1)
+                                )
+                            },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
+                                unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
+                            )
+                        )
+                    }
+
+                    Row() {
+
+                        DropDownMenu(
+                            taskGoal = taskGoal,
+                            modifier = Modifier
+                                .width(300.dp)
+                                .fillMaxHeight()
+                        )
+
+                        IconButton(
+                            onClick = { onRemove() },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 8.dp, end = 20.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = "delete-icon",
+                                modifier = Modifier.height(55.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DropDownMenu(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
+    taskGoal: TaskGoal,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedItem by remember { mutableStateOf(Measurements.KG) }
+    var goalInputType by remember { mutableStateOf(taskGoal.type) }
+
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = Modifier.widthIn(0.dp, 90.dp)
+        modifier = Modifier.then(modifier)
     ) {
         OutlinedTextField(
-            value = selectedItem.toString(),
+            value = goalInputType.toString(),
             onValueChange = {},
             readOnly = true,
             label = { },
@@ -197,10 +402,11 @@ fun DropDownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            Measurements.values().forEach { selectedOption ->
+            ITask.GoalDataTypes.values().forEach { selectedOption ->
                 // menu item
                 DropdownMenuItem(onClick = {
-                    selectedItem = selectedOption
+                    goalInputType = selectedOption
+                    taskGoal.type = selectedOption
                     expanded = false
                 }) {
                     Text(text = selectedOption.toString())
