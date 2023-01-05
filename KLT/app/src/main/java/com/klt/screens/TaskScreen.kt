@@ -3,6 +3,7 @@ package com.klt.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
@@ -76,11 +77,12 @@ fun TaskScreen(
                     val t = TaskItem()
                     val goalsArr = item.getJSONArray("goals")
                     for (j in 0 until goalsArr.length()) {
-                        val goal = goalsArr.getJSONObject(i)
+                        val goal = goalsArr.getJSONObject(j)
                         val g = GoalItem()
                         g.name = goal.getString("name")
                         g.type = ITask.GoalDataTypes.valueOf(goal.getString("type"))
                         g.unit = goal.getString("unit")
+                        Log.d("KLT_API_CONNECTOR", g.name)
                         t.goals.add(g)
                     }
 
@@ -192,7 +194,19 @@ fun TaskScreen(
         },
         sheetContent = {
             BottomDrawer(
-                content = { CreateTaskComposable(BottomSheetStateCurrent = sheetState) }
+                content = { CreateTaskComposable(
+                    BottomSheetStateCurrent = sheetState,
+                    customer = customer,
+                    onTaskCreated = {
+                        allTasks.clear()
+                        pinnedTasks.clear()
+                        ApiConnector.getTasksFromCustomer(
+                            token = LocalStorage.getToken(context),
+                            customerId = customer.id,
+                            onRespond = onFetchTasks
+                        )
+                    }
+                ) }
             )
         }) {
         Box(

@@ -133,6 +133,30 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    /** Api call to Create task */
+    fun createTask(
+        token: String,
+        taskAsJson: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+
+        val urlPath = "/api/ts/t/new"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("data", taskAsJson)
+            .build()
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
+
+
     fun getAllCustomers(
         token: String,
         onRespond: (result: ApiResult) -> Unit
