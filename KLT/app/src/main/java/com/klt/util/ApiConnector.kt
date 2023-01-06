@@ -133,17 +133,21 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
-    fun getAllCustomers(
-        name: String,
+    /** Api call to Create task */
+    fun createTask(
+        token: String,
+        taskAsJson: String,
         onRespond: (result: ApiResult) -> Unit
     ) {
-        val urlPath = "/api/ts/c/new"
+
+        val urlPath = "/api/ts/t/new"
 
         val formBody: RequestBody = FormBody.Builder()
-            .add("name", name)
+            .add("data", taskAsJson)
             .build()
 
         val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
             .url(Values.BACKEND_IP + urlPath)
             .post(formBody)
             .build()
@@ -151,14 +155,52 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
-    /** API Call to retrieve all tasks from a client */
-    fun getAllTasks(
-        customerid: String,
+
+
+    fun getAllCustomers(
+        token: String,
         onRespond: (result: ApiResult) -> Unit
     ) {
-        val urlPath = "api/ts/c/$customerid/t"
+        val urlPath = "/api/ts/c/all"
 
         val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
+    fun sendTaskEntry(
+        token: String,
+        jsonData: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/ts/t/newentry"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("data", jsonData)
+            .build()
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
+    /** API CAll to get all task's from an customer */
+    fun getTasksFromCustomer(
+        token: String,
+        customerId: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/ts/c/$customerId/t"
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
             .url(Values.BACKEND_IP + urlPath)
             .build()
 

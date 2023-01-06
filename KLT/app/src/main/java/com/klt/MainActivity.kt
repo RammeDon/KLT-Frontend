@@ -24,7 +24,6 @@ import com.klt.ui.navigation.*
 import com.klt.ui.theme.KLTTheme
 import com.klt.util.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -74,7 +73,7 @@ fun RunApp() {
             // Call backend to check if we already have an valid token
             coroutine.launch(Dispatchers.IO) {
                 ApiConnector.getUserData(
-                    token = Token.get(context),
+                    token = LocalStorage.getToken(context),
                     onRespond = { onAuth(it) }
                 )
             }

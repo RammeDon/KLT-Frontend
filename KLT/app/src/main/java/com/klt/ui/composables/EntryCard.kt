@@ -7,11 +7,10 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material.icons.rounded.ArrowForward
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -19,9 +18,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.klt.screens.Customer
-import com.klt.screens.CustomerSelected
-import com.klt.screens.Task
+import com.klt.ui.navigation.ActiveTask
+import com.klt.ui.navigation.Tasks
+import com.klt.util.ICustomer
+import com.klt.util.IKLTItem
+import com.klt.util.ITask
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,14 +36,14 @@ fun EntryCard(
     hasIcon: Boolean = true,
     isInsideDrawer: Boolean = false,
     icon: ImageVector? = null,
-    job: () -> Unit = { }
+    job: (item: IKLTItem?) -> Unit = { }
 ) {
     val coroutine = rememberCoroutineScope()
-    val cardColor = remember { mutableStateOf(backgroundColor) }
+    var cardColor = remember { mutableStateOf(backgroundColor) }
 
     val text = when (item) {
-        is Customer -> item.name
-        is Task -> item.name
+        is ICustomer -> item.name
+        is ITask -> item.name
         is String -> item
         else -> ""
     }
@@ -52,12 +53,9 @@ fun EntryCard(
             .padding(horizontal = 15.dp)
             .height(50.dp),
         onClick = {
-            if (isInsideDrawer) coroutine.launch { job() }
-            if (item is Customer) {
-                CustomerSelected.name = item.name
-                CustomerSelected.id = item.id
-                CustomerSelected.hasIcon = item.hasIcon
-            }
+            if (isInsideDrawer) coroutine.launch { job(null) }
+            if (item is ICustomer) Tasks.customer = item
+            if (item is ITask) ActiveTask.task = item
             navController.navigate(destination)
         },
         colors = ButtonDefaults.buttonColors(
@@ -82,15 +80,14 @@ fun EntryCard(
             Spacer(modifier = Modifier.weight(1f))
             if (hasIcon) {
                 IconButton(onClick = {
-                    // TODO - add conditional logic below for job to run on show/hide pin icon for
-                    //  cards in ClientScreen
-                    if (isInsideDrawer) coroutine.launch { job() }
-                    navController.navigate(destination)
+                    coroutine.launch { job(item as IKLTItem) }
+                    // if (isInsideDrawer) coroutine.launch { job() }
+                    // navController.navigate(destination)
                 }) {
                     Icon(
                         imageVector = when (item) {
-                            is Customer -> Icons.Outlined.PushPin
-                            is Task -> Icons.Rounded.ArrowForward
+                            is ICustomer -> if (item.pinned) Icons.Outlined.Star else Icons.Outlined.StarBorder
+                            is ITask ->  if (item.pinned) Icons.Outlined.Star else Icons.Outlined.StarBorder
                             else -> icon ?: Icons.Default.BrokenImage // in case of error
                         }, contentDescription = "card-icon", tint = textColor
                     )

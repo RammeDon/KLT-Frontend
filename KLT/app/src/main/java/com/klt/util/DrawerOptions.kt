@@ -14,15 +14,8 @@ enum class SideBarUserOptions(val title: String, val icon: ImageVector?, val rou
 
 
 enum class SideBarAdminOptions(val title: String, val icon: ImageVector?, val route: String) {
-    USER_CONTROL("User control", Icons.Rounded.AdminPanelSettings, route = CreateUser.route),
+    USER_CONTROL("Create User", Icons.Rounded.PersonAdd, route = CreateUser.route),
     CLIENT_CONTROL("Client control", Icons.Rounded.AddBusiness, route = Clients.route),
     TASK_TEMPLATES("Task templates", Icons.Rounded.Description, route = Tasks.route),
-    PERFORMANCE("Performance", Icons.Rounded.Analytics, route = Statistics.route)
-}
-
-enum class Measurements(val M: String) {
-    ST("ST"),
-    KG("KG"),
-    Gr("Gr"),
-    L("L")
+    PERFORMANCE("Performance", Icons.Rounded.Analytics, route = Login.route)
 }

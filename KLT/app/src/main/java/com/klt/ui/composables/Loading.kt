@@ -6,7 +6,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import com.klt.screens.KLTItem
 
 
 @Composable

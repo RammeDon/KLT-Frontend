@@ -302,9 +302,8 @@ fun AnimatedAppNavHost(
             }
         ) {
             TaskScreen(
-                navController = navController,
-                OnSelfClick = { navController.navigateSingleTopTo(Tasks.route) }
-            )
+                navController = navController
+            ) { navController.navigateSingleTopTo(Tasks.route) }
         }
 
         // CREATE USER
@@ -526,9 +525,8 @@ fun AnimatedAppNavHost(
             }
         ) {
             ActiveTaskScreen(
-                navController = navController,
-                OnSelfClick = { navController.navigateSingleTopTo(ActiveTask.route) }
-            )
+                navController = navController
+            ) { navController.navigateSingleTopTo(ActiveTask.route) }
         }
 
         // LOGOUT

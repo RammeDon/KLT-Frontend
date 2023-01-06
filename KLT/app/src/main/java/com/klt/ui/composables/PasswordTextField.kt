@@ -45,13 +45,14 @@ var isMatching: Boolean = false
 
 @Composable
 fun PasswordTextField(
-    labelText: String = "Password",
+    labelText: String = "Password..",
     semanticContentDescription: String = "",
     hasError: Boolean = false,
     title: String = "",
     checkPasswordStrength: Boolean = false,
     performMatchCheck: Boolean = false,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    onUpdate: (String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val showPassword = remember { mutableStateOf(false) }
@@ -83,7 +84,11 @@ fun PasswordTextField(
                 .semantics { contentDescription = semanticContentDescription },
             value = pwStateValue,
             label = { Text(labelText) },
-            onValueChange = { if (it != " ") pwStateValue = it },
+            onValueChange = {
+                if (it != " ") pwStateValue = it
+
+                onUpdate(it)
+            },
             keyboardOptions = KeyboardOptions.Default.copy(
                 autoCorrect = true,
                 keyboardType = KeyboardType.Text,

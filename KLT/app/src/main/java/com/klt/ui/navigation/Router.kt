@@ -23,6 +23,8 @@ package com.klt.ui.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.klt.util.ICustomer
+import com.klt.util.ITask
 
 /**
  * Creates a routing interface through which different views may be accessed as states in the
@@ -46,6 +48,7 @@ object Clients : NavPath {
 object Tasks : NavPath {
     override val route = "tasks"
     override val icon: ImageVector = Icons.Rounded.TaskAlt
+    var customer: ICustomer? = null
 }
 
 object Settings : NavPath {
@@ -91,6 +94,7 @@ object ForgotPassword : NavPath {
 object ActiveTask : NavPath {
     override val icon = Icons.Rounded.TaskAlt
     override val route = "active-task"
+    var task: ITask? = null
 }
 
 object Logout : NavPath {
