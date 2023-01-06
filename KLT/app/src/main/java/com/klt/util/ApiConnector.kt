@@ -223,6 +223,27 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    fun updateCustomer(
+        token: String,
+        customerId: String,
+        jsonData: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/ts/c/$customerId/edit"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("data", jsonData)
+            .build()
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
     private fun callAPI(request: Request): ApiResult {
         return try {
             val apiResult = client.newCall(request).execute()

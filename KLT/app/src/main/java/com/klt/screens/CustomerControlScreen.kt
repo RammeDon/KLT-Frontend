@@ -1,8 +1,8 @@
 package com.klt.screens
 
+import android.content.Context
 import android.os.Looper
 import android.widget.Toast
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.gson.Gson
 import com.klt.ui.composables.NormalTextField
 import com.klt.util.*
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +32,6 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CustomerControlScreen(
     navController: NavController,
@@ -160,6 +160,7 @@ fun CustomerControlScreen(
                             coroutine.launch {
                                 if (clicked && nameVal != "") {
                                     it.name = nameVal
+                                    updateCustomer(it, context)
                                 }
                                 clicked = !clicked
                             }
@@ -191,4 +192,27 @@ fun CustomerControlScreen(
             }
         }
     }
+}
+
+fun updateCustomer(customer: IKLTItem, context: Context) {
+    val onCustomerEditRespond: (ApiResult) -> Unit = { apiResult ->
+        when (apiResult.status()) {
+            HttpStatus.SUCCESS -> {
+                Toast.makeText(context, "Edit is successful!", Toast.LENGTH_SHORT).show()
+            }
+            HttpStatus.UNAUTHORIZED -> {
+                Toast.makeText(context, "Error: Unauthorized", Toast.LENGTH_SHORT).show()
+            }
+            HttpStatus.FAILED -> {
+                Toast.makeText(context, "Error: Operation failed!", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    ApiConnector.updateCustomer(
+        token = LocalStorage.getToken(context),
+        customerId = customer.id,
+        jsonData = Gson().toJson(customer),
+        onRespond = onCustomerEditRespond
+    )
 }
