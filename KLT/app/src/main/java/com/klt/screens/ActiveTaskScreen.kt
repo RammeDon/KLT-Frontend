@@ -291,7 +291,7 @@ fun ActiveTaskScreen(
                 navController = navController,
                 onBackNavigation = Tasks.route,
                 bigText = "Task: " + task.taskName,
-                smallText = "taskCompletedSubHeaderString()"
+                smallText = ""
             )
 
             Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp /15).dp))
