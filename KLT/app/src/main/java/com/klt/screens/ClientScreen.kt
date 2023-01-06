@@ -175,7 +175,7 @@ fun ClientScreen(
                 DualLazyWindow(
                     navController = navController,
                     leftButtonText = "Customers",
-                    rightButtonText = "Favorites",
+                    rightButtonText = "Saved",
                     leftLazyItems = allCustomers,
                     rightLazyItems = pinnedCustomers,
                     rightIcons = Icons.Outlined.PushPin,

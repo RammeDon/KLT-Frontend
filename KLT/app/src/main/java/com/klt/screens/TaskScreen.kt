@@ -217,7 +217,7 @@ fun TaskScreen(
                 DualLazyWindow(
                     navController = navController,
                     leftButtonText = "Tasks",
-                    rightButtonText = "Favourite Tasks",
+                    rightButtonText = "Saved",
                     leftLazyItems = allTasks,
                     rightLazyItems = pinnedTasks,
                     leftIcons = Icons.Outlined.Done,
