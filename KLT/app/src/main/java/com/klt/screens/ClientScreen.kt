@@ -125,7 +125,7 @@ fun ClientScreen(
         topBar = {
             Column(verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
-                    text = "Customers: Select a Customer",
+                    text = "Select a Customer",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
