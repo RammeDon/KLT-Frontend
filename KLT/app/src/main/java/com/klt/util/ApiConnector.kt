@@ -229,7 +229,7 @@ object ApiConnector {
         jsonData: String,
         onRespond: (result: ApiResult) -> Unit
     ) {
-        val urlPath = "/api/ts/c/$customerId/edit"
+        val urlPath = "/api/customer/c/$customerId/edit"
 
         val formBody: RequestBody = FormBody.Builder()
             .add("data", jsonData)
