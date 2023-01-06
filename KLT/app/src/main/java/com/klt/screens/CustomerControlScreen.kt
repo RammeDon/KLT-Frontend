@@ -119,6 +119,7 @@ fun CustomerControlScreen(
                             ),
                             shape = RoundedCornerShape(5.dp),
                             elevation = null,
+                            enabled = false
                         ) {
                             Row(
                                 modifier = Modifier
