@@ -1,7 +1,10 @@
 package com.klt.util
 
 import android.util.Log
-import okhttp3.*
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import org.json.JSONObject
 
 /** The Api Connector has all the functions for talking to the API,
@@ -11,7 +14,7 @@ import org.json.JSONObject
 object ApiConnector {
 
     // Init HTTP Client
-    private var client: OkHttpClient = OkHttpClient();
+    private var client: OkHttpClient = OkHttpClient()
 
 
     /** Api call that requires email and password,
@@ -96,7 +99,7 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
-    
+
     /** Api call to delete an user */
     fun deleteUser(
         token: String,
@@ -154,7 +157,6 @@ object ApiConnector {
 
         onRespond(callAPI(request))
     }
-
 
 
     fun getAllCustomers(
@@ -221,6 +223,27 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    fun updateCustomer(
+        token: String,
+        customerId: String,
+        jsonData: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/ts/c/$customerId/edit"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("data", jsonData)
+            .build()
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
     private fun callAPI(request: Request): ApiResult {
         return try {
             val apiResult = client.newCall(request).execute()
@@ -241,13 +264,21 @@ data class ApiResult(
 ) {
     fun status(): HttpStatus {
         return when (code) {
-            in 100..299 -> { HttpStatus.SUCCESS }
-            in 300..499 -> { HttpStatus.UNAUTHORIZED }
-            else -> { HttpStatus.FAILED }
+            in 100..299 -> {
+                HttpStatus.SUCCESS
+            }
+            in 300..499 -> {
+                HttpStatus.UNAUTHORIZED
+            }
+            else -> {
+                HttpStatus.FAILED
+            }
         }
     }
 
-    fun data(): JSONObject { return JSONObject(data) }
+    fun data(): JSONObject {
+        return JSONObject(data)
+    }
 }
 
 /** Http status enum */

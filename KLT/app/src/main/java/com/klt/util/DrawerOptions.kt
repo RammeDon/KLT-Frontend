@@ -1,7 +1,7 @@
 package com.klt.util
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.Analytics
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.klt.ui.navigation.*
 
@@ -14,8 +14,14 @@ enum class SideBarUserOptions(val title: String, val icon: ImageVector?, val rou
 
 
 enum class SideBarAdminOptions(val title: String, val icon: ImageVector?, val route: String) {
-    USER_CONTROL("Create User", Icons.Rounded.PersonAdd, route = CreateUser.route),
-    CLIENT_CONTROL("Client control", Icons.Rounded.AddBusiness, route = Clients.route),
-    TASK_TEMPLATES("Task templates", Icons.Rounded.Description, route = Tasks.route),
+    CREATE_USER("Create User", CreateUser.icon, route = CreateUser.route),
+    USER_CONTROL("User Control", UserControl.icon, route = UserControl.route),
+
+    //   Needs to list all customers + edit and delete options
+    CUSTOMER_CONTROL("Customer control", CustomerControl.icon, route = CustomerControl.route),
+
+    //    TASK_TEMPLATES("Task templates", Tasks.icon, route = Tasks.route),  # dropped
+
+    // Needs to be routed to Alrik's screen
     PERFORMANCE("Performance", Icons.Rounded.Analytics, route = Login.route)
 }

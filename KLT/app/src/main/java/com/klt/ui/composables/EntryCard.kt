@@ -6,11 +6,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
-import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.material.icons.rounded.ArrowForward
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -27,11 +28,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun EntryCard(
+    modifier: Modifier = Modifier,
     item: Any,
     textColor: Color,
     navController: NavController,
     destination: String,
-    modifier: Modifier = Modifier,
     backgroundColor: Color = Color.LightGray,
     hasIcon: Boolean = true,
     isInsideDrawer: Boolean = false,
@@ -51,7 +52,8 @@ fun EntryCard(
     Button(
         modifier = Modifier
             .padding(horizontal = 15.dp)
-            .height(50.dp),
+            .height(50.dp)
+            .then(modifier),
         onClick = {
             if (isInsideDrawer) coroutine.launch { job(null) }
             if (item is ICustomer) Tasks.customer = item
@@ -87,7 +89,7 @@ fun EntryCard(
                     Icon(
                         imageVector = when (item) {
                             is ICustomer -> if (item.pinned) Icons.Outlined.Star else Icons.Outlined.StarBorder
-                            is ITask ->  if (item.pinned) Icons.Outlined.Star else Icons.Outlined.StarBorder
+                            is ITask -> if (item.pinned) Icons.Outlined.Star else Icons.Outlined.StarBorder
                             else -> icon ?: Icons.Default.BrokenImage // in case of error
                         }, contentDescription = "card-icon", tint = textColor
                     )

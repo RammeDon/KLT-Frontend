@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 /* Item used to populate the customer list */
-private class CustomerItem: ICustomer {
+class CustomerItem : ICustomer {
     override var id: String = "-1"
     override var hasIcon: Boolean = true
     override var name: String = "NAME"
@@ -96,7 +96,7 @@ fun ClientScreen(
 
     // On pin customer
     val onPin: (item: IKLTItem?) -> Unit = {
-        if (it != null && it is ICustomer){
+        if (it != null && it is ICustomer) {
             val ls = LocalStorage.getLocalStorageData(context)
             if (!it.pinned) {
                 pinnedCustomers.add(it)
@@ -171,7 +171,6 @@ fun ClientScreen(
                 .padding(horizontal = 20.dp)
         ) {
             Column(modifier = Modifier) {
-                
                 DualLazyWindow(
                     navController = navController,
                     leftButtonText = "Customers",

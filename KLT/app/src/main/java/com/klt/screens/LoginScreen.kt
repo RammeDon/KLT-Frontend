@@ -1,7 +1,6 @@
 package com.klt.screens
 
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,7 +12,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -24,7 +22,7 @@ import androidx.navigation.NavController
 import com.klt.R
 import com.klt.ui.composables.NormalTextField
 import com.klt.ui.composables.PasswordTextField
-import com.klt.ui.navigation.Clients
+import com.klt.ui.navigation.Customers
 import com.klt.ui.navigation.ForgotPassword
 import com.klt.util.ApiConnector
 import com.klt.util.ApiResult
@@ -66,10 +64,10 @@ fun LoginScreen(
                     labelText = "Email..",
                     title = "Email",
                     forUsername = true,
-                    updateState = {email = it}
+                    updateState = { email = it }
                 )
                 Spacer(Modifier.padding(vertical = 8.dp))
-                PasswordTextField(title = "Password", onUpdate = {password  = it})
+                PasswordTextField(title = "Password", onUpdate = { password = it })
 
                 // Auth state
                 var auth by remember { mutableStateOf(Pair(false, "")) }
@@ -100,7 +98,7 @@ fun LoginScreen(
                     launch {
                         if (auth.first) {
                             LocalStorage.saveToken(context, auth.second)
-                            navController.navigate(Clients.route)
+                            navController.navigate(Customers.route)
                         }
                     }
                 }

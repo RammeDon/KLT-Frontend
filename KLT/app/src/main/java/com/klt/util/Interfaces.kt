@@ -1,6 +1,6 @@
 package com.klt.util
 
-import java.util.Date
+import java.util.*
 
 
 /** Interface for tasks entry's */
@@ -22,7 +22,7 @@ interface ITaskEntry {
 }
 
 /** Interface for task's */
-interface ITask: IKLTItem {
+interface ITask : IKLTItem {
 
     /** Enum for data types */
     enum class GoalDataTypes(text: String) {
@@ -44,21 +44,24 @@ interface ITask: IKLTItem {
     var pinned: Boolean
     val requireOrderNumber: Boolean
 
-    override val name: String
+    override var name: String
         get() = taskName
+        set(newName) {
+            this.name = newName
+        }
 
     override val hasIcon: Boolean
         get() = true
 }
 
 /** Interface for customer */
-interface ICustomer: IKLTItem {
+interface ICustomer : IKLTItem {
     var pinned: Boolean
 }
 
 /** Interface for KLT Item */
 interface IKLTItem {
-    val name: String
+    var name: String
     val id: String
     val hasIcon: Boolean
 }

@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.R
-import com.klt.ui.navigation.Clients
+import com.klt.ui.navigation.Customers
 import com.klt.ui.navigation.ForgotPassword
 import com.klt.ui.navigation.Login
 import com.klt.ui.navigation.ResetPassword
@@ -62,7 +62,7 @@ fun TopBar(
                         if (currScreen != Login.route && currScreen != ForgotPassword.route &&
                             currScreen != ResetPassword.route
                         ) {
-                            navController.navigate(Clients.route)
+                            navController.navigate(Customers.route)
                         }
                     },
                     interactionSource = interactionSource, indication = null
