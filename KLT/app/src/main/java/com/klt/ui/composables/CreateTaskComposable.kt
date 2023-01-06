@@ -313,7 +313,7 @@ fun CreateTaskGoal(
                                     color = colorResource(id = R.color.KLT_DarkGray1)
                                 )
                             },
-                            modifier = Modifier.padding(end = 10.dp),
+                            modifier = Modifier.padding(end = 10.dp).width(250.dp),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
                                 unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
@@ -329,7 +329,7 @@ fun CreateTaskGoal(
                             label = {
                                 Text(
                                     text = "Unit",
-                                    color = colorResource(id = R.color.KLT_DarkGray1)
+                                    color = colorResource(id = R.color.KLT_DarkGray1),
                                 )
                             },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -344,7 +344,7 @@ fun CreateTaskGoal(
                         DropDownMenu(
                             taskGoal = taskGoal,
                             modifier = Modifier
-                                .width(300.dp)
+                                .width(250.dp)
                                 .fillMaxHeight()
                         )
 
