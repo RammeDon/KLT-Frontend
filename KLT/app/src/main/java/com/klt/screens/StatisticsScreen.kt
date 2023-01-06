@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import com.klt.ui.composables.BarGraph
 import com.klt.ui.composables.LazyWindow
 import com.klt.ui.navigation.ClientStatistics
 import com.klt.util.ApiConnector
@@ -36,9 +37,15 @@ fun StatisticsScreen(
                 items = listOfClients,
                 color = Color.LightGray
             )
-
+            Spacer(modifier = Modifier.weight(1f))
+            BarGraph(
+                dataset = listOf(403,2634,1643,54312,65423,2643),
+                variablename = "Clients",
+                variables = listOf("Client A", "Client B", "Client C", "Client D", "Client E", "Client F", )
+            )
             Spacer(modifier = Modifier.weight(1f))
         }
+
     }
 }
 /*Display Checklist:
