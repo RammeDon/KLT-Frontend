@@ -125,7 +125,7 @@ fun ClientScreen(
         topBar = {
             Column(verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
-                    text = "Clients: Select a client",
+                    text = "Customers: Select a Customer",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -139,7 +139,7 @@ fun ClientScreen(
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     ClickableText(
-                        text = AnnotatedString("Add Client"),
+                        text = AnnotatedString("Add Customers"),
                         modifier = Modifier.padding(top = 14.dp),
                         onClick = {
                             coroutine.launch {

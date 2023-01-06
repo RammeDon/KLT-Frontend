@@ -48,7 +48,7 @@ fun CreateClientComposable(
         }
     }
 
-    Text(text = "Client name")
+    Text(text = "Customer name")
     Spacer(modifier = Modifier.height(5.dp))
     OutlinedTextField(
         value = clientName,
@@ -58,7 +58,7 @@ fun CreateClientComposable(
             .fillMaxWidth(),
         placeholder = {
             Text(
-                text = "Client Name...",
+                text = "Customer Name...",
                 color = colorResource(id = R.color.KLT_DarkGray1)
             )
         },
@@ -85,7 +85,7 @@ fun CreateClientComposable(
             },
             colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),
         ) {
-            Text(text = "Create New Client", color = Color.White)
+            Text(text = "Create New Customer", color = Color.White)
         }
     }
 }
