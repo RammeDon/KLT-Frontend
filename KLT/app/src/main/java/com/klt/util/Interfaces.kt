@@ -59,8 +59,14 @@ interface ICustomer : IKLTItem {
     var pinned: Boolean
 }
 
+interface IUser : IKLTItem {
+    var firstName: String
+    var lastName: String
+    var email: String
+}
+
 /** Interface for KLT Item */
-interface IKLTItem {
+sealed interface IKLTItem {
     var name: String
     val id: String
     val hasIcon: Boolean

@@ -5,6 +5,7 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.json.JSONArray
 import org.json.JSONObject
 
 /** The Api Connector has all the functions for talking to the API,
@@ -99,6 +100,15 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    fun getAllUserData(token: String, onRespond: (result: ApiResult) -> Unit) {
+        val urlPath = "/api/user/getall"
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .build()
+
+        onRespond(callAPI(request))
+    }
 
     /** Api call to delete an user */
     fun deleteUser(
@@ -278,6 +288,10 @@ data class ApiResult(
 
     fun data(): JSONObject {
         return JSONObject(data)
+    }
+
+    fun dataArray(): JSONArray {
+        return JSONArray(data)
     }
 }
 
