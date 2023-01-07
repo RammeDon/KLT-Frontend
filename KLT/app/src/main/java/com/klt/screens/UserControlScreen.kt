@@ -51,7 +51,6 @@ private class UserItem : IUser {
 }
 
 @Suppress("LocalVariableName", "UnnecessaryVariable")
-@OptIn(InternalComposeApi::class)
 @Composable
 fun UserControlScreen(
     navController: NavController,
