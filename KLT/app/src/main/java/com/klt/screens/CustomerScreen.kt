@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.gson.annotations.SerializedName
 import com.klt.drawers.BottomDrawer
 import com.klt.ui.composables.CreateClientComposable
 import com.klt.ui.composables.DualLazyWindow
@@ -27,11 +28,14 @@ import com.klt.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.Serializable
 
 /* Item used to populate the customer list */
-class CustomerItem : ICustomer {
+class CustomerItem : ICustomer, Serializable {
+    @SerializedName("_id")
     override var id: String = "-1"
     override var hasIcon: Boolean = true
+    @SerializedName("name")
     override var name: String = "NAME"
     override var pinned: Boolean = false
 }

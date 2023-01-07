@@ -1,5 +1,6 @@
 package com.klt.screens
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
 import android.widget.Toast
@@ -44,10 +45,10 @@ fun CustomerControlScreen(
             .then(modifier)
     ) {
         val context = LocalContext.current
-        val allCustomers = remember { mutableStateListOf<IKLTItem>() }
+        val allCustomers = remember { mutableStateListOf<ICustomer>() }
         val coroutine = rememberCoroutineScope()
         var haveFetchCustomers by remember { mutableStateOf(false) }
-        val pinnedCustomers = remember { mutableStateListOf<IKLTItem>() }
+        val pinnedCustomers = remember { mutableStateListOf<ICustomer>() }
         val scrollState = rememberLazyListState()
         var editOn: Boolean by remember {
             mutableStateOf(false)
@@ -158,7 +159,7 @@ fun CustomerControlScreen(
                             mutableStateOf(false)
                         }
                         IconButton(onClick = {
-                            coroutine.launch {
+                            coroutine.launch(Dispatchers.IO) {
                                 if (clicked && nameVal != "") {
                                     it.name = nameVal
                                     updateCustomer(it, context)
@@ -195,24 +196,31 @@ fun CustomerControlScreen(
     }
 }
 
-fun updateCustomer(customer: IKLTItem, context: Context) {
+
+fun updateCustomer(customer: ICustomer, context: Context) {
+
     val onCustomerEditRespond: (ApiResult) -> Unit = { apiResult ->
         when (apiResult.status()) {
             HttpStatus.SUCCESS -> {
+                Looper.prepare()
                 Toast.makeText(context, "Edit is successful!", Toast.LENGTH_SHORT).show()
+                Looper.loop()
             }
             HttpStatus.UNAUTHORIZED -> {
+                Looper.prepare()
                 Toast.makeText(context, "Error: Unauthorized", Toast.LENGTH_SHORT).show()
+                Looper.loop()
             }
             HttpStatus.FAILED -> {
+                Looper.prepare()
                 Toast.makeText(context, "Error: Operation failed!", Toast.LENGTH_LONG).show()
+                Looper.loop()
             }
         }
     }
 
-    ApiConnector.updateCustomer(
+    ApiConnector.editCustomer(
         token = LocalStorage.getToken(context),
-        customerId = customer.id,
         jsonData = Gson().toJson(customer),
         onRespond = onCustomerEditRespond
     )

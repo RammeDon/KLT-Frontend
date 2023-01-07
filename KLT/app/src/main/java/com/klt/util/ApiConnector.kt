@@ -209,27 +209,12 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
-    /** API Call to retrieve a task from the id */
-    fun getTask(
-        taskId: String,
-        onRespond: (result: ApiResult) -> Unit
-    ) {
-        val urlPath = "/api/ts/t/$taskId"
-
-        val request: Request = Request.Builder()
-            .url(Values.BACKEND_IP + urlPath)
-            .build()
-
-        onRespond(callAPI(request))
-    }
-
-    fun updateCustomer(
+    fun editCustomer(
         token: String,
-        customerId: String,
         jsonData: String,
         onRespond: (result: ApiResult) -> Unit
     ) {
-        val urlPath = "/api/customer/c/$customerId/edit"
+        val urlPath = "/api/ts/c/edit"
 
         val formBody: RequestBody = FormBody.Builder()
             .add("data", jsonData)
@@ -246,11 +231,13 @@ object ApiConnector {
 
     private fun callAPI(request: Request): ApiResult {
         return try {
+            Log.d("callAPI", request.url.toString())
             val apiResult = client.newCall(request).execute()
+            Log.d("callAPI", apiResult.message)
             val jsonData = apiResult.body?.string() ?: "{}"
             ApiResult(jsonData, apiResult.code)
         } catch (e: java.lang.Exception) {
-            Log.d("TOKEN_LOAD", e.toString())
+            Log.d("callAPI", "Crash")
             ApiResult("{msg: \"Connection timeout\"}")
         }
     }
@@ -262,6 +249,7 @@ data class ApiResult(
     private val data: String = "{}",
     private val code: Number = 500
 ) {
+
     fun status(): HttpStatus {
         return when (code) {
             in 100..299 -> {
