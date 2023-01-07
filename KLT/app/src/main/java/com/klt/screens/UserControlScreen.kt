@@ -18,6 +18,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
@@ -194,21 +195,23 @@ fun UserControlScreen(
                             Icon(
                                 imageVector = Icons.Rounded.Delete,
                                 contentDescription = "Delete Customer",
-                                tint = if (confirmDelete) Color.Green else Color.Black,
+                                tint = if (confirmDelete) Color.Red else Color.Black,
                                 modifier = Modifier.scale(if (confirmDelete) 1.2f else 1f)
                             )
                         }
                         Spacer(modifier = Modifier.weight(1f))
-                        IconButton(onClick = {
-                            confirmDelete = false
-                        }) {
+                        IconButton(
+                            enabled = confirmDelete,
+                            onClick = { confirmDelete = false }
+                        ) {
                             Icon(
                                 imageVector = Icons.Rounded.Add,
                                 contentDescription = "Cancel Delete",
-                                tint = if (confirmDelete) Color.Red else Color.DarkGray,
+                                tint = Color.DarkGray,
                                 modifier = Modifier
                                     .scale(if (confirmDelete) 1.2f else 1f)
-                                    .rotate(45f),
+                                    .rotate(45f)
+                                    .alpha(if (confirmDelete) 1f else 0f),
                             )
                         }
                         Spacer(modifier = Modifier.weight(1f))
