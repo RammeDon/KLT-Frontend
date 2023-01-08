@@ -147,7 +147,7 @@ fun AnimatedAppNavHost(
                 }
             }
         ) {
-            ClientScreen(
+            CustomerScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(Customers.route) }
             )

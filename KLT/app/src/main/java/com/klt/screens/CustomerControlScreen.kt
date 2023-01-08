@@ -1,8 +1,10 @@
 package com.klt.screens
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
@@ -39,6 +42,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.klt.R
+import com.klt.ui.composables.CreateCustomer
 import com.klt.ui.composables.NormalTextField
 import com.klt.ui.composables.ScreenSubTitle
 import com.klt.util.*
@@ -48,6 +52,7 @@ import kotlin.coroutines.suspendCoroutine
 import kotlin.math.max
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CustomerControlScreen(
     navController: NavController,
@@ -59,17 +64,7 @@ fun CustomerControlScreen(
             .fillMaxSize()
             .then(modifier)
     ) {
-        ScreenSubTitle(
-            navController = navController,
-            onBackNavigation = navController.previousBackStackEntry?.destination?.route!!,
-            bigText = "Manage Existing Customers",
-            smallText = "Here you change customer names or delete customers"
-        )
-        Spacer(
-            modifier = Modifier.height(
-                max(LocalConfiguration.current.screenHeightDp / 23, 37).dp
-            )
-        )
+
         val context = LocalContext.current
         val allCustomers = remember { mutableStateListOf<ICustomer>() }
         val coroutine = rememberCoroutineScope()
@@ -115,157 +110,239 @@ fun CustomerControlScreen(
                 }
             }
         }
-
-        LazyColumn(state = scrollState) {
-            items(items = allCustomers, key = { customer -> customer.id }) {
-                var nameVal by remember {
-                    mutableStateOf("")
-                }
-                var isEditing by remember {
-                    mutableStateOf(false)
-                }
-                var isDeleted by remember {
-                    mutableStateOf(false)
-                }
-                val KLT_Red = colorResource(id = R.color.KLT_Red)
-                var deleteButtonClicked by remember {
-                    mutableStateOf(false)
-                }
-
-                LaunchedEffect(isDeleted) {
-                    if (isDeleted) {
-                        allCustomers.remove(it)
-                        launch(Dispatchers.IO) {
-                            deleteCustomer(it, context)
-                        }
-                    }
-                }
-
-                Row {
-                    if (deleteButtonClicked) {
-                        OpenDialogue(context = context, customer = it, OnResponse = { result ->
-                            isDeleted = result
-                            if (!result) {
-                                deleteButtonClicked = false
+        val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+        val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetGesturesEnabled = scaffoldState.bottomSheetState.isExpanded,
+            sheetPeekHeight = 0.dp,
+            topBar = {
+                ScreenSubTitle(
+                    navController = navController,
+                    onBackNavigation = navController.previousBackStackEntry?.destination?.route!!,
+                    bigText = "Manage Existing Customers",
+                    smallText = "Here you add, change or delete customers"
+                )
+                Spacer(
+                    modifier = Modifier.height(
+                        max(LocalConfiguration.current.screenHeightDp / 23, 37).dp
+                    )
+                )
+            },
+            content = {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    IconButton(
+                        onClick = {
+                            coroutine.launch {
+                                scaffoldState.bottomSheetState.expand()
                             }
-                        })
-                    }
-                    if (!isEditing) {
-                        Button(
-                            modifier = Modifier
-                                .padding(horizontal = 15.dp)
-                                .width((LocalConfiguration.current.screenWidthDp / 1.5).dp)
-                                .fillMaxHeight()
-                                .then(modifier),
-                            onClick = { /* Disabled.*/ },
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color.LightGray
-                            ),
-                            shape = RoundedCornerShape(5.dp),
-                            elevation = null,
-                            enabled = false
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .then(modifier)
-                                    .background(Color.Transparent)
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .drawBehind {
-                                            val borderSize = 4.dp.toPx()
-                                            drawLine(
-                                                color = KLT_Red,
-                                                start = Offset(
-                                                    -(50f),
-                                                    (size.height * 1.5).toFloat()
-                                                ),
-                                                end = Offset(
-                                                    -(50f),
-                                                    -(size.height * 1.5).toFloat()
-                                                ),
-                                                strokeWidth = borderSize
-                                            )
-                                        },
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Text(
-                                        text = it.name, color = Color.Black,
-                                        fontWeight = FontWeight.Normal,
-                                        fontSize = 14.sp
-                                    )
-                                }
-                            }
-                        }
-                    } else {
-                        NormalTextField(
-                            labelText = it.name,
-                            modifier = Modifier
-                                .padding(horizontal = 15.dp)
-                                .padding(top = 8.dp)
-                                .fillMaxHeight()
-                                .width((LocalConfiguration.current.screenWidthDp / 1.5).dp),
-                            updateState = { input -> nameVal = input }
-                        )
-                    }
-                    var confirmDelete by remember {
-                        mutableStateOf(deleteButtonClicked)
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(end = 20.dp)
+                        },
                     ) {
-                        var clicked by remember {
+                        Icon(Icons.Default.Add, contentDescription = "")
+                    }
+                    ClickableText(
+                        text = AnnotatedString("Add Customers"),
+                        modifier = Modifier.padding(top = 14.dp),
+                        onClick = {
+                            coroutine.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        },
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+
+                LazyColumn(state = scrollState) {
+                    items(items = allCustomers, key = { customer -> customer.id }) {
+                        var nameVal by remember {
+                            mutableStateOf("")
+                        }
+                        var isEditing by remember {
                             mutableStateOf(false)
                         }
-                        IconButton(onClick = {
-                            coroutine.launch(Dispatchers.IO) {
-                                if (clicked && nameVal != "") {
-                                    it.name = nameVal
-                                    isEditing = false
-                                    clicked = false
-                                    updateCustomer(it, context)
-                                } else {
-                                    clicked = !clicked
-                                    isEditing = !isEditing
+                        var isDeleted by remember {
+                            mutableStateOf(false)
+                        }
+                        val KLT_Red = colorResource(id = R.color.KLT_Red)
+                        var deleteButtonClicked by remember {
+                            mutableStateOf(false)
+                        }
+
+                        LaunchedEffect(isDeleted) {
+                            if (isDeleted) {
+                                allCustomers.remove(it)
+                                launch(Dispatchers.IO) {
+                                    deleteCustomer(it, context)
                                 }
                             }
-                        }) {
-                            Icon(
-                                imageVector = if (!clicked)
-                                    Icons.Rounded.Edit else Icons.Rounded.Check,
-                                contentDescription = "Edit Customer",
-                                tint = if (!clicked) Color.Black else Color.Green
-                            )
                         }
-                        IconButton(onClick = {
-                            if (confirmDelete) {
-                                deleteButtonClicked = true
-                                confirmDelete = false
-                            } else confirmDelete = true
-                        }) {
-                            Icon(
-                                imageVector = Icons.Rounded.Delete,
-                                contentDescription = "Delete Customer",
-                                tint = if (confirmDelete) Color.Red else Color.Black,
-                                modifier = Modifier.scale(if (confirmDelete) 1.2f else 1f),
-                            )
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
 
-                        if (clicked) {
-                            editingList.add(it.id)
-                        } else {
-                            editingList.remove(it.id)
+                        Row {
+                            if (deleteButtonClicked) {
+                                OpenDialogue(
+                                    context = context,
+                                    customer = it,
+                                    OnResponse = { result ->
+                                        isDeleted = result
+                                        if (!result) {
+                                            deleteButtonClicked = false
+                                        }
+                                    })
+                            }
+                            if (!isEditing) {
+                                Button(
+                                    modifier = Modifier
+                                        .padding(horizontal = 15.dp)
+                                        .width((LocalConfiguration.current.screenWidthDp / 1.5).dp)
+                                        .fillMaxHeight()
+                                        .then(modifier),
+                                    onClick = { /* Disabled.*/ },
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.LightGray
+                                    ),
+                                    shape = RoundedCornerShape(5.dp),
+                                    elevation = null,
+                                    enabled = false
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .then(modifier)
+                                            .background(Color.Transparent)
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxHeight()
+                                                .drawBehind {
+                                                    val borderSize = 4.dp.toPx()
+                                                    drawLine(
+                                                        color = KLT_Red,
+                                                        start = Offset(
+                                                            -(50f),
+                                                            (size.height * 1.5).toFloat()
+                                                        ),
+                                                        end = Offset(
+                                                            -(50f),
+                                                            -(size.height * 1.5).toFloat()
+                                                        ),
+                                                        strokeWidth = borderSize
+                                                    )
+                                                },
+                                            verticalArrangement = Arrangement.Center
+                                        ) {
+                                            Text(
+                                                text = it.name, color = Color.Black,
+                                                fontWeight = FontWeight.Normal,
+                                                fontSize = 14.sp
+                                            )
+                                        }
+                                    }
+                                }
+                            } else {
+                                NormalTextField(
+                                    labelText = it.name,
+                                    modifier = Modifier
+                                        .padding(horizontal = 15.dp)
+                                        .padding(top = 8.dp)
+                                        .fillMaxHeight()
+                                        .width((LocalConfiguration.current.screenWidthDp / 1.5).dp),
+                                    updateState = { input -> nameVal = input }
+                                )
+                            }
+                            var confirmDelete by remember {
+                                mutableStateOf(deleteButtonClicked)
+                            }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(end = 20.dp)
+                            ) {
+                                var clicked by remember {
+                                    mutableStateOf(false)
+                                }
+                                IconButton(onClick = {
+                                    coroutine.launch(Dispatchers.IO) {
+                                        if (clicked && nameVal != "") {
+                                            it.name = nameVal
+                                            isEditing = false
+                                            clicked = false
+                                            updateCustomer(it, context)
+                                        } else {
+                                            clicked = !clicked
+                                            isEditing = !isEditing
+                                        }
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = if (!clicked)
+                                            Icons.Rounded.Edit else Icons.Rounded.Check,
+                                        contentDescription = "Edit Customer",
+                                        tint = if (!clicked) Color.Black else Color.Green
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    if (confirmDelete) {
+                                        deleteButtonClicked = true
+                                        confirmDelete = false
+                                    } else confirmDelete = true
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Delete,
+                                        contentDescription = "Delete Customer",
+                                        tint = if (confirmDelete) Color.Red else Color.Black,
+                                        modifier = Modifier.scale(if (confirmDelete) 1.2f else 1f),
+                                    )
+                                }
+                                Spacer(modifier = Modifier.weight(1f))
+
+                                if (clicked) {
+                                    editingList.add(it.id)
+                                } else {
+                                    editingList.remove(it.id)
+                                }
+                                isEditing = clicked
+                            }
                         }
-                        isEditing = clicked
+                        Spacer(Modifier.height(5.dp))
                     }
                 }
-                Spacer(Modifier.height(5.dp))
-            }
-        }
+            },
+            sheetContent = {
+                com.klt.drawers.BottomDrawer(content = {
+                    CreateCustomer(BottomSheetStateCurrent = sheetState, onSubmit = {
+                        val buildCustomerByName: (ApiResult) -> Unit = { apiResult ->
+                            when (apiResult.status()) {
+                                HttpStatus.SUCCESS -> {
+                                    Log.d(TAG, apiResult.toString())
+                                    val data = apiResult.data()
+                                    val item = data.getJSONObject("customer")
+                                    val c = CustomerItem()
+                                    c.id = item.getString("_id")
+                                    c.name = item.getString("name")
+                                    allCustomers.add(0, c)
+                                }
+                                HttpStatus.UNAUTHORIZED -> {
+                                    Looper.prepare()
+                                    Toast.makeText(context, "UNAUTHORIZED", Toast.LENGTH_SHORT)
+                                        .show()
+                                    Looper.loop()
+                                }
+                                HttpStatus.FAILED -> {
+                                    Looper.prepare()
+                                    Toast.makeText(context, "FAILED", Toast.LENGTH_SHORT).show()
+                                    Looper.loop()
+                                }
+                            }
+                        }
+                        ApiConnector.getCustomerByName(
+                            token = LocalStorage.getToken(context),
+                            customerName = it,
+                            onRespond = buildCustomerByName
+                        )
+                    })
+                })
+            })
     }
 }
 
@@ -360,7 +437,7 @@ fun OpenDialogue(context: Context, customer: ICustomer, OnResponse: (Boolean) ->
                         ) {
                             Text(text = "Confirm")
                         }
-                        Spacer(modifier = Modifier.width(15.dp))
+                        Spacer(modifier = Modifier.weight(5f))
                         ClickableText(
                             text = AnnotatedString("Cancel"),
                             onClick = { onDismiss(false) },
@@ -372,6 +449,7 @@ fun OpenDialogue(context: Context, customer: ICustomer, OnResponse: (Boolean) ->
                                 )
                                 .align(Alignment.CenterVertically),
                         )
+                        Spacer(modifier = Modifier.weight(0.5f))
                     }
                 }
             }

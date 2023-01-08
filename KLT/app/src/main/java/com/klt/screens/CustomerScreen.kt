@@ -4,15 +4,12 @@ import android.content.Context
 import android.os.Looper
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -20,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.gson.annotations.SerializedName
 import com.klt.drawers.BottomDrawer
-import com.klt.ui.composables.CreateClientComposable
+import com.klt.ui.composables.CreateCustomer
 import com.klt.ui.composables.DualLazyWindow
 import com.klt.ui.composables.KLTDivider
 import com.klt.ui.navigation.Tasks
@@ -35,6 +32,7 @@ class CustomerItem : ICustomer, Serializable {
     @SerializedName("_id")
     override var id: String = "-1"
     override var hasIcon: Boolean = true
+
     @SerializedName("name")
     override var name: String = "NAME"
     override var pinned: Boolean = false
@@ -42,14 +40,12 @@ class CustomerItem : ICustomer, Serializable {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ClientScreen(
+fun CustomerScreen(
     navController: NavController,
     context: Context = LocalContext.current,
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
-
-
     val coroutine = rememberCoroutineScope()
     var haveFetchCustomers by remember { mutableStateOf(false) }
     val allCustomers = remember { mutableStateListOf<IKLTItem>() }
@@ -112,8 +108,6 @@ fun ClientScreen(
                 it.pinned = false
             }
             LocalStorage.saveLocalStorageData(context, ls)
-
-            // Force re-render
             allCustomers.add(it)
             allCustomers.removeLast()
         }
@@ -138,37 +132,11 @@ fun ClientScreen(
                     textAlign = TextAlign.Center
                 )
                 KLTDivider()
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    ClickableText(
-                        text = AnnotatedString("Add Customers"),
-                        modifier = Modifier.padding(top = 14.dp),
-                        onClick = {
-                            coroutine.launch {
-                                scaffoldState.bottomSheetState.expand()
-                            }
-                        },
-                    )
-                    IconButton(
-                        onClick = {
-                            coroutine.launch {
-                                scaffoldState.bottomSheetState.expand()
-                            }
-                        },
-                        modifier = Modifier.padding(end = 30.dp)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "")
-                    }
-                }
-
+                Spacer(Modifier.height(14.dp))
             }
-
         },
         sheetContent = {
-            BottomDrawer(content = { CreateClientComposable(BottomSheetStateCurrent = sheetState) })
-
+            BottomDrawer(content = { CreateCustomer(BottomSheetStateCurrent = sheetState) })
         }) {
         Box(
             modifier = Modifier
