@@ -127,6 +127,21 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    fun deleteCustomer(
+        token: String,
+        customerId: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/ts/c/$customerId/delete"
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .delete()
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
     /** Api call to Create customer */
     fun createCustomer(
         name: String,
