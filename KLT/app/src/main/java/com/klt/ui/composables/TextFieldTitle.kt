@@ -8,12 +8,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
-val TextFieldTitle: @Composable (String) -> Unit = {
+@Composable
+fun TextFieldTitle(text: String, modifier: Modifier = Modifier) {
     Text(
-        text = it,
+        text = text,
         textAlign = TextAlign.Center,
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 5.dp)
+            .then(modifier)
     )
 }
