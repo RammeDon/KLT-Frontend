@@ -1,36 +1,51 @@
 package com.klt.screens
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Looper
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.google.gson.Gson
+import com.klt.R
 import com.klt.ui.composables.NormalTextField
+import com.klt.ui.composables.ScreenSubTitle
 import com.klt.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.json.JSONObject
+import kotlin.coroutines.suspendCoroutine
+import kotlin.math.max
 
 
 @Composable
@@ -44,43 +59,46 @@ fun CustomerControlScreen(
             .fillMaxSize()
             .then(modifier)
     ) {
+        ScreenSubTitle(
+            navController = navController,
+            onBackNavigation = navController.previousBackStackEntry?.destination?.route!!,
+            bigText = "Manage Existing Customers",
+            smallText = "Here you change customer names or delete customers"
+        )
+        Spacer(
+            modifier = Modifier.height(
+                max(LocalConfiguration.current.screenHeightDp / 23, 37).dp
+            )
+        )
         val context = LocalContext.current
         val allCustomers = remember { mutableStateListOf<ICustomer>() }
         val coroutine = rememberCoroutineScope()
         var haveFetchCustomers by remember { mutableStateOf(false) }
-        val pinnedCustomers = remember { mutableStateListOf<ICustomer>() }
         val scrollState = rememberLazyListState()
-        var editOn: Boolean by remember {
-            mutableStateOf(false)
-        }
         var editingList = remember { mutableListOf<String>() }
 
         val onFetchTasks: (ApiResult) -> Unit = {
-            val data: JSONObject = it.data()
-            val msg: String = data.get("msg") as String
             when (it.status()) {
                 HttpStatus.SUCCESS -> {
+                    val data = it.data()
                     val itemsArray = data.getJSONArray("customers")
-                    val ls = LocalStorage.getLocalStorageData(context)
                     for (i in 0 until itemsArray.length()) {
                         val item = itemsArray.getJSONObject(i)
                         val c = CustomerItem()
                         c.id = item.getString("_id")
                         c.name = item.getString("name")
-                        c.pinned = ls.pinnedCustomers.contains(c.id)
                         allCustomers.add(c)
-                        if (c.pinned) pinnedCustomers.add(c)
                     }
                     haveFetchCustomers = true
                 }
                 HttpStatus.UNAUTHORIZED -> {
                     Looper.prepare()
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "UNAUTHORIZED", Toast.LENGTH_SHORT).show()
                     Looper.loop()
                 }
                 HttpStatus.FAILED -> {
                     Looper.prepare()
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "FAILED", Toast.LENGTH_SHORT).show()
                     Looper.loop()
                 }
             }
@@ -106,7 +124,32 @@ fun CustomerControlScreen(
                 var isEditing by remember {
                     mutableStateOf(false)
                 }
+                var isDeleted by remember {
+                    mutableStateOf(false)
+                }
+                val KLT_Red = colorResource(id = R.color.KLT_Red)
+                var deleteButtonClicked by remember {
+                    mutableStateOf(false)
+                }
+
+                LaunchedEffect(isDeleted) {
+                    if (isDeleted) {
+                        allCustomers.remove(it)
+                        launch(Dispatchers.IO) {
+                            deleteCustomer(it, context)
+                        }
+                    }
+                }
+
                 Row {
+                    if (deleteButtonClicked) {
+                        OpenDialogue(context = context, customer = it, OnResponse = { result ->
+                            isDeleted = result
+                            if (!result) {
+                                deleteButtonClicked = false
+                            }
+                        })
+                    }
                     if (!isEditing) {
                         Button(
                             modifier = Modifier
@@ -114,7 +157,7 @@ fun CustomerControlScreen(
                                 .width((LocalConfiguration.current.screenWidthDp / 1.5).dp)
                                 .fillMaxHeight()
                                 .then(modifier),
-                            onClick = { /*No.*/ },
+                            onClick = { /* Disabled.*/ },
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Color.LightGray
                             ),
@@ -129,7 +172,23 @@ fun CustomerControlScreen(
                                     .background(Color.Transparent)
                             ) {
                                 Column(
-                                    modifier = Modifier.fillMaxHeight(),
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .drawBehind {
+                                            val borderSize = 4.dp.toPx()
+                                            drawLine(
+                                                color = KLT_Red,
+                                                start = Offset(
+                                                    -(50f),
+                                                    (size.height * 1.5).toFloat()
+                                                ),
+                                                end = Offset(
+                                                    -(50f),
+                                                    -(size.height * 1.5).toFloat()
+                                                ),
+                                                strokeWidth = borderSize
+                                            )
+                                        },
                                     verticalArrangement = Arrangement.Center
                                 ) {
                                     Text(
@@ -151,6 +210,9 @@ fun CustomerControlScreen(
                             updateState = { input -> nameVal = input }
                         )
                     }
+                    var confirmDelete by remember {
+                        mutableStateOf(deleteButtonClicked)
+                    }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(end = 20.dp)
@@ -165,6 +227,7 @@ fun CustomerControlScreen(
                                     updateCustomer(it, context)
                                 }
                                 clicked = !clicked
+                                isEditing = !isEditing
                             }
                         }) {
                             Icon(
@@ -174,10 +237,17 @@ fun CustomerControlScreen(
                                 tint = if (!clicked) Color.Black else Color.Green
                             )
                         }
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = {
+                            if (confirmDelete) {
+                                deleteButtonClicked = true
+                                confirmDelete = false
+                            } else confirmDelete = true
+                        }) {
                             Icon(
                                 imageVector = Icons.Rounded.Delete,
-                                contentDescription = "Delete Customer"
+                                contentDescription = "Delete Customer",
+                                tint = if (confirmDelete) Color.Red else Color.Black,
+                                modifier = Modifier.scale(if (confirmDelete) 1.2f else 1f),
                             )
                         }
                         Spacer(modifier = Modifier.weight(1f))
@@ -198,7 +268,6 @@ fun CustomerControlScreen(
 
 
 fun updateCustomer(customer: ICustomer, context: Context) {
-
     val onCustomerEditRespond: (ApiResult) -> Unit = { apiResult ->
         when (apiResult.status()) {
             HttpStatus.SUCCESS -> {
@@ -224,4 +293,114 @@ fun updateCustomer(customer: ICustomer, context: Context) {
         jsonData = Gson().toJson(customer),
         onRespond = onCustomerEditRespond
     )
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun OpenDialogue(context: Context, customer: ICustomer, OnResponse: (Boolean) -> Unit) {
+    val dialogueState = remember { mutableStateOf(true) }
+    val onDismiss: (Boolean) -> Unit = {
+        OnResponse(it)
+        dialogueState.value = false  // button has been clicked
+    }
+
+    if (dialogueState.value) {
+        Dialog(
+            onDismissRequest = { onDismiss(false) }, properties = DialogProperties(
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            Card(
+                elevation = 5.dp,
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .border(
+                        1.dp,
+                        color = colorResource(id = R.color.KLT_DarkGray1),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Icon(
+                        imageVector = Icons.Rounded.Warning,
+                        contentDescription = "Warning!",
+                        tint = Color.Red,
+                        modifier = Modifier
+                            .scale(3f)
+                            .padding(top = 10.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                    Spacer(Modifier.height(50.dp))
+                    Text(
+                        "Deleting a customer will delete all customer tasks and metric " +
+                                "history.",
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(Modifier.height(25.dp))
+                    Text("Are you sure you want to delete ${customer.name}?")
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Divider()
+                    Row(horizontalArrangement = Arrangement.Center) {
+                        Button(
+                            onClick = {
+                                onDismiss(true)
+                            },
+                            colors = ButtonDefaults
+                                .buttonColors(
+                                    backgroundColor = colorResource(id = R.color.KLT_Red),
+                                    contentColor = Color.White
+                                ),
+                            elevation = null
+                        ) {
+                            Text(text = "Confirm")
+                        }
+                        Spacer(modifier = Modifier.width(15.dp))
+                        ClickableText(
+                            text = AnnotatedString("Cancel"),
+                            onClick = { onDismiss(false) },
+                            modifier = Modifier
+                                .scale(
+                                    if (context.resources.configuration.orientation == Configuration
+                                            .ORIENTATION_PORTRAIT
+                                    ) 1f else 0.8f
+                                )
+                                .align(Alignment.CenterVertically),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+suspend fun deleteCustomer(customer: ICustomer, context: Context) {
+    return suspendCoroutine { _ ->
+        val onUserEditRespond: (ApiResult) -> Unit = { apiResult ->
+            Looper.prepare()
+            when (apiResult.status()) {
+                HttpStatus.SUCCESS -> {
+                    Toast.makeText(context, "Delete successful!", Toast.LENGTH_SHORT).show()
+                    Looper.loop()
+                }
+                HttpStatus.UNAUTHORIZED -> {
+                    Toast.makeText(context, "Error: Unauthorized", Toast.LENGTH_SHORT).show()
+                    Looper.loop()
+                }
+                HttpStatus.FAILED -> {
+                    Toast.makeText(context, "Error: Failed", Toast.LENGTH_LONG).show()
+                    Looper.loop()
+                }
+            }
+        }
+
+        ApiConnector.deleteCustomer(
+            token = LocalStorage.getToken(context),
+            customerId = customer.id,
+            onRespond = onUserEditRespond
+        )
+    }
 }

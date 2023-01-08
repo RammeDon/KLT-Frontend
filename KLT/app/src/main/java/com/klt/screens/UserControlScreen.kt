@@ -1,9 +1,7 @@
 package com.klt.screens
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -83,13 +81,11 @@ fun UserControlScreen(
             when (it.status()) {
                 HttpStatus.SUCCESS -> {
                     val itemsArray = it.dataArray()
-                    val ls = LocalStorage.getLocalStorageData(context)
                     var currUser = ""
                     getUserData(LocalStorage.getToken(context), onRespond = { user ->
                         val userObj = user.data()
                         currUser = userObj.get("_id") as String
                     })
-                    Log.d(TAG, currUser)
                     for (i in 0 until itemsArray.length()) {
                         val item = itemsArray.getJSONObject(i)
                         val c = UserItem()
@@ -105,12 +101,12 @@ fun UserControlScreen(
                 }
                 HttpStatus.UNAUTHORIZED -> {
                     Looper.prepare()
-                    Toast.makeText(context, "msg", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "UNAUTHORIZED", Toast.LENGTH_SHORT).show()
                     Looper.loop()
                 }
                 HttpStatus.FAILED -> {
                     Looper.prepare()
-                    Toast.makeText(context, "msg", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "FAILED", Toast.LENGTH_SHORT).show()
                     Looper.loop()
                 }
             }

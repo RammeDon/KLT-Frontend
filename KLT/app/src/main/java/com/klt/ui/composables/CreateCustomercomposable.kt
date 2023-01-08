@@ -64,7 +64,8 @@ fun CreateClientComposable(
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = colorResource(id = R.color.KLT_DarkGray1),
             unfocusedBorderColor = colorResource(id = R.color.KLT_DarkGray2)
-        )
+        ),
+        singleLine = true
     )
     Column(
         modifier = Modifier.fillMaxWidth(),
