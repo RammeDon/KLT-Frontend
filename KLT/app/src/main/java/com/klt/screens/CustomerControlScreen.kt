@@ -224,10 +224,13 @@ fun CustomerControlScreen(
                             coroutine.launch(Dispatchers.IO) {
                                 if (clicked && nameVal != "") {
                                     it.name = nameVal
+                                    isEditing = false
+                                    clicked = false
                                     updateCustomer(it, context)
+                                } else {
+                                    clicked = !clicked
+                                    isEditing = !isEditing
                                 }
-                                clicked = !clicked
-                                isEditing = !isEditing
                             }
                         }) {
                             Icon(
