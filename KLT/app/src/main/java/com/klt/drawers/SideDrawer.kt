@@ -3,11 +3,15 @@ package com.klt.drawers
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material.icons.rounded.Email
+import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
@@ -18,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.R
@@ -43,12 +48,14 @@ class SideDrawer(
                 .background(colorResource(id = R.color.KLT_WhiteGray1)),
             topBar = { drawHead(modifier = modifier.scale(1.75f)) },
             content = {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    drawBody(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it)
-                    )
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    item {
+                        drawBody(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it)
+                        )
+                    }
                 }
             },
             bottomBar = { drawFooter() }
@@ -120,6 +127,7 @@ class SideDrawer(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .then(modifier)
         ) {
             Spacer(modifier = Modifier.weight(0.25f))
             TitledDivider(
@@ -172,10 +180,11 @@ class SideDrawer(
             modifier = Modifier
                 .background(colorResource(id = R.color.KLT_DarkGray1))
                 .height(
-                    LocalConfiguration.current.screenHeightDp.dp / 20
+                    max(LocalConfiguration.current.screenHeightDp.dp / 16, 57.dp)
                 )
+                .then(modifier)
         ) {
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.height(8.dp))
             Text(
                 AnnotatedString(stringResource(id = R.string.company_name)), color = colorResource(
                     id = R.color.KLT_WhiteGray1
@@ -185,6 +194,53 @@ class SideDrawer(
                 textAlign = TextAlign.Center, fontSize = 12.sp
 
             )
+            Spacer(Modifier.height(5.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Spacer(modifier = Modifier.width(20.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Rounded.Email,
+                        contentDescription = "KLT Email",
+                        tint = colorResource(id = R.color.KLT_WhiteGray1),
+                        modifier = Modifier
+                            .scale(0.6f)
+                            .alpha(0.5f)
+                    )
+                    Text(
+                        AnnotatedString(stringResource(id = R.string.KLT_email)),
+                        color = colorResource(
+                            id = R.color.KLT_WhiteGray1
+                        ),
+                        modifier = Modifier
+                            .alpha(0.5f)
+                            .padding(start = 5.dp),
+                        textAlign = TextAlign.Center,
+                        fontSize = 9.sp
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        Icons.Rounded.Phone,
+                        contentDescription = "KLT Phone",
+                        tint = colorResource(id = R.color.KLT_WhiteGray1),
+                        modifier = Modifier
+                            .scale(0.6f)
+                            .alpha(0.5f)
+                    )
+                    Text(
+                        AnnotatedString(stringResource(id = R.string.KLT_phone)),
+                        color = colorResource(
+                            id = R.color.KLT_WhiteGray1
+                        ),
+                        modifier = Modifier
+                            .alpha(0.5f)
+                            .padding(start = 5.dp),
+                        textAlign = TextAlign.Center,
+                        fontSize = 9.sp
+
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                }
+            }
             Spacer(Modifier.weight(1f))
         }
     }

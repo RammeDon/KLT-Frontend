@@ -1,7 +1,7 @@
 package com.klt.screens
 
+import android.content.res.Configuration
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,15 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.R
 import com.klt.ui.composables.NormalTextField
 import com.klt.ui.composables.PasswordTextField
-import com.klt.ui.navigation.Clients
+import com.klt.ui.navigation.Customers
 import com.klt.ui.navigation.ForgotPassword
 import com.klt.util.ApiConnector
 import com.klt.util.ApiResult
@@ -40,36 +42,80 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
-    Box(modifier = modifier.then(Modifier.fillMaxSize()), contentAlignment = Alignment.Center) {
+    val context = LocalContext.current
+    Column(
+        modifier = modifier
+            .then(Modifier.fillMaxSize())
+            .scale(
+                if (context.resources.configuration.orientation == Configuration
+                        .ORIENTATION_PORTRAIT
+                ) 1f else 0.9f
+            ),
+        verticalArrangement = Arrangement.Center
+    ) {
         val initialHorizontalPadding = 20.dp
-        val context = LocalContext.current
         val coroutine = rememberCoroutineScope()
-
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
-
+        val horizontalScale = 0.8f
+        Spacer(Modifier.weight(1f))
         Box(
             modifier = Modifier
-                .padding(horizontal = initialHorizontalPadding)
-                .padding(bottom = 56.dp) // push up to make up for TopBar
+                .padding(horizontal = LocalConfiguration.current.screenWidthDp.dp / 14)
                 .shadow(10.dp, shape = RoundedCornerShape(10.dp))
         ) {
             Column(
                 modifier = Modifier
                     .background(Color(0xFFE9E9E9), shape = RoundedCornerShape(5.dp))
-                    .fillMaxWidth()
-                    .padding(vertical = 20.dp)
-                    .padding(horizontal = initialHorizontalPadding * 2)
+                    .padding(
+                        vertical = if (context.resources.configuration.orientation == Configuration
+                                .ORIENTATION_PORTRAIT
+                        ) 20.dp else 0.dp
+                    )
+                    .padding(
+                        horizontal = initialHorizontalPadding * 2
+                    )
             ) {
-                Spacer(Modifier.padding(vertical = 8.dp))
+                Spacer(
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .scale(
+                            if (context.resources.configuration.orientation == Configuration
+                                    .ORIENTATION_PORTRAIT
+                            ) 1f else horizontalScale
+                        )
+                )
                 NormalTextField(
                     labelText = "Email..",
                     title = "Email",
                     forUsername = true,
-                    updateState = {email = it}
+                    updateState = { email = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(
+                            if (context.resources.configuration.orientation == Configuration
+                                    .ORIENTATION_PORTRAIT
+                            ) 1f else horizontalScale
+                        )
                 )
-                Spacer(Modifier.padding(vertical = 8.dp))
-                PasswordTextField(title = "Password", onUpdate = {password  = it})
+                Spacer(
+                    Modifier
+                        .padding(
+                            if (context.resources.configuration.orientation == Configuration
+                                    .ORIENTATION_PORTRAIT
+                            ) 8.dp else 0.dp
+                        )
+                )
+                PasswordTextField(
+                    title = "Password",
+                    onUpdate = { password = it },
+                    modifier = Modifier.scale(
+                        if (context.resources.configuration.orientation == Configuration
+                                .ORIENTATION_PORTRAIT
+                        ) 1f else horizontalScale
+
+                    )
+                )
 
                 // Auth state
                 var auth by remember { mutableStateOf(Pair(false, "")) }
@@ -100,7 +146,7 @@ fun LoginScreen(
                     launch {
                         if (auth.first) {
                             LocalStorage.saveToken(context, auth.second)
-                            navController.navigate(Clients.route)
+                            navController.navigate(Customers.route)
                         }
                     }
                 }
@@ -118,7 +164,16 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(alignment = Alignment.CenterHorizontally)
-                        .padding(vertical = 30.dp),
+                        .padding(
+                            if (context.resources.configuration.orientation == Configuration
+                                    .ORIENTATION_PORTRAIT
+                            ) 30.dp else 5.dp
+                        )
+                        .scale(
+                            if (context.resources.configuration.orientation == Configuration
+                                    .ORIENTATION_PORTRAIT
+                            ) 1f else 0.5f
+                        ),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = colorResource(id = R.color.KLT_Red)
                     )
@@ -126,10 +181,14 @@ fun LoginScreen(
                     Text(
                         color = Color.White,
                         text = "Login",
-                        modifier = Modifier.padding(
-                            vertical = 10.dp,
-                            horizontal = 22.dp
-                        )
+                        modifier = Modifier
+                            .padding(
+                                horizontal = 22.dp,
+                                vertical = 8.dp
+                            ),
+                        fontSize = if (context.resources.configuration.orientation == Configuration
+                                .ORIENTATION_PORTRAIT
+                        ) 15.sp else (15 * 2).sp
                     )
                 }
 
@@ -138,10 +197,23 @@ fun LoginScreen(
                     text = AnnotatedString(text),
                     onClick = { navController.navigate(ForgotPassword.route) },
                     modifier = Modifier
-                        .padding(vertical = 18.dp)
+//                        .padding(bottom = 5.dp)
                         .align(Alignment.CenterHorizontally)
+                        .scale(
+                            if (context.resources.configuration.orientation == Configuration
+                                    .ORIENTATION_PORTRAIT
+                            ) 1f else 0.8f
+                        ),
                 )
             }
         }
+        Spacer(Modifier.weight(1f))
+        Spacer(
+            Modifier.height(
+                if (context.resources.configuration.orientation == Configuration
+                        .ORIENTATION_PORTRAIT
+                ) 30.dp else 0.dp
+            )
+        )
     }
 }

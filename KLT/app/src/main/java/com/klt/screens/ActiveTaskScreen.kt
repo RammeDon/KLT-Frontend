@@ -2,9 +2,6 @@ package com.klt.screens
 
 
 import android.content.Context
-import android.os.Looper
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -16,7 +13,7 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.klt.ui.composables.*
 import com.klt.ui.navigation.ActiveTask
-import com.klt.ui.navigation.Clients
+import com.klt.ui.navigation.Customers
 import com.klt.ui.navigation.Tasks
 import com.klt.util.*
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +28,7 @@ import java.util.concurrent.TimeUnit
 
 
 /** Enum for defining this views states */
-enum class TaskViewState() {
+enum class TaskViewState {
     ORDER_NUMBER,
     TASK,
     DEVIATION,
@@ -39,39 +36,49 @@ enum class TaskViewState() {
 }
 
 
-
-class ActiveTaskState: Serializable {
+class ActiveTaskState : Serializable {
     @SerializedName("taskId")
     var id: String = ""
+
     @SerializedName("orderNumber")
     var orderNumber: String = ""
+
     @SerializedName("start")
     var start: String = ""
+
     @SerializedName("end")
     var end: String = ""
+
     @SerializedName("pauses")
     var pauses: MutableList<Pause> = mutableListOf()
+
     @SerializedName("timeSummary")
     var timeSummary: Long = 0L
+
     @SerializedName("goals")
     var goals: MutableList<Goals> = mutableListOf()
 
-    class Pause: Serializable {
+    class Pause : Serializable {
         @SerializedName("start")
         var start: String = ""
+
         @SerializedName("end")
         var end: String = ""
+
         @SerializedName("reason")
         var reason: String = ""
     }
 
-    class Goals: Serializable {
+    class Goals : Serializable {
         @SerializedName("name")
         var name: String = ""
+
         @SerializedName("value")
         var value: Any = ""
+
         @SerializedName("unit")
         var unit: String = ""
+
         @SerializedName("dataType")
         var dataTypes: String = ""
     }
@@ -109,10 +116,10 @@ fun ActiveTaskScreen(
     fun areWeInPause(): Boolean {
         val activeTaskState = getActiveTaskState()
         return (
-            activeTaskState != null &&
-            activeTaskState.pauses.isNotEmpty() &&
-            activeTaskState.pauses.last().end == ""
-        )
+                activeTaskState != null &&
+                        activeTaskState.pauses.isNotEmpty() &&
+                        activeTaskState.pauses.last().end == ""
+                )
     }
 
     fun summarizeTimeElapsed(endTime: LocalDateTime): Long {
@@ -122,11 +129,12 @@ fun ActiveTaskScreen(
         var totalTimePaused = 0L
         for (pause in activeTask.pauses) {
             val pauseStart = LocalDateTime.parse(pause.start)
-            val pauseEnd: LocalDateTime = if (pause.end == "") endTime else LocalDateTime.parse(pause.end)
+            val pauseEnd: LocalDateTime =
+                if (pause.end == "") endTime else LocalDateTime.parse(pause.end)
             val pauseDuration = Duration.between(pauseStart, pauseEnd)
             totalTimePaused += pauseDuration.toMillis()
         }
-        return  elapsed - totalTimePaused
+        return elapsed - totalTimePaused
     }
 
     fun getUpdateClock(): Long {
@@ -143,16 +151,17 @@ fun ActiveTaskScreen(
     }
 
 
-
     // Variables for this composable
     var taskActive by remember { mutableStateOf(initState != null) }
-    var sliderValue by remember { mutableStateOf(if(initState != null) 1.0F else 0.0F) }
+    var sliderValue by remember { mutableStateOf(if (initState != null) 1.0F else 0.0F) }
     var taskPaused by remember { mutableStateOf(areWeInPause()) }
     var finalTimeElapsed by remember { mutableStateOf(0L) }
     var orderNumber by remember { mutableStateOf(getActiveTaskState()?.orderNumber ?: "") }
-    var state: TaskViewState by remember { mutableStateOf(
-        if (task.requireOrderNumber && orderNumber == "") TaskViewState.ORDER_NUMBER else TaskViewState.TASK
-    )}
+    var state: TaskViewState by remember {
+        mutableStateOf(
+            if (task.requireOrderNumber && orderNumber == "") TaskViewState.ORDER_NUMBER else TaskViewState.TASK
+        )
+    }
     var timeElapsed by remember { mutableStateOf(getUpdateClock()) }
 
 
@@ -164,7 +173,7 @@ fun ActiveTaskScreen(
 
         if (taskActive && !taskPaused) {
             delay(100L)
-            timeElapsed= getUpdateClock()
+            timeElapsed = getUpdateClock()
 
         }
 
@@ -291,10 +300,10 @@ fun ActiveTaskScreen(
                 navController = navController,
                 onBackNavigation = Tasks.route,
                 bigText = "Task: " + task.taskName,
-                smallText = "taskCompletedSubHeaderString()"
+                smallText = ""
             )
 
-            Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp /15).dp))
+            Spacer(modifier = Modifier.height((LocalConfiguration.current.screenHeightDp / 15).dp))
 
             when (state) {
                 TaskViewState.ORDER_NUMBER -> {
@@ -322,7 +331,9 @@ fun ActiveTaskScreen(
                         )
                     }
                 }
-                TaskViewState.DEVIATION -> { DeviationForm( onConfirm = {onDeviation(it)} ) }
+                TaskViewState.DEVIATION -> {
+                    DeviationForm(onConfirm = { onDeviation(it) })
+                }
                 TaskViewState.COMPLETE -> {
                     val coroutine = rememberCoroutineScope()
                     OnTaskDone(
@@ -331,12 +342,13 @@ fun ActiveTaskScreen(
                             coroutine.launch(Dispatchers.IO) {
                                 onTaskDone()
                             }
-                            navController.navigate(Clients.route)
+                            navController.navigate(Customers.route)
                         },
                         activeTaskState = getActiveTaskState()!!,
                         timeTaken = getTimeElapsedAsString(),
                         modifier = Modifier.padding(horizontal = 40.dp)
-                    )}
+                    )
+                }
             }
 
 

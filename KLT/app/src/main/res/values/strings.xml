@@ -7,4 +7,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="company_name">Kjellssons Logistik &amp; Transport AB</string>
     <string name="KLT_name">Kjellssons Logistik &amp; Transport AB</string>
+    <string name="KLT_phone">044–781 90 00</string>
+    <string name="KLT_email">info@kjellssons.com</string>
 </resources>

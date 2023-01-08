@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.R
-import com.klt.ui.navigation.Clients
+import com.klt.ui.navigation.Customers
 import com.klt.ui.navigation.Login
 import com.klt.util.LocalStorage
 
@@ -82,7 +84,12 @@ fun LogoutScreen(
                                 backgroundColor = Color.Transparent
                             ),
                             elevation = null,
-                            onClick = { navController.navigate(navController.previousBackStackEntry?.destination?.route?: Clients.route) })
+                            onClick = {
+                                navController.navigate(
+                                    navController.previousBackStackEntry?.destination?.route
+                                        ?: Customers.route
+                                )
+                            })
                         {
                             Text(
                                 modifier = Modifier.padding(10.dp),

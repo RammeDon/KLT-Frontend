@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.gson.annotations.SerializedName
 import com.klt.drawers.BottomDrawer
 import com.klt.ui.composables.CreateClientComposable
 import com.klt.ui.composables.DualLazyWindow
@@ -27,11 +28,14 @@ import com.klt.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.Serializable
 
 /* Item used to populate the customer list */
-private class CustomerItem: ICustomer {
+class CustomerItem : ICustomer, Serializable {
+    @SerializedName("_id")
     override var id: String = "-1"
     override var hasIcon: Boolean = true
+    @SerializedName("name")
     override var name: String = "NAME"
     override var pinned: Boolean = false
 }
@@ -96,7 +100,7 @@ fun ClientScreen(
 
     // On pin customer
     val onPin: (item: IKLTItem?) -> Unit = {
-        if (it != null && it is ICustomer){
+        if (it != null && it is ICustomer) {
             val ls = LocalStorage.getLocalStorageData(context)
             if (!it.pinned) {
                 pinnedCustomers.add(it)
@@ -125,7 +129,7 @@ fun ClientScreen(
         topBar = {
             Column(verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
-                    text = "Clients: Select a client",
+                    text = "Select a Customer",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -139,7 +143,7 @@ fun ClientScreen(
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     ClickableText(
-                        text = AnnotatedString("Add Client"),
+                        text = AnnotatedString("Add Customers"),
                         modifier = Modifier.padding(top = 14.dp),
                         onClick = {
                             coroutine.launch {
@@ -171,11 +175,10 @@ fun ClientScreen(
                 .padding(horizontal = 20.dp)
         ) {
             Column(modifier = Modifier) {
-                
                 DualLazyWindow(
                     navController = navController,
                     leftButtonText = "Customers",
-                    rightButtonText = "Favorites",
+                    rightButtonText = "Saved",
                     leftLazyItems = allCustomers,
                     rightLazyItems = pinnedCustomers,
                     rightIcons = Icons.Outlined.PushPin,
