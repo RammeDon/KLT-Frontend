@@ -24,7 +24,7 @@ fun NormalTextField(
 ) {
     Column {
         if (title != "")
-            TextFieldTitle(title)
+            TextFieldTitle(title, modifier = modifier)
         var stateValue: String by remember {
             mutableStateOf("")
         }

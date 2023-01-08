@@ -218,7 +218,6 @@ class SideDrawer(
                         fontSize = 9.sp
                     )
                     Spacer(modifier = Modifier.weight(1f))
-
                     Icon(
                         Icons.Rounded.Phone,
                         contentDescription = "KLT Phone",

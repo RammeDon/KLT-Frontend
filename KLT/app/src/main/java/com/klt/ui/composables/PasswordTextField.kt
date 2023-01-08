@@ -52,7 +52,8 @@ fun PasswordTextField(
     checkPasswordStrength: Boolean = false,
     performMatchCheck: Boolean = false,
     singleLine: Boolean = true,
-    onUpdate: (String) -> Unit
+    onUpdate: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
     val showPassword = remember { mutableStateOf(false) }
@@ -75,7 +76,7 @@ fun PasswordTextField(
             } else pwContainer = hashedPW
         }
     }
-    Column(modifier = Modifier) {
+    Column(modifier = Modifier.then(modifier)) {
         if (title != "")
             TextFieldTitle(title)
         TextField(
