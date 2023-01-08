@@ -3,6 +3,7 @@ package com.klt.drawers
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowForward
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.R
@@ -46,12 +48,14 @@ class SideDrawer(
                 .background(colorResource(id = R.color.KLT_WhiteGray1)),
             topBar = { drawHead(modifier = modifier.scale(1.75f)) },
             content = {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    drawBody(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it)
-                    )
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    item {
+                        drawBody(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it)
+                        )
+                    }
                 }
             },
             bottomBar = { drawFooter() }
@@ -123,6 +127,7 @@ class SideDrawer(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .then(modifier)
         ) {
             Spacer(modifier = Modifier.weight(0.25f))
             TitledDivider(
@@ -175,7 +180,7 @@ class SideDrawer(
             modifier = Modifier
                 .background(colorResource(id = R.color.KLT_DarkGray1))
                 .height(
-                    LocalConfiguration.current.screenHeightDp.dp / 16
+                    max(LocalConfiguration.current.screenHeightDp.dp / 16, 57.dp)
                 )
                 .then(modifier)
         ) {
@@ -196,7 +201,10 @@ class SideDrawer(
                     Icon(
                         Icons.Rounded.Email,
                         contentDescription = "KLT Email",
-                        modifier = Modifier.scale(0.6f)
+                        tint = colorResource(id = R.color.KLT_WhiteGray1),
+                        modifier = Modifier
+                            .scale(0.6f)
+                            .alpha(0.5f)
                     )
                     Text(
                         AnnotatedString(stringResource(id = R.string.KLT_email)),
@@ -214,7 +222,10 @@ class SideDrawer(
                     Icon(
                         Icons.Rounded.Phone,
                         contentDescription = "KLT Phone",
-                        modifier = Modifier.scale(0.6f)
+                        tint = colorResource(id = R.color.KLT_WhiteGray1),
+                        modifier = Modifier
+                            .scale(0.6f)
+                            .alpha(0.5f)
                     )
                     Text(
                         AnnotatedString(stringResource(id = R.string.KLT_phone)),
