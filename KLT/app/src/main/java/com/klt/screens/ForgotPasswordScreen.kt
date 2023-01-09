@@ -24,7 +24,11 @@ fun ForgotPasswordScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
-        NormalTextField(labelText = "example@klt.se", title = "Email")
+        NormalTextField(
+            labelText = "example@klt.se", title = "Email", modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth()
+        )
         Button(
             modifier = Modifier
                 .fillMaxWidth()

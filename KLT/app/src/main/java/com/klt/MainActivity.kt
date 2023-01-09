@@ -110,9 +110,11 @@ fun RunApp() {
                         if (!loading) {
                             AnimatedAppNavHost(
                                 navController = navController,
-                                startDestination = Clients.route
+                                startDestination = if (isAuth) Customers.route else Login.route
                             )
-                        } else { Loading() }
+                        } else {
+                            Loading()
+                        }
                     }
                 }
             },

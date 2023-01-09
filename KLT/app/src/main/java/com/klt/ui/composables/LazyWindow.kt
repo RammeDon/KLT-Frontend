@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +24,7 @@ import com.klt.util.ITask
 fun LazyWindow(
     modifier: Modifier = Modifier,
     navController: NavController,
+    state: LazyListState = rememberLazyListState(),
     destination: String,
     items: List<IKLTItem>,
     repeats: Int = 1,
@@ -35,6 +38,7 @@ fun LazyWindow(
         modifier = Modifier
             .fillMaxHeight()
             .then(modifier),
+        state = state
     ) {
         items(items = items, key = { item -> item.name }) { item ->
             repeat(repeats) {
@@ -49,11 +53,12 @@ fun LazyWindow(
                     else -> Color.Black
                 }
                 EntryCard(
+                    modifier = modifier,
                     item = item,
                     textColor = textColor,
                     navController = navController,
                     destination = destination,
-                    hasIcon = item.hasIcon,
+                    hasIcon = if (icon != null) item.hasIcon else false,
                     backgroundColor = bgColor,
                     job = job
                 )

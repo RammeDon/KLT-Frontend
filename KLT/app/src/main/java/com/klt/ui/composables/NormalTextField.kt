@@ -1,7 +1,6 @@
 package com.klt.ui.composables
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
@@ -16,6 +15,7 @@ var username: String? = null
 
 @Composable
 fun NormalTextField(
+    modifier: Modifier = Modifier,
     labelText: String, horizontalPadding: Dp = 15.dp,
     title: String = "",
     singleLine: Boolean = true,
@@ -24,7 +24,7 @@ fun NormalTextField(
 ) {
     Column {
         if (title != "")
-            TextFieldTitle(title)
+            TextFieldTitle(title, modifier = modifier)
         var stateValue: String by remember {
             mutableStateOf("")
         }
@@ -37,8 +37,8 @@ fun NormalTextField(
                 if (forUsername) username = stateValue
             },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 10.dp),
+                .padding(bottom = 10.dp)
+                .then(modifier),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = singleLine
         )

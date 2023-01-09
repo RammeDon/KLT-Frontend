@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import com.klt.drawers.BottomDrawer
 import com.klt.ui.composables.*
 import com.klt.ui.navigation.ActiveTask
-import com.klt.ui.navigation.Clients
+import com.klt.ui.navigation.Customers
 import com.klt.ui.navigation.Tasks
 import com.klt.util.*
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 /* Item used to populate the goals */
-private class GoalItem: ITask.IGoal {
+private class GoalItem : ITask.IGoal {
     override var name: String = ""
     override var value: Any? = null
     override var unit: String = ""
@@ -37,14 +37,13 @@ private class GoalItem: ITask.IGoal {
 }
 
 /* Item used to populate the task list */
-private class TaskItem: ITask {
+private class TaskItem : ITask {
     override var taskName: String = ""
     override var goals: MutableList<ITask.IGoal> = mutableListOf()
     override var requireOrderNumber: Boolean = false
     override var id: String = ""
     override var pinned: Boolean = false
 }
-
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -57,7 +56,6 @@ fun TaskScreen(
     customer: ICustomer = Tasks.customer!!,
     OnSelfClick: () -> Unit = {},
 ) {
-
 
 
     val coroutine = rememberCoroutineScope()
@@ -110,7 +108,7 @@ fun TaskScreen(
 
     // On pin task
     val onPin: (item: IKLTItem?) -> Unit = {
-        if (it != null && it is ITask){
+        if (it != null && it is ITask) {
             val ls = LocalStorage.getLocalStorageData(context)
             if (!it.pinned) {
                 pinnedTasks.add(it)
@@ -145,8 +143,6 @@ fun TaskScreen(
     }
 
 
-
-
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
 
@@ -161,7 +157,7 @@ fun TaskScreen(
 
                 ScreenSubTitle(
                     navController = navController,
-                    onBackNavigation = Clients.route,
+                    onBackNavigation = Customers.route,
                     bigText = customer.name,
                     smallText = ""
                 )
@@ -194,19 +190,21 @@ fun TaskScreen(
         },
         sheetContent = {
             BottomDrawer(
-                content = { CreateTaskComposable(
-                    BottomSheetStateCurrent = sheetState,
-                    customer = customer,
-                    onTaskCreated = {
-                        allTasks.clear()
-                        pinnedTasks.clear()
-                        ApiConnector.getTasksFromCustomer(
-                            token = LocalStorage.getToken(context),
-                            customerId = customer.id,
-                            onRespond = onFetchTasks
-                        )
-                    }
-                ) }
+                content = {
+                    CreateTaskComposable(
+                        BottomSheetStateCurrent = sheetState,
+                        customer = customer,
+                        onTaskCreated = {
+                            allTasks.clear()
+                            pinnedTasks.clear()
+                            ApiConnector.getTasksFromCustomer(
+                                token = LocalStorage.getToken(context),
+                                customerId = customer.id,
+                                onRespond = onFetchTasks
+                            )
+                        }
+                    )
+                }
             )
         }) {
         Box(
@@ -217,7 +215,7 @@ fun TaskScreen(
                 DualLazyWindow(
                     navController = navController,
                     leftButtonText = "Tasks",
-                    rightButtonText = "favourite Tasks",
+                    rightButtonText = "Saved",
                     leftLazyItems = allTasks,
                     rightLazyItems = pinnedTasks,
                     leftIcons = Icons.Outlined.Done,

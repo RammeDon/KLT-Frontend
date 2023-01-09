@@ -109,7 +109,7 @@ fun AnimatedAppNavHost(
 
         // CLIENTS
         composable(
-            route = Clients.route,
+            route = Customers.route,
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentScope.SlideDirection.Left,
@@ -147,9 +147,9 @@ fun AnimatedAppNavHost(
                 }
             }
         ) {
-            ClientScreen(
+            CustomerScreen(
                 navController = navController,
-                OnSelfClick = { navController.navigateSingleTopTo(Clients.route) }
+                OnSelfClick = { navController.navigateSingleTopTo(Customers.route) }
             )
         }
 
@@ -560,6 +560,54 @@ fun AnimatedAppNavHost(
             LogoutScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(Logout.route) }
+            )
+        }
+
+        // USER CONTROL
+        composable(
+            route = UserControl.route,
+            // animation played ON ENTER when screen is not at top of back stack)
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Up,
+                    tween(defaultTween)
+                )
+            }
+        ) {
+            UserControlScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(UserControl.route) }
+            )
+        }
+
+        // USER CONTROL
+        composable(
+            route = CustomerControl.route,
+            // animation played ON ENTER when screen is not at top of back stack)
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Right,
+                    tween(defaultTween)
+                )
+            },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentScope.SlideDirection.Up,
+                    tween(defaultTween)
+                )
+            }
+        ) {
+            CustomerControlScreen(
+                navController = navController,
+                OnSelfClick = { navController.navigateSingleTopTo(UserControl.route) }
             )
         }
     }

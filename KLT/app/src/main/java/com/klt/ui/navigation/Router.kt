@@ -40,14 +40,14 @@ object Login : NavPath {
     override val icon: ImageVector = Icons.Rounded.Login
 }
 
-object Clients : NavPath {
-    override val route = "clients"
-    override val icon: ImageVector = Icons.Rounded.PeopleAlt
+object Customers : NavPath {
+    override val route = "customers"
+    override val icon: ImageVector = Icons.Rounded.AddBusiness
 }
 
 object Tasks : NavPath {
     override val route = "tasks"
-    override val icon: ImageVector = Icons.Rounded.TaskAlt
+    override val icon: ImageVector = Icons.Rounded.Description
     var customer: ICustomer? = null
 }
 
@@ -68,7 +68,7 @@ object ClientStatistics : NavPath {
 }
 
 object CreateUser : NavPath {
-    override val icon = Icons.Rounded.Person
+    override val icon = Icons.Rounded.PersonAdd
     override val route = "create-user"
 }
 
@@ -101,4 +101,14 @@ object ActiveTask : NavPath {
 object Logout : NavPath {
     override val icon = Icons.Rounded.TaskAlt
     override val route = "logout"
+}
+
+object UserControl : NavPath {
+    override val icon = Icons.Rounded.PeopleAlt
+    override val route = "user-control"
+}
+
+object CustomerControl : NavPath {
+    override val icon = Icons.Rounded.DomainDisabled
+    override val route = "customer-control"
 }
