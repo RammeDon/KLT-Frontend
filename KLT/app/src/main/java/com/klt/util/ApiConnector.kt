@@ -254,14 +254,12 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
-    fun getStats(
+    fun getCustomerByName(
         token: String,
-        startDate: String,
-        endDate: String,
+        customerName: String,
         onRespond: (result: ApiResult) -> Unit
     ) {
-        val urlPath = "/api/ts/getstats/" + startDate + "/" + endDate
-
+        val urlPath = "/api/ts/c/get-by-name/$customerName"
         val request: Request = Request.Builder()
             .header(Values.AUTH_TOKEN_NAME, token)
             .url(Values.BACKEND_IP + urlPath)
@@ -269,6 +267,7 @@ object ApiConnector {
 
         onRespond(callAPI(request))
     }
+
 
     private fun callAPI(request: Request): ApiResult {
         return try {
