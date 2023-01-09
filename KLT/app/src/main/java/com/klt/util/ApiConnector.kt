@@ -268,6 +268,21 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    fun getStats(
+        token: String,
+        startDate: String,
+        endDate: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/ts/getstats/" + startDate + "/" + endDate
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .build()
+
+        onRespond(callAPI(request))
+    }
 
     private fun callAPI(request: Request): ApiResult {
         return try {

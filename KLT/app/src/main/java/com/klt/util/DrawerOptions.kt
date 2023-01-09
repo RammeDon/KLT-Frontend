@@ -23,5 +23,5 @@ enum class SideBarAdminOptions(val title: String, val icon: ImageVector?, val ro
     //    TASK_TEMPLATES("Task templates", Tasks.icon, route = Tasks.route),  # dropped
 
     // Needs to be routed to Alrik's screen
-    PERFORMANCE("Performance", Icons.Rounded.Analytics, route = Login.route)
+    PERFORMANCE("Performance", Icons.Rounded.Analytics, route = Statistics.route)
 }
