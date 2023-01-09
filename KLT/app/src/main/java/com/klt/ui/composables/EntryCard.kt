@@ -83,8 +83,6 @@ fun EntryCard(
             if (hasIcon) {
                 IconButton(onClick = {
                     coroutine.launch { job(item as IKLTItem) }
-                    // if (isInsideDrawer) coroutine.launch { job() }
-                    // navController.navigate(destination)
                 }) {
                     Icon(
                         imageVector = when (item) {
