@@ -80,7 +80,8 @@ fun EntryCard(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            if (hasIcon) {
+
+            if (hasIcon && !isInsideDrawer) {
                 IconButton(onClick = {
                     coroutine.launch { job(item as IKLTItem) }
                 }) {
@@ -92,7 +93,16 @@ fun EntryCard(
                         }, contentDescription = "card-icon", tint = textColor
                     )
                 }
+            } else if (hasIcon) {
+                Icon(
+                    imageVector = when (item) {
+                        is ICustomer -> if (item.pinned) Icons.Outlined.Star else Icons.Outlined.StarBorder
+                        is ITask -> if (item.pinned) Icons.Outlined.Star else Icons.Outlined.StarBorder
+                        else -> icon ?: Icons.Default.BrokenImage // in case of error
+                    }, contentDescription = "card-icon", tint = textColor
+                )
             }
+
         }
     }
 }
