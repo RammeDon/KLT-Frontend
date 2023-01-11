@@ -50,8 +50,6 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
-        exclude 'META-INF/NOTICE.md'
-        exclude 'META-INF/LICENSE.md'
     }
 }
 

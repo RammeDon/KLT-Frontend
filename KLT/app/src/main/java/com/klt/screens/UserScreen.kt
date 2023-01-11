@@ -1,10 +1,5 @@
 package com.klt.screens
 
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.os.Looper
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,28 +16,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.gson.Gson
 import com.klt.R
 import com.klt.ui.composables.EditableCards
 import com.klt.ui.composables.KLTDivider
 import com.klt.ui.composables.PasswordTextField
 import com.klt.ui.composables.ScreenSubTitle
-import com.klt.util.ApiConnector
-import com.klt.util.ApiResult
-import com.klt.util.HttpStatus
-import com.klt.util.LocalStorage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonObjectBuilder
-import org.json.JSONObject
 
 /*  ------  TODO: When time for adding functionality the this kotlin file will be turned into a
 *            class which will have EditableCards as well. This is for more manageable handling of
@@ -57,35 +41,8 @@ fun UserScreen(
     OnSelfClick: () -> Unit = {}
 ) {
 
-    val currUserID = ""
-    val context = LocalContext.current
-    val coroutine = rememberCoroutineScope()
-    var userObj = JSONObject()
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var userFetched by remember { mutableStateOf(false) }
-
-
-    LaunchedEffect(currUserID) {
-        if (!userFetched) {
-            coroutine.launch(Dispatchers.IO) {
-                ApiConnector.getUserData(LocalStorage.getToken(context), onRespond = { user ->
-                    userObj = user.data()
-                    Log.d(TAG, userObj.toString())
-                    //currUserID = userObj.get("_id") as String
-                    firstName = userObj.get("firstName") as String
-                    lastName = userObj.get("lastName") as String
-                    email = userObj.get("email") as String
-                })
-            }
-        }
-        userFetched = true
-
-    }
-
     var editState by remember { mutableStateOf(false) }
-
+    var buttonPressed by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -118,29 +75,20 @@ fun UserScreen(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 EditableCards(
-                    text = firstName,
+                    text = "Emil Henriksen",
                     icon = Icons.Outlined.Person,
-                    editOn = editState,
-                    editValue = {firstName = it}
+                    editOn = editState
                 )
-                EditableCards(
-                    text = lastName,
-                    icon = Icons.Outlined.Person,
-                    editOn = editState,
-                    editValue = {lastName = it}
-                )/**
                 EditableCards(
                     text = "+46 0734587234",
                     icon = Icons.Outlined.Phone,
-                    editOn = editState,
-                    editValue = {firstName = it}
-                )*/
+                    editOn = editState
+                )
                 EditableCards(
-                    text = email,
+                    text = "emilhentriksen@klt.com",
                     icon = Icons.Outlined.Email,
-                    editOn = editState,
-                    editValue = {email = it}
-                )/**
+                    editOn = editState
+                )
                 if (editState) { // instead of textfield it should be passwordtextfield
                     Box(modifier = Modifier.padding(horizontal = 30.dp)) {
                         Row(
@@ -210,7 +158,7 @@ fun UserScreen(
                         editOn = editState
                     )
                 }
-*/
+
             }
             Column(
                 modifier = Modifier
@@ -227,15 +175,11 @@ fun UserScreen(
                     .height(40.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),
                     onClick = {
-                        if (editState) {
-                            coroutine.launch(Dispatchers.IO) {
-                                updateUser(firstName, lastName, email, userObj, context)
-                            }
-                        }
                         editState = !editState
+                        buttonPressed = !buttonPressed
                     }) {
                     Text(
-                        text = if (!editState) "Edit Profile" else "Save Changes",
+                        text = if (!buttonPressed) "Edit Profile" else "Save Changes",
                         color = Color.White
                     )
                 }
@@ -244,45 +188,4 @@ fun UserScreen(
         }
 
     }
-}
-
-private fun updateUser(
-    firstname: String,
-    lastname: String,
-    email: String,
-    userObj: JSONObject,
-    context: Context
-) {
-    userObj.put("firstName", firstname)
-    userObj.put("lastName", lastname)
-    userObj.put("email", email)
-
-    val onUserEditRespond: (ApiResult) -> Unit = { apiResult ->
-        when (apiResult.status()) {
-            HttpStatus.SUCCESS -> {
-                Looper.prepare()
-                Toast.makeText(context, "Edit is successful!", Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-            HttpStatus.UNAUTHORIZED -> {
-                Looper.prepare()
-                Toast.makeText(context, "Error: Unauthorized", Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-            HttpStatus.FAILED -> {
-                Looper.prepare()
-                Toast.makeText(context, "Error: Operation failed!", Toast.LENGTH_LONG).show()
-                Looper.loop()
-            }
-        }
-    }
-    Log.d(TAG, "This is the new object $userObj")
-    ApiConnector.editUser(
-        token = LocalStorage.getToken(context),
-        jsonData = userObj,
-        onRespond = onUserEditRespond
-    )
-
-
-
 }

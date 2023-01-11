@@ -18,10 +18,13 @@ fun EditableCards(
     modifier: Modifier = Modifier,
     editOn: Boolean = false,
     icon: ImageVector? = null,
-    text: String,
-    editValue: (String) -> Unit = {}
+
+    text: String
 
 ) {
+    var nameEdit by remember {
+        mutableStateOf("")
+    }
 
     Box(
         modifier = Modifier
@@ -46,9 +49,9 @@ fun EditableCards(
                 Text(text = text)
             } else {
                 TextField(
-                    value = text,
+                    value = nameEdit,
                     singleLine = true,
-                    onValueChange = { editValue(it) },
+                    onValueChange = { nameEdit = it },
                     placeholder = {
                         Text(
                             text = text
