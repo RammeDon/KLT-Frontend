@@ -74,6 +74,7 @@ class SideDrawer(
         val primaryCol = Color.Black
         val primaryAlpha: Float = 1f
         val bgCol = colorResource(id = R.color.KLT_WhiteGray1)
+
         Column {
             Spacer(
                 modifier = Modifier
@@ -181,18 +182,12 @@ class SideDrawer(
     @SuppressLint("ComposableNaming")
     @Composable
     private fun drawFooter(modifier: Modifier = Modifier) {
-//        val phoneSplit = R.string.KLT_phone.toString().split('–')
-//        val phoneSplit2 = phoneSplit[1].split(' ')
-//        var phoneJoin = phoneSplit[0]
-//        phoneSplit2.forEach {
-//            phoneJoin += it.trim()
-//        }
-
         val phoneIntent = Intent(Intent.ACTION_DIAL)
         phoneIntent.data = Uri.parse("tel: 0447819000")
         val emailIntent = Intent(Intent.ACTION_SENDTO)
         emailIntent.data = Uri.parse("mailto:info@kjellssons.com")
         val context = LocalContext.current
+
         Column(
             modifier = Modifier
                 .background(colorResource(id = R.color.KLT_DarkGray1))

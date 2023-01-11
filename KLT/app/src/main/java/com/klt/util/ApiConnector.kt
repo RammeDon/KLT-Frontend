@@ -254,6 +254,26 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    fun editUser(
+        token: String,
+        jsonData: JSONObject,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/updateuser"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("data", jsonData.toString())
+            .build()
+
+        val request: Request = Request.Builder()
+            .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
     fun getCustomerByName(
         token: String,
         customerName: String,
