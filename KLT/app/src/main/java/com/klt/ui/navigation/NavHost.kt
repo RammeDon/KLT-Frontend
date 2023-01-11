@@ -305,7 +305,7 @@ fun AnimatedAppNavHost(
             },
             popEnterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Down,
                     tween(defaultTween)
                 )
             },
@@ -317,7 +317,7 @@ fun AnimatedAppNavHost(
             },
             popExitTransition = {
                 slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
+                    AnimatedContentScope.SlideDirection.Up,
                     tween(defaultTween)
                 )
             }
