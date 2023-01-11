@@ -152,7 +152,8 @@ fun CustomerScreen(
                     rightIcons = Icons.Outlined.PushPin,
                     leftDestination = Tasks.route,
                     rightDestination = Tasks.route,
-                    job = onPin
+                    hasIcons = true,
+                    job = onPin,
                 )
             }
 
