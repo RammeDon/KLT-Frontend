@@ -32,6 +32,7 @@ fun DualLazyWindow(
     rightIcons: ImageVector? = null,
     leftDestination: String,
     rightDestination: String,
+    hasIcons: Boolean = true,
     job: (item: IKLTItem?) -> Unit = { }
 ) {
     val buttonSelectedColor = Color.LightGray
@@ -137,8 +138,8 @@ fun DualLazyWindow(
             }, content = {
                 Box(modifier = Modifier.padding(top = 15.dp)) {
                     if (leftButtonSelected) {
-                        
-                        Column() {
+
+                        Column {
 
                             Text(
                                 text = "All $leftButtonText",
@@ -156,13 +157,14 @@ fun DualLazyWindow(
                                 repeats = 1,
                                 color = Color(0XFFC85250),
                                 icon = leftIcons,
+                                hasIcons = hasIcons,
                                 job = job
                             )
                         }
-                        
+
                     } else {
-                        
-                        Column() {
+
+                        Column {
 
                             Text(
                                 text = "All $rightButtonText",
@@ -180,10 +182,11 @@ fun DualLazyWindow(
                                 repeats = 1,
                                 color = Color.LightGray,
                                 icon = rightIcons,
+                                hasIcons = hasIcons,
                                 job = job
                             )
                         }
-                        
+
                     }
                 }
             }

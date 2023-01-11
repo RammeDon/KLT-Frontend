@@ -30,6 +30,7 @@ fun LazyWindow(
     repeats: Int = 1,
     color: Color,
     icon: ImageVector? = null,
+    hasIcons: Boolean = false,
     collapsed: Boolean = false,
     job: (item: IKLTItem?) -> Unit = { }
 ) {
@@ -58,7 +59,7 @@ fun LazyWindow(
                     textColor = textColor,
                     navController = navController,
                     destination = destination,
-                    hasIcon = if (icon != null) item.hasIcon else false,
+                    hasIcon = if (icon != null || hasIcons) item.hasIcon else false,
                     backgroundColor = bgColor,
                     job = job
                 )
