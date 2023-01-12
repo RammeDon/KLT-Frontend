@@ -40,6 +40,46 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    /** Api Call for checking if user exists */
+    fun userExists(
+        email: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/userexists"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("email", email)
+            .build()
+
+        val request: Request = Request.Builder()
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
+
+    /** Api Call for checking if user exists */
+    fun createMailToken(
+        email: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/mailtoken"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("email", email)
+            .build()
+
+        val request: Request = Request.Builder()
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
+
     /** Api Call for creating an account */
     fun createAccount(
         token: String,
