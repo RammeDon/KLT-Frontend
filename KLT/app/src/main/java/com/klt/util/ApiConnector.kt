@@ -59,6 +59,24 @@ object ApiConnector {
         onRespond(callAPI(request))
     }
 
+    fun mailTokenExists(
+        token: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/mailtoken/exists"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("token", token)
+            .build()
+
+        val request: Request = Request.Builder()
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
 
     /** Api Call for checking if user exists */
     fun createMailToken(

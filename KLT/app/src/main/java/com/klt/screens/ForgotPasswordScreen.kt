@@ -19,6 +19,7 @@ import com.klt.ui.navigation.ConfirmToken
 import com.klt.ui.navigation.ResetPassword
 import com.klt.util.ApiConnector
 import com.klt.util.HttpStatus
+import com.klt.util.LocalStorage
 import kotlinx.coroutines.AbstractCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,9 +35,14 @@ fun ForgotPasswordScreen(
 ) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
-    var success = false
-
+    var success by remember { mutableStateOf(false) }
     val coroutine = rememberCoroutineScope()
+
+
+    LaunchedEffect(success) {
+        if (success) navController.navigate(ConfirmToken.route)
+    }
+
 
     Column(
         modifier = Modifier
@@ -57,12 +63,28 @@ fun ForgotPasswordScreen(
                 .padding(horizontal = 20.dp),
             onClick = {
                 coroutine.launch(Dispatchers.IO) {
-                    success = checkForUser(email, context)
-
-                    //Log.d(TAG, "------------------------------This is happening in coroutine $success")
+                    ApiConnector.userExists(email, onRespond = {
+                        val data: JSONObject = it.data()
+                        val msg: String = data.get("msg") as String
+                        when (it.status()) {
+                            HttpStatus.SUCCESS -> {
+                                LocalStorage.saveTokenEmail(context, email)
+                                success = true
+                                createMailToken(email, context)
+                            }
+                            HttpStatus.UNAUTHORIZED -> {
+                                Looper.prepare()
+                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                Looper.loop()
+                            }
+                            HttpStatus.FAILED -> {
+                                Looper.prepare()
+                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                                Looper.loop()
+                            }
+                        }
+                    })
                 }
-                navController.navigate(ConfirmToken.route)
-                //if (success)
 
             }
         ) {
@@ -70,35 +92,6 @@ fun ForgotPasswordScreen(
         }
         Spacer(modifier = Modifier.weight(1f))
     }
-
-}
-
-
-private fun checkForUser(email: String, context: Context): Boolean{
-    // navController.navigate(ResetPassword.route)
-    var success = false
-    ApiConnector.userExists(email, onRespond = {
-        val data: JSONObject = it.data()
-        val msg: String = data.get("msg") as String
-        when (it.status()) {
-            HttpStatus.SUCCESS -> {
-                createMailToken(email, context)
-                success = true
-
-            }
-            HttpStatus.UNAUTHORIZED -> {
-                Looper.prepare()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-            HttpStatus.FAILED -> {
-                Looper.prepare()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-        }
-    })
-    return success
 
 }
 

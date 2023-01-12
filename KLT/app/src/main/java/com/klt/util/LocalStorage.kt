@@ -11,8 +11,8 @@ class LocalStorageData: Serializable {
 
     @SerializedName("token")
     var token: String = ""
-    @SerializedName("emailToken")
-    var emailToken: String = ""
+    @SerializedName("tokenEmail")
+    var tokenEmail: String = ""
     @SerializedName("activeTasks")
     var activeTasks: MutableList<ActiveTaskState> = mutableListOf()
     @SerializedName("pinnedCustomer")
@@ -27,14 +27,14 @@ object LocalStorage {
     private const val FILENAME = "DATA.json"
 
     /** Quick function to save a new token */
-    fun saveToken(context: Context, token: String) {
-        localStorageData.token = token
+    fun saveToken(context: Context, email: String) {
+        localStorageData.token = email
         saveData(context)
     }
 
     /** Quick function to save a new email token */
-    fun saveEmailToken(context: Context, emailToken: String) {
-        localStorageData.emailToken = emailToken
+    fun saveTokenEmail(context: Context, emailToken: String) {
+        localStorageData.tokenEmail = emailToken
         saveData(context)
     }
 
@@ -45,9 +45,9 @@ object LocalStorage {
     }
 
     /** Retries the email token */
-    fun getEmailToken(context: Context): String {
+    fun getETokenEmail(context: Context): String {
         loadData(context)
-        return localStorageData.emailToken
+        return localStorageData.tokenEmail
     }
 
     /** Returns all the saved data */
