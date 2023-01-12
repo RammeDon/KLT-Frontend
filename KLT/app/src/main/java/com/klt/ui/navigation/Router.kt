@@ -102,7 +102,7 @@ object CustomerControl : NavPath {
     override val route = "customer-control"
 }
 
-object ConfirmPassword : NavPath {
+object ConfirmToken : NavPath {
     override val icon = Icons.Rounded.DomainDisabled
-    override val route = "customer-control"
+    override val route = "confirm-token"
 }

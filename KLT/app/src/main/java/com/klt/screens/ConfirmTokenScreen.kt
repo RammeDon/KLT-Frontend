@@ -32,7 +32,7 @@ fun ConfirmTokenScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
         NormalTextField(
-            labelText = "example@klt.se", title = "Email", modifier = Modifier
+            labelText = "Enter token here", title = "Token", modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
             updateState = { inputToken = it }
@@ -45,7 +45,7 @@ fun ConfirmTokenScreen(
 
             }
         ) {
-            Text("Reset Password")
+            Text("Confirm Token")
         }
         Spacer(modifier = Modifier.weight(1f))
     }

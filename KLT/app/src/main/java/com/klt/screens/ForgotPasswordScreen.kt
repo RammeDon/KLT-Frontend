@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.ui.composables.NormalTextField
+import com.klt.ui.navigation.ConfirmToken
 import com.klt.ui.navigation.ResetPassword
 import com.klt.util.ApiConnector
 import com.klt.util.HttpStatus
@@ -60,7 +61,7 @@ fun ForgotPasswordScreen(
 
                     //Log.d(TAG, "------------------------------This is happening in coroutine $success")
                 }
-                navController.navigate(ResetPassword.route)
+                navController.navigate(ConfirmToken.route)
                 //if (success)
 
             }
@@ -100,6 +101,7 @@ private fun checkForUser(email: String, context: Context): Boolean{
     return success
 
 }
+
 
 private fun createMailToken(email: String, context: Context) {
 

@@ -531,25 +531,25 @@ fun AnimatedAppNavHost(
             )
         }
 
-        // USER CONTROL
+        // CONFIRM TOKEN
         composable(
-            route = ConfirmTokenScreen.route,
+            route = ConfirmToken.route,
             // animation played ON ENTER when screen is not at top of back stack)
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
+                    AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
             },
             // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Up,
+                    AnimatedContentScope.SlideDirection.Left,
                     tween(defaultTween)
                 )
             }
         ) {
-            CustomerControlScreen(
+            ConfirmTokenScreen(
                 navController = navController,
                 OnSelfClick = { navController.navigateSingleTopTo(UserControl.route) }
             )
