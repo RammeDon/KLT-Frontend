@@ -66,7 +66,6 @@ fun UserScreen(
     var email by remember { mutableStateOf("") }
     var userFetched by remember { mutableStateOf(false) }
 
-
     LaunchedEffect(currUserID) {
         if (!userFetched) {
             coroutine.launch(Dispatchers.IO) {
@@ -276,7 +275,6 @@ private fun updateUser(
             }
         }
     }
-    Log.d(TAG, "This is the new object $userObj")
     ApiConnector.editUser(
         token = LocalStorage.getToken(context),
         jsonData = userObj,
