@@ -2,12 +2,18 @@ package com.klt.screens
 
 import android.os.Looper
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -71,12 +77,81 @@ fun ResetPasswordScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(12.dp),
+            .padding(horizontal = 12.dp)
+            .padding(vertical = 70.dp)
+        ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val newPW = PasswordTextField(labelText = "New Password", checkPasswordStrength = true, onUpdate = {newPassword = it})
+
+        Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .background(
+                        color = Color.LightGray,
+                        shape = RoundedCornerShape(5.dp)
+                    )
+                    .padding(start = 15.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(top = 15.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Lock,
+                        contentDescription = "name-Icon"
+                    )
+                }
+                Spacer(modifier = Modifier.width(20.dp))
+                PasswordTextField(
+                    labelText = "New Password",
+                    checkPasswordStrength = true,
+                    onUpdate = {newPassword = it}
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
+        Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .background(
+                        color = Color.LightGray,
+                        shape = RoundedCornerShape(5.dp)
+                    )
+                    .padding(start = 15.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(top = 15.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Lock,
+                        contentDescription = "name-Icon"
+                    )
+                }
+                Spacer(modifier = Modifier.width(20.dp))
+                PasswordTextField(
+                    labelText = "Confirm new password",
+                    performMatchCheck = true,
+                    onUpdate = {}
+                )
+            }
+        }
+
+
+        /**val newPW = PasswordTextField(labelText = "New Password", checkPasswordStrength = true, onUpdate = {newPassword = it})
         val confirmPW =
-            PasswordTextField(labelText = "Confirm new password", performMatchCheck = true, onUpdate = {})
+            PasswordTextField(labelText = "Confirm new password", performMatchCheck = true, onUpdate = {})*/
         Spacer(modifier = Modifier.weight(1f))
         Button(
             modifier = Modifier
