@@ -83,7 +83,7 @@ fun EntryCard(
             }
             Spacer(modifier = Modifier.weight(1f))
 
-            if (!isInsideDrawer) {
+            if (hasIcon && !isInsideDrawer) {
                 IconButton(onClick = {
                     Log.d(TAG, "This is on job: $item")
                     coroutine.launch { job(item as IKLTItem) }
@@ -98,8 +98,7 @@ fun EntryCard(
                         }, contentDescription = "card-icon", tint = textColor
                     )
                 }
-            }
-            else {
+            } else if (hasIcon) {
                 Icon(
                     imageVector = when (item) {
                         is ICustomer -> if (item.pinned) Icons.Outlined.Star else Icons.Outlined.StarBorder
@@ -108,7 +107,6 @@ fun EntryCard(
                     }, contentDescription = "card-icon", tint = textColor
                 )
             }
-
 
         }
     }
