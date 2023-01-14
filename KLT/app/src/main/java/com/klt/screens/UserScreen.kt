@@ -34,6 +34,8 @@ import com.klt.ui.composables.EditableCards
 import com.klt.ui.composables.KLTDivider
 import com.klt.ui.composables.PasswordTextField
 import com.klt.ui.composables.ScreenSubTitle
+import com.klt.ui.navigation.Login
+import com.klt.ui.navigation.ResetPassword
 import com.klt.util.ApiConnector
 import com.klt.util.ApiResult
 import com.klt.util.HttpStatus
@@ -221,6 +223,24 @@ fun UserScreen(
                     modifier = Modifier
                         .weight(1f)
                 )
+
+                if (!editState) {
+                    Button(modifier = Modifier
+                        .width(180.dp)
+                        .height(40.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),
+                        onClick = {
+                            navController.navigate(ResetPassword.route)
+
+                        }) {
+                        Text(
+                            text = "Change Password",
+                            color = Color.White
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
                 Button(modifier = Modifier
                     .width(180.dp)
                     .height(40.dp),

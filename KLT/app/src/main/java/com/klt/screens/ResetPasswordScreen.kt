@@ -166,7 +166,9 @@ fun ResetPasswordScreen(
                                 LocalStorage.getETokenEmail(context),
                                 onRespond = onResetPassword)
                         } else {
-                            ApiConnector.changePassword(authToken, newPassword, onResetPassword)
+                            ApiConnector.changePassword(authToken,
+                                newPassword,
+                                onRespond = onResetPassword)
                         }
 
                     }
