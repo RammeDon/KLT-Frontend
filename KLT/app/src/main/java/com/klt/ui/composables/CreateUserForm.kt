@@ -41,6 +41,7 @@ fun CreateUserForm(
         var email by remember { mutableStateOf("") }
         var firstName by remember { mutableStateOf("") }
         var lastName by remember { mutableStateOf("") }
+        var phoneNumber by remember { mutableStateOf("") }
         var alertState by remember { mutableStateOf(FormAlertMsgState.NOT_ACTIVE) }
         var alertMsg by remember { mutableStateOf("") }
 
@@ -58,7 +59,13 @@ fun CreateUserForm(
             val msg: String = data.get("msg") as String
 
             when (it.status()) {
-                HttpStatus.SUCCESS -> updateAlert(msg, FormAlertMsgState.GOOD)
+                HttpStatus.SUCCESS -> {
+                    email = ""
+                    firstName = ""
+                    lastName = ""
+                    phoneNumber = ""
+                    updateAlert(msg, FormAlertMsgState.GOOD)
+                }
                 HttpStatus.UNAUTHORIZED -> updateAlert(msg, FormAlertMsgState.BAD)
                 HttpStatus.FAILED -> updateAlert(msg, FormAlertMsgState.BAD)
             }
@@ -83,6 +90,16 @@ fun CreateUserForm(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email..") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
+            )
+
+            TextField(
+                value = phoneNumber,
+                onValueChange = { phoneNumber = it },
+                label = { Text("phone number..") },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -117,9 +134,11 @@ fun CreateUserForm(
                             email,
                             firstName,
                             lastName,
+                            phoneNumber,
                             onCreateAccount
                         )
                     }
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()

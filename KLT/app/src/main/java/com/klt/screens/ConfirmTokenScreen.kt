@@ -1,7 +1,6 @@
 package com.klt.screens
 
-import android.content.ContentValues.TAG
-import android.content.Context
+import android.content.ContentValues
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
@@ -20,29 +19,25 @@ import com.klt.ui.navigation.ResetPassword
 import com.klt.util.ApiConnector
 import com.klt.util.HttpStatus
 import com.klt.util.LocalStorage
-import kotlinx.coroutines.AbstractCoroutine
+import com.klt.util.LocalStorageData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import org.json.JSONObject
 
-
 @Composable
-fun ForgotPasswordScreen(
+fun ConfirmTokenScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     OnSelfClick: () -> Unit = {}
 ) {
-    val context = LocalContext.current
-    var email by remember { mutableStateOf("") }
-    var success by remember { mutableStateOf(false) }
+    var inputToken by remember { mutableStateOf("") }
+    var tokenExists by remember { mutableStateOf(false) }
     val coroutine = rememberCoroutineScope()
+    val context = LocalContext.current
 
-
-    LaunchedEffect(success) {
-        if (success) navController.navigate(ConfirmToken.route)
+    LaunchedEffect(tokenExists) {
+        if (tokenExists) navController.navigate(ResetPassword.route)
     }
-
 
     Column(
         modifier = Modifier
@@ -52,25 +47,24 @@ fun ForgotPasswordScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
         NormalTextField(
-            labelText = "example@klt.se", title = "Email", modifier = Modifier
+            labelText = "Enter token here", title = "Token", modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
-            updateState = { email = it }
+            updateState = { inputToken = it }
         )
         Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
             onClick = {
+
                 coroutine.launch(Dispatchers.IO) {
-                    ApiConnector.userExists(email, onRespond = {
+                    ApiConnector.mailTokenExists(inputToken, onRespond = {
                         val data: JSONObject = it.data()
                         val msg: String = data.get("msg") as String
                         when (it.status()) {
                             HttpStatus.SUCCESS -> {
-                                LocalStorage.saveTokenEmail(context, email)
-                                success = true
-                                createMailToken(email, context)
+                                tokenExists = true
                             }
                             HttpStatus.UNAUTHORIZED -> {
                                 Looper.prepare()
@@ -86,39 +80,11 @@ fun ForgotPasswordScreen(
                     })
                 }
 
+
             }
         ) {
-            Text("Reset Password")
+            Text("Confirm Token")
         }
         Spacer(modifier = Modifier.weight(1f))
     }
-
 }
-
-
-private fun createMailToken(email: String, context: Context) {
-
-    ApiConnector.createMailToken(email, onRespond = {
-        val data: JSONObject = it.data()
-        val msg: String = data.get("msg") as String
-        when (it.status()) {
-            HttpStatus.SUCCESS -> {
-                Looper.prepare()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-            HttpStatus.UNAUTHORIZED -> {
-                Looper.prepare()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-            HttpStatus.FAILED -> {
-                Looper.prepare()
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                Looper.loop()
-            }
-        }
-    })
-
-}
-

@@ -1,5 +1,7 @@
 package com.klt.ui.composables
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -83,8 +85,11 @@ fun EntryCard(
 
             if (hasIcon && !isInsideDrawer) {
                 IconButton(onClick = {
+                    Log.d(TAG, "This is on job: $item")
                     coroutine.launch { job(item as IKLTItem) }
-                }) {
+
+                },)
+                {
                     Icon(
                         imageVector = when (item) {
                             is ICustomer -> if (item.pinned) Icons.Outlined.Star else Icons.Outlined.StarBorder

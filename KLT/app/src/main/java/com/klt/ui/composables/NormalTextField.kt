@@ -16,7 +16,7 @@ var username: String? = null
 @Composable
 fun NormalTextField(
     modifier: Modifier = Modifier,
-    labelText: String, horizontalPadding: Dp = 15.dp,
+    labelText: String = "", horizontalPadding: Dp = 15.dp,
     title: String = "",
     singleLine: Boolean = true,
     forUsername: Boolean = false,

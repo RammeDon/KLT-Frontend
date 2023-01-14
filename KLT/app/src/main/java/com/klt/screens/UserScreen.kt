@@ -34,6 +34,8 @@ import com.klt.ui.composables.EditableCards
 import com.klt.ui.composables.KLTDivider
 import com.klt.ui.composables.PasswordTextField
 import com.klt.ui.composables.ScreenSubTitle
+import com.klt.ui.navigation.Login
+import com.klt.ui.navigation.ResetPassword
 import com.klt.util.ApiConnector
 import com.klt.util.ApiResult
 import com.klt.util.HttpStatus
@@ -64,8 +66,8 @@ fun UserScreen(
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
     var userFetched by remember { mutableStateOf(false) }
-
 
     LaunchedEffect(currUserID) {
         if (!userFetched) {
@@ -77,6 +79,7 @@ fun UserScreen(
                     firstName = userObj.get("firstName") as String
                     lastName = userObj.get("lastName") as String
                     email = userObj.get("email") as String
+                    phoneNumber = userObj.get("phoneNumber").toString()
                 })
             }
         }
@@ -128,89 +131,19 @@ fun UserScreen(
                     icon = Icons.Outlined.Person,
                     editOn = editState,
                     editValue = {lastName = it}
-                )/**
+                )
                 EditableCards(
-                    text = "+46 0734587234",
+                    text = phoneNumber,
                     icon = Icons.Outlined.Phone,
                     editOn = editState,
-                    editValue = {firstName = it}
-                )*/
+                    editValue = {phoneNumber = it}
+                )
                 EditableCards(
                     text = email,
                     icon = Icons.Outlined.Email,
                     editOn = editState,
                     editValue = {email = it}
-                )/**
-                if (editState) { // instead of textfield it should be passwordtextfield
-                    Box(modifier = Modifier.padding(horizontal = 30.dp)) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp)
-                                .background(
-                                    color = Color.LightGray,
-                                    shape = RoundedCornerShape(5.dp)
-                                )
-                                .padding(start = 15.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(top = 15.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Lock,
-                                    contentDescription = "name-Icon"
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(20.dp))
-                            PasswordTextField(
-                                labelText = "New Password",
-                                checkPasswordStrength = true,
-                                onUpdate = {}
-                            )
-                        }
-                    }
-                    Box(modifier = Modifier.padding(horizontal = 30.dp)) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp)
-                                .background(
-                                    color = Color.LightGray,
-                                    shape = RoundedCornerShape(5.dp)
-                                )
-                                .padding(start = 15.dp),
-                            verticalAlignment = Alignment.Top
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(top = 15.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Lock,
-                                    contentDescription = "name-Icon"
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(20.dp))
-                            PasswordTextField(
-                                labelText = "confirm Password",
-                                performMatchCheck = true,
-                                onUpdate = {}
-                            )
-                        }
-                    }
-                } else {
-                    EditableCards(
-                        text = "**************",
-                        icon = Icons.Filled.Lock,
-                        editOn = editState
-                    )
-                }
-*/
+                )
             }
             Column(
                 modifier = Modifier
@@ -222,6 +155,24 @@ fun UserScreen(
                     modifier = Modifier
                         .weight(1f)
                 )
+
+                if (!editState) {
+                    Button(modifier = Modifier
+                        .width(180.dp)
+                        .height(40.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.KLT_Red)),
+                        onClick = {
+                            navController.navigate(ResetPassword.route)
+
+                        }) {
+                        Text(
+                            text = "Change Password",
+                            color = Color.White
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
                 Button(modifier = Modifier
                     .width(180.dp)
                     .height(40.dp),
@@ -229,7 +180,7 @@ fun UserScreen(
                     onClick = {
                         if (editState) {
                             coroutine.launch(Dispatchers.IO) {
-                                updateUser(firstName, lastName, email, userObj, context)
+                                updateUser(firstName, lastName, email, phoneNumber, userObj, context)
                             }
                         }
                         editState = !editState
@@ -250,12 +201,14 @@ private fun updateUser(
     firstname: String,
     lastname: String,
     email: String,
+    phoneNumber: String,
     userObj: JSONObject,
     context: Context
 ) {
     userObj.put("firstName", firstname)
     userObj.put("lastName", lastname)
     userObj.put("email", email)
+    userObj.put("phoneNumber", phoneNumber.toInt())
 
     val onUserEditRespond: (ApiResult) -> Unit = { apiResult ->
         when (apiResult.status()) {
@@ -276,13 +229,10 @@ private fun updateUser(
             }
         }
     }
-    Log.d(TAG, "This is the new object $userObj")
     ApiConnector.editUser(
         token = LocalStorage.getToken(context),
         jsonData = userObj,
         onRespond = onUserEditRespond
     )
-
-
 
 }
