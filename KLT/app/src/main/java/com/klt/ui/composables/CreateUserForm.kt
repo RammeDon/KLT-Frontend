@@ -59,7 +59,13 @@ fun CreateUserForm(
             val msg: String = data.get("msg") as String
 
             when (it.status()) {
-                HttpStatus.SUCCESS -> updateAlert(msg, FormAlertMsgState.GOOD)
+                HttpStatus.SUCCESS -> {
+                    email = ""
+                    firstName = ""
+                    lastName = ""
+                    phoneNumber = ""
+                    updateAlert(msg, FormAlertMsgState.GOOD)
+                }
                 HttpStatus.UNAUTHORIZED -> updateAlert(msg, FormAlertMsgState.BAD)
                 HttpStatus.FAILED -> updateAlert(msg, FormAlertMsgState.BAD)
             }
@@ -132,10 +138,7 @@ fun CreateUserForm(
                             onCreateAccount
                         )
                     }
-                    email = ""
-                    firstName = ""
-                    lastName = ""
-                    phoneNumber = ""
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
