@@ -13,6 +13,8 @@ class LocalStorageData: Serializable {
     var token: String = ""
     @SerializedName("tokenEmail")
     var tokenEmail: String = ""
+    @SerializedName("isAdmin")
+    var isAdmin: String = ""
     @SerializedName("activeTasks")
     var activeTasks: MutableList<ActiveTaskState> = mutableListOf()
     @SerializedName("pinnedCustomer")
@@ -30,6 +32,16 @@ object LocalStorage {
     fun saveToken(context: Context, email: String) {
         localStorageData.token = email
         saveData(context)
+    }
+
+    fun saveIsAdmin(context: Context, admin: String) {
+        localStorageData.isAdmin = admin
+        saveData(context)
+    }
+
+    fun getIsAdmin(context: Context): String {
+        loadData(context)
+        return localStorageData.isAdmin
     }
 
     /** Quick function to save a new email token */

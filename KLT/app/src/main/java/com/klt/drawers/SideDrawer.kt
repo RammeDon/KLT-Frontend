@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import com.klt.R
 import com.klt.ui.composables.EntryCard
 import com.klt.ui.composables.TitledDivider
+import com.klt.util.LocalStorage
 import com.klt.util.SideBarAdminOptions
 import com.klt.util.SideBarUserOptions
 import kotlinx.coroutines.CoroutineScope
@@ -129,6 +130,7 @@ class SideDrawer(
         val coroutine: CoroutineScope = rememberCoroutineScope()
         val dividerCol: Color = colorResource(id = R.color.KLT_DarkGray1)
         val dividerColAlpha = 0.5f
+        val context = LocalContext.current
 
         Column(
             modifier = Modifier
@@ -156,24 +158,31 @@ class SideDrawer(
                 Spacer(modifier = Modifier.height(5.dp))
             }
             Spacer(modifier = Modifier.weight(1f))
-            TitledDivider(
-                title = "Admin",
-                dividerCol = dividerCol,
-                dividerColAlpha = dividerColAlpha
-            )
-            SideBarAdminOptions.values().forEach {
-                EntryCard(
-                    item = it.title,
-                    textColor = colorResource(id = R.color.KLT_DarkGray1),
-                    navController = this@SideDrawer.navController,
-                    destination = it.route,
-                    hasIcon = it.icon != null,
-                    icon = it.icon,
-                    isInsideDrawer = true,
-                    backgroundColor = colorResource(id = R.color.KLT_WhiteGray1)
-                ) { coroutine.launch { drawerState.close() } }
-                Spacer(modifier = Modifier.height(5.dp))
+
+
+            if (LocalStorage.getIsAdmin(context) == "true") {
+                TitledDivider(
+                    title = "Admin",
+                    dividerCol = dividerCol,
+                    dividerColAlpha = dividerColAlpha
+                )
+
+                SideBarAdminOptions.values().forEach {
+                    EntryCard(
+                        item = it.title,
+                        textColor = colorResource(id = R.color.KLT_DarkGray1),
+                        navController = this@SideDrawer.navController,
+                        destination = it.route,
+                        hasIcon = it.icon != null,
+                        icon = it.icon,
+                        isInsideDrawer = true,
+                        backgroundColor = colorResource(id = R.color.KLT_WhiteGray1)
+                    ) { coroutine.launch { drawerState.close() } }
+                    Spacer(modifier = Modifier.height(5.dp))
+                }
             }
+
+
             Spacer(modifier = Modifier.weight(2f))
         }
     }

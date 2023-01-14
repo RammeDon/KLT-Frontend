@@ -104,6 +104,7 @@ object ApiConnector {
         email: String,
         firstName: String,
         lastName: String,
+        phoneNumber: String,
         onRespond: (result: ApiResult) -> Unit
     ) {
         val urlPath = "/api/user/create"
@@ -112,6 +113,7 @@ object ApiConnector {
             .add("firstName", firstName)
             .add("lastName", lastName)
             .add("email", email)
+            .add("phoneNumber", phoneNumber)
             .build()
 
         val request: Request = Request.Builder()

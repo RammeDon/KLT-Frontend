@@ -119,6 +119,7 @@ fun LoginScreen(
 
                 // Auth state
                 var auth by remember { mutableStateOf(Pair(false, "")) }
+                var isAdmin by remember { mutableStateOf(false) }
 
                 // Called on response from login call
                 val onLoginRespond: (ApiResult) -> Unit = {
@@ -127,7 +128,9 @@ fun LoginScreen(
                     when (it.status()) {
                         SUCCESS -> {
                             val token: String = data.get("token") as String
+                            val admin: Boolean = data.get("isAdmin") as Boolean
                             auth = Pair(true, token)
+                            isAdmin = admin
                         }
                         UNAUTHORIZED -> {
                             Looper.prepare()
@@ -146,6 +149,7 @@ fun LoginScreen(
                     launch {
                         if (auth.first) {
                             LocalStorage.saveToken(context, auth.second)
+                            LocalStorage.saveIsAdmin(context, "$isAdmin")
                             navController.navigate(Customers.route)
                         }
                     }

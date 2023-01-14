@@ -41,6 +41,7 @@ fun CreateUserForm(
         var email by remember { mutableStateOf("") }
         var firstName by remember { mutableStateOf("") }
         var lastName by remember { mutableStateOf("") }
+        var phoneNumber by remember { mutableStateOf("") }
         var alertState by remember { mutableStateOf(FormAlertMsgState.NOT_ACTIVE) }
         var alertMsg by remember { mutableStateOf("") }
 
@@ -90,6 +91,16 @@ fun CreateUserForm(
             )
 
             TextField(
+                value = phoneNumber,
+                onValueChange = { phoneNumber = it },
+                label = { Text("phone number..") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
+            )
+
+            TextField(
                 value = firstName,
                 onValueChange = { firstName = it },
                 label = { Text("First Name..") },
@@ -117,9 +128,14 @@ fun CreateUserForm(
                             email,
                             firstName,
                             lastName,
+                            phoneNumber,
                             onCreateAccount
                         )
                     }
+                    email = ""
+                    firstName = ""
+                    lastName = ""
+                    phoneNumber = ""
                 },
                 modifier = Modifier
                     .fillMaxWidth()
