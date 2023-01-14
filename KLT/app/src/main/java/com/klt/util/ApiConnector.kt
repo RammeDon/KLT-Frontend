@@ -126,19 +126,38 @@ object ApiConnector {
     /** Api call to change password */
     fun changePassword(
         token: String,
-        currentPassword: String,
         newPassword: String,
         onRespond: (result: ApiResult) -> Unit
     ) {
         val urlPath = "/api/user/changepassword"
 
         val formBody: RequestBody = FormBody.Builder()
-            .add("newPassword", currentPassword)
-            .add("currentPassword", newPassword)
+            .add("newPassword", newPassword)
             .build()
 
         val request: Request = Request.Builder()
             .header(Values.AUTH_TOKEN_NAME, token)
+            .url(Values.BACKEND_IP + urlPath)
+            .post(formBody)
+            .build()
+
+        onRespond(callAPI(request))
+    }
+
+    /** Api call to change password */
+    fun forgotPassword(
+        newPassword: String,
+        email: String,
+        onRespond: (result: ApiResult) -> Unit
+    ) {
+        val urlPath = "/api/user/forgotpassword"
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("newPassword", newPassword)
+            .add("email", email)
+            .build()
+
+        val request: Request = Request.Builder()
             .url(Values.BACKEND_IP + urlPath)
             .post(formBody)
             .build()
