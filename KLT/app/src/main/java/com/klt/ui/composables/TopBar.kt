@@ -26,10 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.R
-import com.klt.ui.navigation.Customers
-import com.klt.ui.navigation.ForgotPassword
-import com.klt.ui.navigation.Login
-import com.klt.ui.navigation.ResetPassword
+import com.klt.ui.navigation.*
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,6 +58,7 @@ fun TopBar(
                         val currScreen = navController.currentBackStackEntry?.destination?.route!!
                         if (currScreen != Login.route && currScreen != ForgotPassword.route &&
                             currScreen != ResetPassword.route
+                            && currScreen != ConfirmToken.route
                         ) {
                             navController.navigate(Customers.route)
                         }

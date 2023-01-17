@@ -402,7 +402,7 @@ fun AnimatedAppNavHost(
         ) {
             ConfirmTokenScreen(
                 navController = navController,
-                OnSelfClick = { navController.navigateSingleTopTo(UserControl.route) }
+                OnSelfClick = { navController.navigateSingleTopTo(ConfirmToken.route) }
             )
         }
     }
