@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.klt.ui.composables.CreateUserForm
 import com.klt.ui.composables.ScreenSubTitle
-import com.klt.ui.navigation.Tasks
+import com.klt.ui.navigation.Customers
 
 @Composable
 fun CreateUserScreen(
@@ -25,7 +25,8 @@ fun CreateUserScreen(
 
             ScreenSubTitle(
                 navController = navController,
-                onBackNavigation = Tasks.route,
+                onBackNavigation = navController.previousBackStackEntry?.destination?.route
+                    ?: Customers.route,
                 bigText = "Create User",
                 smallText = "Here you create accounts for the employees"
             )

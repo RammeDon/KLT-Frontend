@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.klt.R
 import com.klt.ui.composables.ScreenSubTitle
+import com.klt.ui.navigation.Customers
 import com.klt.util.*
 import com.klt.util.ApiConnector.getUserData
 import kotlinx.coroutines.Dispatchers
@@ -63,7 +64,8 @@ fun UserControlScreen(
     ) {
         ScreenSubTitle(
             navController = navController,
-            onBackNavigation = navController.previousBackStackEntry?.destination?.route!!,
+            onBackNavigation = navController.previousBackStackEntry?.destination?.route
+                ?: Customers.route,
             bigText = "Manage Existing Users",
             smallText = "Here you delete redundant accounts"
         )

@@ -21,11 +21,13 @@ package com.klt.ui.navigation
  */
 
 //import androidx.navigation.compose.composable
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -42,7 +44,7 @@ fun AnimatedAppNavHost(
     startDestination: String
 ) {
     // Calls the navigate function to control movement between views/screens in the app
-    val defaultTween = 650
+    val defaultTween = 450
 
     AnimatedNavHost(
         navController = navController,
@@ -56,49 +58,19 @@ fun AnimatedAppNavHost(
             route = Login.route,
             // animation played ON ENTER when screen is not at top of back stack)
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
             // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                when (initialState.destination.route) {
-                    ForgotPassword.route -> slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Up,
-                        tween(defaultTween)
-                    )
-                    else -> slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Right,
-                        tween(defaultTween)
-                    )
-                }
+                fadeIn(tween(defaultTween))
             },
             // animation played ON EXIT
             exitTransition = {
-                when (targetState.destination.route) {
-                    ForgotPassword.route -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Down,
-                        tween(defaultTween)
-                    )
-                    else -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        tween(defaultTween)
-                    )
-                }
+                fadeOut(tween(defaultTween))
             },
             // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                when (targetState.destination.route) {
-                    ForgotPassword.route -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Down,
-                        tween(defaultTween)
-                    )
-                    else -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        tween(defaultTween)
-                    )
-                }
+                fadeOut(tween(defaultTween))
             }
         ) {
             LoginScreen(
@@ -111,40 +83,19 @@ fun AnimatedAppNavHost(
         composable(
             route = Customers.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                when (initialState.destination.route) {
-                    Tasks.route -> slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Right,
-                        tween(defaultTween)
-                    )
-                    else -> slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        tween(defaultTween)
-                    )
-                }
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                when (targetState.destination.route) {
-                    Login.route -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Right,
-                        tween(defaultTween)
-                    )
-                    else -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        tween(defaultTween)
-                    )
-                }
+                fadeOut(tween(defaultTween))
             }
         ) {
             CustomerScreen(
@@ -157,28 +108,19 @@ fun AnimatedAppNavHost(
         composable(
             route = Settings.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             }
         ) {
             SettingsScreen(
@@ -191,34 +133,19 @@ fun AnimatedAppNavHost(
         composable(
             route = Tasks.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                when (targetState.destination.route) {
-                    ActiveTask.route -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        tween(defaultTween)
-                    )
-                    else -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        tween(defaultTween)
-                    )
-                }
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             }
         ) {
             TaskScreen(
@@ -230,28 +157,19 @@ fun AnimatedAppNavHost(
         composable(
             route = CreateUser.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             }
         ) {
             CreateUserScreen(
@@ -264,28 +182,19 @@ fun AnimatedAppNavHost(
         composable(
             route = Admin.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             }
         ) {
             AdminScreen(
@@ -298,28 +207,19 @@ fun AnimatedAppNavHost(
         composable(
             route = User.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Down,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Down,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Up,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Up,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             }
         ) {
             UserScreen(
@@ -332,28 +232,19 @@ fun AnimatedAppNavHost(
         composable(
             route = ResetPassword.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             }
         ) {
             ResetPasswordScreen(
@@ -367,47 +258,19 @@ fun AnimatedAppNavHost(
         composable(
             route = ForgotPassword.route,
             enterTransition = {
-                when (initialState.destination.route) {
-                    Login.route -> slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Down,
-                        tween(defaultTween)
-                    )
-                    else -> slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Down,
-                        tween(defaultTween)
-                    )
-                }
-
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                when (initialState.destination.route) {
-                    ResetPassword.route -> slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Right,
-                        tween(defaultTween)
-                    )
-                    else -> slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Right,
-                        tween(defaultTween)
-                    )
-                }
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                when (targetState.destination.route) {
-                    ResetPassword.route -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        tween(defaultTween)
-                    )
-                    else -> slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        tween(defaultTween)
-                    )
-                }
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Up,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             }
         ) {
             ForgotPasswordScreen(
@@ -420,28 +283,19 @@ fun AnimatedAppNavHost(
         composable(
             route = ActiveTask.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             }
         ) {
             ActiveTaskScreen(
@@ -453,28 +307,19 @@ fun AnimatedAppNavHost(
         composable(
             route = Logout.route,
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
+            // animation played ON EXIT
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             },
+            // animation played ON EXIT ON BACK-KEY
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeOut(tween(defaultTween))
             }
         ) {
             LogoutScreen(
@@ -488,17 +333,19 @@ fun AnimatedAppNavHost(
             route = UserControl.route,
             // animation played ON ENTER when screen is not at top of back stack)
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
             // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Up,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
+            },
+            // animation played ON EXIT
+            exitTransition = {
+                fadeOut(tween(defaultTween))
+            },
+            // animation played ON EXIT ON BACK-KEY
+            popExitTransition = {
+                fadeOut(tween(defaultTween))
             }
         ) {
             UserControlScreen(
@@ -512,17 +359,19 @@ fun AnimatedAppNavHost(
             route = CustomerControl.route,
             // animation played ON ENTER when screen is not at top of back stack)
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
             // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Up,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
+            },
+            // animation played ON EXIT
+            exitTransition = {
+                fadeOut(tween(defaultTween))
+            },
+            // animation played ON EXIT ON BACK-KEY
+            popExitTransition = {
+                fadeOut(tween(defaultTween))
             }
         ) {
             CustomerControlScreen(
@@ -536,17 +385,19 @@ fun AnimatedAppNavHost(
             route = ConfirmToken.route,
             // animation played ON ENTER when screen is not at top of back stack)
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
             },
             // animation played ON ENTER ON BACK-KEY (requires route to be at top of back stack)
             popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    tween(defaultTween)
-                )
+                fadeIn(tween(defaultTween))
+            },
+            // animation played ON EXIT
+            exitTransition = {
+                fadeOut(tween(defaultTween))
+            },
+            // animation played ON EXIT ON BACK-KEY
+            popExitTransition = {
+                fadeOut(tween(defaultTween))
             }
         ) {
             ConfirmTokenScreen(
@@ -570,6 +421,27 @@ fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) 
         this@navigateSingleTopTo.graph.findStartDestination().id
     ) {
         saveState = true
+    }
+    // Avoid multiple copies of the same destination when re-selecting the same item
+    launchSingleTop = true
+    // Restore state when re-selecting a previously selected item
+    restoreState = true
+}
+
+/**
+ * Ensures that there is no duplicate entries within the NavGraph backstack on clicking a NavPath
+ * ImageVector (Icon) asset, if any.
+ */
+fun NavController.navigateSingleTopTo(route: String) = this.navigate(route) {
+    // Pop up to the start destination of the graph to
+    // avoid building up a large stack of destinations
+    // on the back stack as users select items
+    this@navigateSingleTopTo.graph.findNode(route)?.let {
+        popUpTo(
+            it.id
+        ) {
+            saveState = true
+        }
     }
     // Avoid multiple copies of the same destination when re-selecting the same item
     launchSingleTop = true

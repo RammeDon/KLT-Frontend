@@ -56,8 +56,6 @@ fun TaskScreen(
     customer: ICustomer = Tasks.customer!!,
     OnSelfClick: () -> Unit = {},
 ) {
-
-
     val coroutine = rememberCoroutineScope()
     var haveFetchTasks by remember { mutableStateOf(false) }
     val allTasks = remember { mutableStateListOf<IKLTItem>() }
@@ -138,14 +136,10 @@ fun TaskScreen(
                 )
             }
         }
-
-
     }
-
 
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
-
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -157,10 +151,14 @@ fun TaskScreen(
 
                 ScreenSubTitle(
                     navController = navController,
-                    onBackNavigation = Customers.route,
+                    onBackNavigation = navController.previousBackStackEntry?.destination?.route
+                        ?: Customers.route,
                     bigText = customer.name,
-                    smallText = ""
-                )
+                    smallText = "",
+                    fetchState = haveFetchTasks
+                ) { haveFetchTasks = it }
+
+
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {

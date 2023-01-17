@@ -45,6 +45,7 @@ import com.klt.R
 import com.klt.ui.composables.CreateCustomer
 import com.klt.ui.composables.NormalTextField
 import com.klt.ui.composables.ScreenSubTitle
+import com.klt.ui.navigation.Customers
 import com.klt.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -119,7 +120,8 @@ fun CustomerControlScreen(
             topBar = {
                 ScreenSubTitle(
                     navController = navController,
-                    onBackNavigation = navController.previousBackStackEntry?.destination?.route!!,
+                    onBackNavigation = navController.previousBackStackEntry?.destination?.route
+                        ?: Customers.route,
                     bigText = "Manage Existing Customers",
                     smallText = "Here you add, change or delete customers"
                 )

@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.klt.ui.navigation.Customers
+import com.klt.ui.navigation.navigateSingleTopTo
 
 
 @Composable
@@ -25,7 +27,9 @@ fun ScreenSubTitle(
     navController: NavController,
     onBackNavigation: String,
     bigText: String,
-    smallText: String
+    smallText: String,
+    fetchState: Boolean? = null,
+    job: (Boolean) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -34,7 +38,13 @@ fun ScreenSubTitle(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.height(50.dp)
         ) {
-            IconButton(onClick = { navController.navigate(onBackNavigation) }) {
+            IconButton(onClick = {
+                if (fetchState != null) job(!fetchState)
+                navController.popBackStack()
+                navController.navigateSingleTopTo(
+                    navController.previousBackStackEntry?.destination?.route ?: Customers.route
+                )
+            }) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBack,
                     contentDescription = "card-icon",
