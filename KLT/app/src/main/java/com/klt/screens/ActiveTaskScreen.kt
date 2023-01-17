@@ -336,6 +336,7 @@ fun ActiveTaskScreen(
                 }
                 TaskViewState.COMPLETE -> {
                     val coroutine = rememberCoroutineScope()
+                    taskPaused = true
                     OnTaskDone(
                         task = task,
                         onTaskReportDone = {
